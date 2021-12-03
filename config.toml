@@ -1,0 +1,67 @@
+languageCode = "en-us"
+ignoreFiles = [ "\\.files/README.md$",  "content/intermediate/260_weave_flux/app.files/"]
+defaultContentLanguage = "en"
+title = "Kubernetes Primer"
+theme = "learn"
+uglyurls = false
+# googleAnalytics = "UA-44634850-4"
+sectionPagesMenu = "main"
+relativeURLs = true
+
+[blackfriday]
+hrefTargetBlank = true
+
+[params]
+editURL = "https://github.com/amcginlay/k8s-primer/edit/main/content/"
+themeVariant = "mine"
+showVisitedLinks = false
+author = "Alan McGinlay"
+description = "Kubernetes Primer"
+disableSearch = false
+disableAssetsBusting = false
+disableLanguageSwitchingButton = true
+disableShortcutsTitle=false
+disableInlineCopyToClipBoard = true
+ghrepo = "https://github.com/amcginlay/k8s-primer/"
+branch = "main"
+template_bucket = "k8s-primer.com"
+pygmentsUseClasses = true
+pygmentsCodeFences = true
+pygmentsCodefencesGuessSyntax = true
+pygmentsStyle = "tango"
+
+
+[privacy]
+  [privacy.googleAnalytics]
+    anonymizeIP = false
+    disable = true
+    respectDoNotTrack = false
+    useSessionStorage = false
+  [privacy.youtube]
+    disable = false
+    privacyEnhanced = true
+
+[services]
+  [services.youtube]
+    privacyEnhanced = true
+
+
+
+#
+
+[menu]
+  [[menu.main]]
+    identifier = "Prerequisites"
+    name = "This is the Mu track"
+    title = "Workshop using Mu"
+    url = "/mu/"
+    weight = -110
+
+[[menu.shortcuts]]
+name = "<i class='fab fa-github'></i> GitHub Project"
+url = "https://github.com/amcginlay/k8s-primer"
+weight = 30
+
+[outputs]
+home = [ "HTML", "JSON"]
+page = [ "HTML" ]
