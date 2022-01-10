@@ -5,7 +5,7 @@ weight: 013
 draft: false
 ---
 
-## Run your containerized app
+## Run your containerized app in Docker
 
 You can now `run` your app as a containerized background process in Docker.
 ```bash
@@ -20,6 +20,10 @@ They have their own private IP address and are **internally** free to occupy wha
 So whilst port collisions are unlikely inside any individual container it remains a concern on the host which might need to surface many containers from different teams all vying to occupy the same ports.
 We solve this issue with [port binding](https://12factor.net/port-binding).
 In our case `8081:80` directs the Docker daemon to take all port 8081 requests at the host and forward them to port 80 inside our app. If we wanted to run multiple replicas of our app we could use `8082:80`, `8083:80` and so on.
+
+{{% notice note %}}
+The **Docker daemon** is an example of a ***container runtime*** agent; it hosts your containerized app. The `docker` command is an administrative tool which allows you to manage your containers.
+{{% /notice %}}
 
 Check that your app is up and running.
 ```bash
@@ -50,6 +54,36 @@ In both cases the response to `gethostname()` inside our app will match the ID o
 {{< output >}}
 63ab8c3fb819
 {{< /output >}}
+
+## Stop your containerized app
+
+When you are done running your app, you can stop it using `docker stop` as follows:
+```bash
+docker stop ${container_id}
+```
+
+When the container is stopped, the `docker` command will respond with the container id, such as:
+
+{{< output >}}
+4c91176464810c9b796516e1ed48e5361fe98f3ec7107081d5cab080b034a065
+{{< /output >}}
+
+{{% notice note %}}
+Under normal circumstances, you would typically remove your container using `docker rm ${container_id}` after you stop it. However, because you included the `--rm` option when you *ran* it with `docker run`, the Docker daemon automatically removes the container when it is stopped.
+{{% /notice %}}
+
+## Success
+
+- You have successfully `run` a containerized app using `docker run`! 
+- You checked the container's process status using `docker ps`.
+- Then you tested your app using `curl` which relied on port mapping to the running container.
+- Finally, you stopped your container with `docker stop` and in this case it was also removed from the container host (Cloud9).
+
+{{% notice note %}}
+Note that the container *image* still exists in your Cloud9 environment, but the compute power for the container runtime was deallocated when the container was removed.
+{{% /notice %}}
+
+Now that you have some experience **producing** and **consuming** containers using Docker tooling, you are ready to graduate to Kubernetes! 
 
 <!-- for i in $(docker ps -q); do docker kill $i; done
 docker system prune --all --force

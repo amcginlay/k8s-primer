@@ -5,10 +5,15 @@ weight: 011
 draft: false
 ---
 
+## Purpose
+
+Prior to working with *containers* and *Kubernetes* it is helpful to have a dedicated workspace you can use to work, learn, and play with those. This **Setup** guides you through the process of setting up an isolated environment in the cloud that you can use independent of your local computer(s). The rest of this workshop assumes you have created a **Cloud9** environment in which you can perform the tasks and learn at your own pace. You may choose to delete one environment whenever you are done learning or set up a new one when you wish to start over.
+
 ## Prerequisutes
 
 - These instructions build a [Cloud9](https://aws.amazon.com/cloud9/) environment and assume you have access to an [AWS](https://aws.amazon.com/) account in order to do so.
 - For ensure reproducibility we will create all our infrastructure in the `us-west-2` region. 
+- CloudShell is used here as a temporary bootstrap to help you build your Cloud9 environment.
 
 ## Configure CloudShell
 
@@ -25,7 +30,7 @@ sudo ./aws/install --update
 
 ## Build a Cloud9 environment
 
-From **within your CloudShell environment**, create a Cloud9 instance.
+From **within your CloudShell environment**, run the following snippet to create a Cloud9 instance.
 ```bash
 subnet_id=$( \
   aws ec2 describe-subnets \
@@ -44,6 +49,13 @@ env_id=$(
     --output text \
 )
 ```
+
+{{% notice note %}}
+NOTE: The assignment of `subnet_id` here assumes that you have a *Default VPC* in the default region with a subnet in availability zone `a`. If this is not the case, either:
+- use an alternative region which still has a *Default VPC*
+- or use a different account with a *Default VPC* in `us-west-2`
+- or modify the subnet query accordingly to choose an adequate subnet for the Cloud9 instance.
+{{% /notice %}}
 
 ## Configure your Cloud9 environment
 
@@ -100,4 +112,7 @@ Each Cloud9 instance has the [Docker](https://www.docker.com/) build/runtime too
 docker system prune --all --force
 ```
 
-Now you are ready to go.
+## Success
+
+You have now completed the prerequisite of creating a **Cloud9** environment in which you can explore *containers* and *Kubernetes*.
+Now you are ready to go. Please continue to Containerize Your App.

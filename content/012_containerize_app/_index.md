@@ -17,6 +17,11 @@ We will first **produce** a simple app before containerizing it.
 Only once we're happy with the app in container form will we **consume** it from Kubernetes.
 Hopefully this end to end approach can help to close some knowledge gaps that might be holding you back from embracing Kubernetes. 
 
+In this exercise you will do the following:
+1. Build a *simple* app and test it *locally* in the Cloud9 environment. 
+2. Write a `Dockerfile` with instructions for how to ***containerize*** your simple app.
+3. Build a *container image* using your `Dockerfile`.
+
 ## Build and test a simple app
 
 Get started by building the simplest of simple [PHP](https://www.php.net/) apps.
@@ -47,12 +52,12 @@ In the second terminal session, use the `curl` command to send an HTTP GET reque
 curl http://localhost:8080
 ```
 
-As each Cloud9 environment is hosted on a regular EC2 instance, the response indicates the private DNS name of the underlying instance.
+As each Cloud9 environment is hosted on a regular EC2 instance, the response indicates the private DNS name of the underlying instance. Your output from `curl` will have a DNS name similar to the following, but with your Cloud9 instance's private IP as part of the DNS name.
 {{< output >}}
 ip-172-31-58-96.us-west-2.compute.internal
 {{< /output >}}
 
-Now we have tested the app works, head back the first terminal session and hit `ctrl+c` to stop the webserver.
+Now we have tested the app works, head back the first terminal session and hit `ctrl+c` to stop the `php` webserver.
 
 Containers exploit the use of [Linux namespaces](https://en.wikipedia.org/wiki/Linux_namespaces) so once the app is packaged as a containerized process its hostname will appear to become independent of the underlying host.
 It is this behaviour which gives rise to containers being perceived as lightweight virtual machines.
@@ -63,9 +68,9 @@ As mentioned in the [Setup](../011_setup) section, each Cloud9 instance comes wi
 In this section you will build a container image for your app using Docker.
 The Docker build tool uses [Dockerfiles](https://docs.docker.com/engine/reference/builder/) for this.
 A `Dockerfile` is a text document stored alongside your app code.
-It consists of scripted commands used by the Docker build tool to assemble a container image which packages your app and its dependencies.
+It consists of scripted commands used by the Docker build tool to assemble a container image which packages your app and its dependencies. In this sense, your `Dockerfile` is like a recipe for cooking your raw `index.php` app into a cooked form--a *container image*.
 
-The Dockerfile for your app is very simple and is created as follows.
+The Dockerfile for your app is very simple and is created as follows. Run this in your Cloud9 terminal.
 ```bash
 cat > ~/environment/Dockerfile << EOF
 FROM php:8.0.1-apache
@@ -74,7 +79,7 @@ RUN chmod a+rx index.php
 EOF
 ```
 
-Now your app (`index.php`) and its dependencies (`Dockerfile`) are in lockstep under source control.
+Now you could keep your app (`index.php`) and its dependencies (`Dockerfile`) in lockstep under source control.
 
 Here is a quick summary of your `Dockerfile`.
 
@@ -91,7 +96,7 @@ In this example `php` is the name of an image and `8.0.1-apache` is the immutabl
 The `COPY` instruction takes your app (`index.php`) from the local file system and lays it down as the homepage for your webserver inside the container.
 - **`RUN chmod a+rx index.php`** - A Linux command that will be familiar to you, `chmod` sets the access permissions of our app to ensure it is executable from any context within the contianer.
 
-Each instruction in the Dockerfile adds new layers to your container which are used to extend or override the detail of preceeding layers.
+Each instruction in the Dockerfile adds new layers to your container image which are used to extend or override the detail of preceeding layers.
 
 ## Dispose of the pre-loaded Docker images
 
@@ -103,7 +108,7 @@ docker system prune --all --force
 
 ## Build the container image
 
-With the app ready and the Dockerfile composed you can now build a container image for your app.
+With the app ready and the Dockerfile composed you can now build a container image for your app. Run this:
 ```bash
 docker build --tag demo:1.0.0 ~/environment/
 ```
@@ -129,6 +134,10 @@ Successfully built 3e88e08548ff
 Successfully tagged demo:1.0.0
 {{< /output >}}
 
+{{% notice note %}}
+When you run `docker build` like this, it is like following your `Dockerfile` recipe to cook your raw app into a cooked (**containerized**) app. The result is a *container image*.
+{{% /notice %}}
+
 Once complete, list the images in the local cache.
 ```bash
 docker images
@@ -144,3 +153,13 @@ php          8.0.1-apache   6ad14718b8c3   10 months ago   417MB
 
 - **`php:8.0.1-apache`** is the versioned base layer you referenced in the Dockerfile `FROM` command
 - **`demo:1.0.0`** is the newly built and tagged container image for your app which sits down upon the `php` base layer
+
+## Success
+
+In this exercise you did the following:
+1. Built a *simple* app and test it *locally* in the Cloud9 environment (like eating raw food).
+2. Wrote a `Dockerfile` with instructions for how to ***containerize*** your simple app (like writing a recipe).
+3. Built a *container image* using your `Dockerfile` using `docker build` (like cooking according to your recipe).
+
+Congratulations. You are a **producer** of containerized apps! If you are not yet a professional developer, nor ever want to be, you can still produce apps as *container images*.
+Now you are ready to play the role of **consumer** and ***run*** that containerized app.
