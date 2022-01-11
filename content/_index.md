@@ -10,3 +10,4 @@ weight: 1
 * [Containerize Your App](012_containerize_app/)
 * [Test Your App In Docker](013_test_in_docker/)
 * [Install Kubernetes](014_install_kubernetes/)
+* [Install kubectl](015_install_kubectl/)
