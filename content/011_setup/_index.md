@@ -40,7 +40,7 @@ subnet_id=$( \
 )
 env_id=$(
   aws cloud9 create-environment-ec2 \
-    --name k8s-primer \
+    --name k8s-primer-$(date +"%Y%m%d%H%M") \
     --instance-type m5.large \
     --image-id amazonlinux-2-x86_64 \
     --subnet-id ${subnet_id} \
@@ -72,7 +72,7 @@ From this point on you will no longer require access to the CloudShell environme
 
 From **within your Cloud9 environment**, to ensure we don't exhaust disk space, extend the root volume storage to 30gb.
 ```bash
-df -T # check disk usage before (typically ~80%) ...
+df -T # check disk use percentage before (typically ~80%) ...
 
 region=$(curl --silent http://169.254.169.254/latest/meta-data/placement/region)
 instance_id=$(curl --silent http://169.254.169.254/latest/meta-data/instance-id)
@@ -102,7 +102,7 @@ done
 sudo growpart /dev/nvme0n1 1
 sudo xfs_growfs -d /
 
-df -T # ... check disk usage has been reduced
+df -T # ... check disk use percentage has been reduced
 ```
 
 ## Dispose of the pre-loaded Docker images
