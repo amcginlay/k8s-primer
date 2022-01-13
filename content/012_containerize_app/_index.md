@@ -98,14 +98,6 @@ The `COPY` instruction takes your app (`index.php`) from the local file system a
 
 Each instruction in the Dockerfile adds new layers to your container image which are used to extend or override the detail of preceeding layers.
 
-## Dispose of the pre-loaded Docker images
-
-Docker provides a local cache feature so it can make efficient re-use of downloaded container images.
-Cloud9 pre-loads the cache with images we will not need in this tutorial so flush out the cache as follows.
-```bash
-docker system prune --all --force
-```
-
 ## Build the container image
 
 With the app ready and the Dockerfile composed you can now build a container image for your app. Run this:

@@ -85,8 +85,7 @@ Note that the container *image* still exists in your Cloud9 environment, but the
 
 Now that you have some experience **producing** and **consuming** containers using Docker tooling, you are ready to graduate to Kubernetes! 
 
-<!-- for i in $(docker ps -q); do docker kill $i; done
-docker system prune --all --force
+<!--
 
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
