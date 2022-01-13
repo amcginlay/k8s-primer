@@ -107,7 +107,7 @@ df -T # ... check disk usage has been reduced
 
 ## Dispose of the pre-loaded Docker images
 
-Each Cloud9 instance has the [Docker](https://www.docker.com/) build/runtime tooling installed with a set of images pre-loaded.
+Each Cloud9 instance has the [Docker](https://www.docker.com/) build/runtime tooling.
 Docker provides a local cache feature so it can make efficient re-use of downloaded container images.
 Cloud9 pre-loads the cache with images we will not need in this tutorial so flush out the cache as follows.
 ```bash
