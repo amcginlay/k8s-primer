@@ -66,6 +66,5 @@ You have successfully run your containerized `demo` app in a Kubernetes pod.
 Now you are ready to create your own resources, such as your own Kubernetes:
 - namespaces
 - configmaps
-- secrets
 - pods
-and more…
+- deployments
