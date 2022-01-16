@@ -8,7 +8,8 @@ draft: false
 ## Introduction
 
 In order to learn Kubernetes, we first need to understand containers and what they are used for.
-Containers, in their running state, encapsulate processes serving many purposes however, in the [API-first](https://en.wikipedia.org/wiki/Web_API) world of [microservices](https://en.wikipedia.org/wiki/Microservices), a large majority of these processes are web servers.
+In their running state, containers encapsulate processes which may serve a variety of purposes.
+In the [API-first](https://en.wikipedia.org/wiki/Web_API) world of [microservices](https://en.wikipedia.org/wiki/Microservices), a large majority of these processes are web servers.
 
 We potentially interact with many such web servers every time we pick up a modern smartphone.
 It is tempting to view a web server as a metaphorical [black box](https://en.wikipedia.org/wiki/Black_box), obscured behind decades of ongoing effort to address our modern expectations of scale and security.
