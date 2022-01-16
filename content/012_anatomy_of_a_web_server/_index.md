@@ -113,8 +113,8 @@ nc localhost 8000 <<< "request 4"
 ```
 
 {{% notice note %}}
-Observe how, `nc` can be used as both a listening process on the `SERVER` side and as the initiator of requests on the `CLIENT` side.
-The `CLIENT` sent four identical requests each using different syntax. 
+Observe how `nc`, which is used as the listening process in the `SERVER` session, can be repurposed as the transmitter of requests in the `CLIENT` session.
+The `CLIENT` sent four identical requests each using a different syntax. 
 In the final request, `nc` was able to resolve the IP address for the hostname `localhost`.
 {{% /notice %}}
 
