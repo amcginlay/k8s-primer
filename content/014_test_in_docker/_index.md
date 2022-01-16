@@ -55,17 +55,34 @@ In both cases the response to `gethostname()` inside our app will match the ID o
 63ab8c3fb819
 {{< /output >}}
 
-## Stop your containerized app
+## Overriding environment variable
 
-When you are done running your app, you can stop it using `docker stop` as follows:
+The `GREETING` environment variable was set in the Dockerfile which ensures it will always be available from within your app.
+As you launch container instances in Docker you have the opportunity to override these variable settings.
+This technique of separating your code from its config is considered good practice and you will take advantage of it whenever you can.
+
+Run a second instance of your app with an alternative greeting, taking care to target an unused port on the host.
 ```bash
-docker stop ${container_id}
+container2_id=$(docker run --env "GREETING=Hi from" --detach --rm --publish 8082:80 demo:1.0.0)
 ```
 
-When the container is stopped, the `docker` command will respond with the container id, such as:
+Test it to see the `GREETING` override in effect.
+```bash
+curl http://localhost:8082
+```
+
+## Stop your containerized app instances
+
+When you are done running your app instances, you can stop then using `docker stop` as follows:
+```bash
+docker stop ${container_id} ${container2_id}
+```
+
+When your app instances are stopped, the `docker` command will respond with their container ids, such as:
 
 {{< output >}}
 4c91176464810c9b796516e1ed48e5361fe98f3ec7107081d5cab080b034a065
+576f8a79d1c65bdaa92d4259e6db8fbb68a1153b03a5ef3abcb78412c1e9e874
 {{< /output >}}
 
 {{% notice note %}}
@@ -84,44 +101,3 @@ Note that the container *image* still exists in your Cloud9 environment, but the
 {{% /notice %}}
 
 Now that you have some experience **producing** and **consuming** containers using Docker tooling, you are ready to graduate to Kubernetes! 
-
-<!--
-
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
-
-minikube start
-minikube docker-env > ~/.env
-echo "source ~/.env" >> ~/.bashrc
-source ~/.env
-
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && rm kubectl
-
-kubectl cluster-info
-
-cat > ~/environment/index.php << EOF
-<?php
-  echo gethostname() . "\n";
-?>
-EOF
-
-# test it inside Cloud9
-
-cat > ~/environment/Dockerfile << EOF
-FROM php:8.0.1-apache
-COPY index.php /var/www/html/
-RUN chmod a+rx *.php
-EOF
-
-docker build --tag demo:1.0.0 ~/environment/
-docker images
-container_id=$(docker run --detach --rm demo:1.0.0)
-docker ps --filter id=${container_id}
-
-docker exec -it ${container_id} curl localhost:80
-docker stop ${container_id}
-
-kubectl run demo --image demo:1.0.0 --image-pull-policy=Never
-kubectl exec -it demo -- curl localhost:80
-kubectl delete pod demo -->

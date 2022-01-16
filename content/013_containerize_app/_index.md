@@ -25,11 +25,11 @@ In this exercise you will do the following:
 ## Build and test a simple app
 
 Get started by building the simplest of simple [PHP](https://www.php.net/) apps.
-This one just returns the hostname of the server.
+This one just returns the value of the `GREETING` environment variable (if present) and the hostname of the server.
 ```bash
 cat > ~/environment/index.php << EOF
 <?php
-  echo gethostname() . "\n";
+  echo getenv("GREETING") . " " . gethostname() . "\n";
 ?>
 EOF
 ```
@@ -37,8 +37,13 @@ EOF
 Before we tackle containers, keep it simple.
 Just run this app as a webserver from your Cloud9 environment.
 ```bash
-php -S localhost:8080
+GREETING="Hello fron" php -S localhost:8080
 ```
+
+{{% notice note %}}
+The above syntax demonstrates the ability to inject environment variables (e.g. `GREETING`) into child processes at the point of creation.
+One may `export` variables to achieve the same effect.
+{{% /notice %}}
 
 {{% notice note %}}
 Port 8080 is neither reserved or firewalled so this is a popular development alternative to port 80.
@@ -52,12 +57,12 @@ In the second terminal session, use the `curl` command to send an HTTP GET reque
 curl http://localhost:8080
 ```
 
-As each Cloud9 environment is hosted on a regular EC2 instance, the response indicates the private DNS name of the underlying instance. Your output from `curl` will have a DNS name similar to the following, but with your Cloud9 instance's private IP as part of the DNS name.
+As each Cloud9 environment is hosted on a regular EC2 instance, the response indicates the private DNS name of the underlying instance. Your output from `curl` will display the value of the `GREETING` environment variable alongside a DNS name similar to the following, but with your Cloud9 instance's private IP as part of the DNS name.
 {{< output >}}
-ip-172-31-58-96.us-west-2.compute.internal
+Hello from ip-172-31-58-96.us-west-2.compute.internal
 {{< /output >}}
 
-Now we have tested the app works, head back the first terminal session and hit `ctrl+c` to stop the `php` webserver.
+Now we have tested the app works, head back the first terminal session and hit `Ctrl+C` to stop the `php` webserver.
 
 Containers exploit the use of [Linux namespaces](https://en.wikipedia.org/wiki/Linux_namespaces) so once the app is packaged as a containerized process its hostname will appear to become independent of the underlying host.
 It is this behaviour which gives rise to containers being perceived as lightweight virtual machines.
@@ -75,11 +80,12 @@ The Dockerfile for your app is very simple and is created as follows. Run this i
 cat > ~/environment/Dockerfile << EOF
 FROM php:8.0.1-apache
 COPY index.php /var/www/html/
+ENV GREETING="Hello from"
 RUN chmod a+rx index.php
 EOF
 ```
 
-Now you could keep your app (`index.php`) and its dependencies (`Dockerfile`) in lockstep under source control.
+Now, you could keep your app (`index.php`) and its dependencies (`Dockerfile`) in lockstep under source control.
 
 Here is a quick summary of your `Dockerfile`.
 
