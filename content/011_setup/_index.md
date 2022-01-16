@@ -117,4 +117,4 @@ docker system prune --all --force
 ## Success
 
 You have now completed the prerequisite of creating a **Cloud9** environment in which you can explore *containers* and *Kubernetes*.
-Now you are ready to go. Please continue to Containerize Your App.
+Now you are ready to go. Please continue to the next section.
