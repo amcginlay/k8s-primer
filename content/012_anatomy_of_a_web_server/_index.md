@@ -13,7 +13,7 @@ In the [API-first](https://en.wikipedia.org/wiki/Web_API) world of [microservice
 
 We potentially interact with many such web servers every time we pick up a modern smartphone.
 It is tempting to view a web server as a metaphorical [black box](https://en.wikipedia.org/wiki/Black_box), obscured behind decades of ongoing effort to address our modern expectations of scale and security.
-This obscurity has the potential to dissuade candidates from pursuing a deeper knowledge of modern software development and deployment.
+This obscurity has the potential to dissuade candidates from pursuing a deeper knowledge of modern software development and deployment practices.
 
 You will address this by leveraging concepts you already know to help peel back the layers and reveal a hidden simplicity behind the technologies we all use every day.
 
@@ -114,7 +114,7 @@ nc localhost 8000 <<< "request 4"
 ```
 
 {{% notice note %}}
-Observe how `nc`, which is used as the listening process in the `SERVER` session, can be repurposed as the transmitter of requests in the `CLIENT` session.
+Observe how `nc`, which is used as the listening process in the `SERVER` session, can be repurposed as the request transmitting process in the `CLIENT` session.
 The `CLIENT` sent four identical requests each using a different syntax. 
 In the final request, `nc` was able to resolve the IP address for the hostname `localhost`.
 {{% /notice %}}
@@ -149,7 +149,7 @@ Accept: */*
 {{< /output >}}
 
 On the `CLIENT` side, the `curl` command expected the `SERVER` to reciprocate using the HTTP protocol.
-It did not and `curl` errored as a result, but we can fake it.
+It did not and `curl` errored as a result, but we can fake a compatible response.
 
 Hit Ctrl+C in the `SERVER` session to break the loop and try the following.
 ```bash
