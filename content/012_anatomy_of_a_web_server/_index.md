@@ -161,15 +161,15 @@ curl http://localhost:8000
 
 Great, we have our minimum viable web server.
 
-There is no longer a failure in `curl` but there is also no tangible response beyond the successful `200` [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_success).
-HTTP clients expect the `SERVER` to provide a [body](https://en.wikipedia.org/wiki/HTTP_message_body) so try building a multi-line response to send back to the `CLIENT`.
+There is no longer a failure in `curl` but there is also no tangible response beyond the successful `200` [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_success) in the [header](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields).
+HTTP clients expect servers to provide both a header and a [body](https://en.wikipedia.org/wiki/HTTP_message_body) so try building a multi-line response to send back to the `CLIENT`.
 ```bash
 # SERVER (hit Ctrl+C to break)
 while true
 do nc --listen 8000 << EOF
 HTTP/1.1 200 OK
 
-response
+response-body
 EOF
 done
 
@@ -178,11 +178,11 @@ curl http://localhost:8000
 ```
 
 {{% notice warning %}}
-Do not remove the empty line before the word "response".
+Do not remove the empty line between the header and body sections.
 It is a requirement of the HTTP protocol.
 {{% /notice %}}
 
-Now the `curl` command on the `CLIENT` will output the response.
+Now the `curl` command on the `CLIENT` will output the body of the response.
 
 ## Deploy a simple web server
 
