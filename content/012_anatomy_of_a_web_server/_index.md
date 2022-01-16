@@ -138,7 +138,7 @@ The [curl](https://en.wikipedia.org/wiki/CURL) command can be used to form HTTP 
 curl http://localhost:8000
 ```
 
-The `SERVER` side will output the lines written to it by the `curl` command which will look something like this.
+The `SERVER` side will output the plain-text lines written to it by the `curl` command which will look something like this.
 {{< output >}}
 request
 GET / HTTP/1.1
@@ -160,8 +160,9 @@ curl http://localhost:8000
 ```
 
 Great, we have our minimum viable web server.
-There is no longer a failure in `curl` but there is also no tangible response.
-The HTTP protocol requires the `SERVER` to do a little more work so, building on what we had before, try providing a multi-line response to send back to the `CLIENT`.
+
+There is no longer a failure in `curl` but there is also no tangible response beyond the successful `200` [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_success).
+HTTP clients expect the `SERVER` to provide a [body](https://en.wikipedia.org/wiki/HTTP_message_body) so try building a multi-line response to send back to the `CLIENT`.
 ```bash
 # SERVER (hit Ctrl+C to break)
 while true
@@ -181,9 +182,11 @@ Do not remove the empty line before the word "response".
 It is a requirement of the HTTP protocol.
 {{% /notice %}}
 
+Now the `curl` command on the `CLIENT` will output the response.
+
 ## Deploy a simple web server
 
-Then, finally, to show how a web server would truly behave in the wild.
+Finally, to show how a web server would truly behave in the wild, try the following.
 ```bash
 # SERVER (hit Ctrl+C to break)
 while true
