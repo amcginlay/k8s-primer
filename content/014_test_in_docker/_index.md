@@ -49,19 +49,19 @@ And, secondly, via port 80 by `exec`ing onto the container itself.
 docker exec -it ${container_id} curl localhost:80
 ```
 
-In both cases the response to `gethostname()` inside our app will match the ID of the container we created.
+In both cases the response to `gethostname()` inside our app will match the short-form ID of the container we created.
 
 {{< output >}}
-63ab8c3fb819
+Hello from 63ab8c3fb819
 {{< /output >}}
 
-## Overriding environment variable
+## Overriding environment variables
 
 The `GREETING` environment variable was set in the Dockerfile which ensures it will always be available from within your app.
-As you launch container instances in Docker you have the opportunity to override these variable settings.
+As you launch your app in Docker you have the opportunity to provide override values for these variables.
 This technique of separating your code from its config is considered good practice and you will take advantage of it whenever you can.
 
-Run a second instance of your app with an alternative greeting, taking care to target an unused port on the host.
+Run a second instance of your app with an alternative `GREETING`, taking care to target an unused port number on the host.
 ```bash
 container2_id=$(docker run --env "GREETING=Hi from" --detach --rm --publish 8082:80 demo:1.0.0)
 ```
