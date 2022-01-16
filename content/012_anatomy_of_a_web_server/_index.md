@@ -90,8 +90,8 @@ We shall refer to these sessions as the `SERVER` session and the `CLIENT` sessio
 New sessions can be created from the Cloud9 menus using `Window -> New Terminal`.
 {{% /notice %}}
 
-Start by writing to a TCP-enabled process, just as you would to a device file.
-Observe how the `SERVER` will block until a single write operation (i.e. **request**) is directed to port 8000.
+TCP-enabled processes are accessible as device files at `/dev/tcp` and utilising them is no more complex than before.
+Observe how `nc` sits down on port 8000 and will, much like a solitary `cat` command, block until a single write operation (i.e. **request**) is received.
 ```bash
 # SERVER
 nc --listen 8000
