@@ -74,7 +74,7 @@ cat <<< "test"
 Using a here-string in this way causes `cat` to mimics the standard behaviour of the familiar `echo` command.
 {{% /notice %}}
 
-## Connecting the cats
+## Herding cats
 
 Until now, you have been limited to using a single `cat` process to interact with strings, local files and device files.
 The [TCP protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) allows you to use pairs of network-enabled processes to communicate with each other as it they were themselves device files.
