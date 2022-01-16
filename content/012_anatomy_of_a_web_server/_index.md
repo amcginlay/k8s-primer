@@ -119,7 +119,7 @@ The `CLIENT` sent four identical requests each using a different syntax.
 In the final request, `nc` was able to resolve the IP address for the hostname `localhost`.
 {{% /notice %}}
 
-Hit Ctrl+C in the `SERVER` session to break the loop and regain your prompt.
+Hit `Ctrl+C` in the `SERVER` session to break the loop and regain your prompt.
 
 You have just seen how the `CLIENT` can perform write operations against the `SERVER`.
 Now observe how, with a small adjustment, the `SERVER` can be configured to write back a response. 
@@ -151,7 +151,7 @@ Accept: */*
 On the `CLIENT` side, the `curl` command expected the `SERVER` to reciprocate using the HTTP protocol.
 It did not and `curl` errored as a result, but we can fake a compatible response.
 
-Hit Ctrl+C in the `SERVER` session to break the loop and try the following.
+Hit `Ctrl+C` in the `SERVER` session to break the loop and try the following.
 ```bash
 # SERVER (hit Ctrl+C to break)
 while true; do nc --listen 8000 <<< "HTTP/1.1 200 OK"; done
