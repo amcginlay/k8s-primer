@@ -50,24 +50,6 @@ NAME                 STATUS   ROLES                  AGE   VERSION
 kind-control-plane   Ready    control-plane,master   14h   v1.21.1
 {{< /output >}}
 
-Within the control plane, there are Kubernetes components which each serve a purpose like the members of government.
-
-```bash
-kubectl get componentstatuses
-```
-
-{{< output >}}
-Warning: v1 ComponentStatus is deprecated in v1.19+
-NAME                 STATUS      MESSAGE                                                                                       ERROR
-controller-manager   Unhealthy   Get "http://127.0.0.1:10252/healthz": dial tcp 127.0.0.1:10252: connect: connection refused   
-scheduler            Unhealthy   Get "http://127.0.0.1:10251/healthz": dial tcp 127.0.0.1:10251: connect: connection refused   
-etcd-0               Healthy     {"health":"true"}                                                                             
-{{< /output >}}
-
-{{% notice note %}}
-The term ComponentStatuses can be abbreviated "cs" as in `kubectl get cs`. In general, there are singular ("kind"), plural, and short forms of the various types of Kubernetes resources.
-{{% /notice %}}
-
 Check what is running in your cluster.
 
 ```bash
