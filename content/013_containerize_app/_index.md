@@ -113,22 +113,26 @@ docker build --tag demo:1.0.0 ~/environment/
 
 The output produced will look something like this.
 {{< output >}}
-Sending build context to Docker daemon  19.46kB
-Step 1/3 : FROM php:8.0.1-apache
+Sending build context to Docker daemon  15.36kB
+Step 1/4 : FROM php:8.0.1-apache
 8.0.1-apache: Pulling from library/php
 a076a628af6f: Pull complete 
-...
+... 
 0a115ef70c7a: Pull complete 
 Digest: sha256:7fd9e31a9580356adefd6ae2ce20b2b98720cc7bc20bfbfaeb8113281e533408
 Status: Downloaded newer image for php:8.0.1-apache
  ---> 6ad14718b8c3
-Step 2/3 : COPY index.php /var/www/html/
- ---> 41c8626e581d
-Step 3/3 : RUN chmod a+rx index.php
- ---> Running in e356d3b5ea35
-Removing intermediate container e356d3b5ea35
- ---> 3e88e08548ff
-Successfully built 3e88e08548ff
+Step 2/4 : COPY index.php /var/www/html/
+ ---> 119e834cbbcd
+Step 3/4 : ENV GREETING="Hello from"
+ ---> Running in 8d714367f5b6
+Removing intermediate container 8d714367f5b6
+ ---> a12324074429
+Step 4/4 : RUN chmod a+rx index.php
+ ---> Running in 9cbf62fafc84
+Removing intermediate container 9cbf62fafc84
+ ---> 0374358a8b8e
+Successfully built 0374358a8b8e
 Successfully tagged demo:1.0.0
 {{< /output >}}
 
