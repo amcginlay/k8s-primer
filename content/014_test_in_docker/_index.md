@@ -86,6 +86,12 @@ There appears to be no port collision there yet they are both running on the Clo
 How is that possible?
 {{% /notice %}}
 
+{{< mermaid >}}
+graph TB
+container-->Cloud9
+container2-->Cloud9 
+{{< /mermaid >}}
+
 ## Containers are ephemeral
 
 Remind yourself of what is currently running.
