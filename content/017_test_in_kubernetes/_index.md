@@ -58,7 +58,7 @@ Most Kubernetes objects expect to be placed into a namespace.
 If you fail to explicitly place any such object it will be sent to the **default** namespace.
 You will almost always want to place objects into an explicit namespace, so you need to know how to create one.
 
-Create your namespace manifest then instruct Kubernetes to ingest it using `kubectl apply` which will cause Kubernetes to translate your manifests into objects.
+Create your namespaces manifest then instruct Kubernetes to ingest it using `kubectl apply` which will cause Kubernetes to translate your manifests into objects.
 This manifest defines two namespaces, `dev` and `test`.
 ```bash
 cat > ~/environment/001-namespaces.yaml << EOF
@@ -79,6 +79,7 @@ kubectl apply -f ~/environment/001-namespaces.yaml
 `kubectl` will respond as follows.
 {{< output >}}
 namespace/dev created
+namespace/test created
 {{< /output >}}
 
 
@@ -118,7 +119,7 @@ Pods are the smallest deployable units of compute resource you can create and ma
 Pods can be comprised of multiple containers but since we are starting with just one, you can think about these two terms as being interchangeable.
 
 To run a pod you need a YAML manifest which represents the pod.
-You can neatly create, persist and apply your minimum viable product pod like this.
+With judicious use of some [piped commands](https://en.wikipedia.org/wiki/Pipeline_(Unix)) you can build and persist your pod manifest before asking Kubernetes to ingest it, as follows.
 ```bash
 cat << EOF | tee ~/environment/002-demo-pod.yaml | kubectl -n dev apply -f -
 apiVersion: v1
