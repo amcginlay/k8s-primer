@@ -99,10 +99,10 @@ As with any image, the base layer may also inject [`ENV`](https://docs.docker.co
 Base layers are themselves just published container images which are sourced from registries such as [Dockerhub](https://hub.docker.com/).
 In this example `php` is the name of an image and `8.0.1-apache` is the immutable version of that image.
 - **`COPY index.php /var/www/html/`** - The default virtual directory for our webserver is at `/var/www/html/`.
-The `COPY` instruction takes your app (`index.php`) from the local file system and lays it down as the homepage for your webserver inside the container.
+The `COPY` instruction takes your app (`index.php`) from the local file system (on your Cloud9 instance in this case) and lays it down as the homepage for your webserver inside the container image.
 - **`RUN chmod a+rx index.php`** - A Linux command that will be familiar to you, `chmod` sets the access permissions of our app to ensure it is executable from any context within the contianer.
 
-Each instruction in the Dockerfile adds new layers to your container image which are used to extend or override the detail of preceeding layers.
+Each instruction in the Dockerfile adds new layers to your container image which are used to extend or override the detail of preceding layers.
 
 ## Build the container image
 
