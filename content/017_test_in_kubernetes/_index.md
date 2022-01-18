@@ -61,14 +61,14 @@ You will almost always want to place objects into an explicit namespace, so you 
 Create your namespaces manifest then instruct Kubernetes to ingest it using `kubectl apply` which will cause Kubernetes to translate your manifests into objects.
 This manifest defines two namespaces, `dev` and `test`.
 ```bash
-cat > ~/environment/001-namespace-dev.yaml << EOF
+cat > ~/environment/001-dev-namespace.yaml << EOF
 apiVersion: v1
 kind: Namespace
 metadata:
   name: dev
 EOF
 
-kubectl apply -f ~/environment/001-namespace-dev.yaml
+kubectl apply -f ~/environment/001-dev-namespace.yaml
 ```
 
 `kubectl` will respond as follows.
