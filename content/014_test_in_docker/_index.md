@@ -14,7 +14,7 @@ container_id=$(docker run --detach --rm --publish 8081:80 demo:1.0.0)
 
 Here is a quick summary of the options we applied to `docker run`.
 - **`--detach`** - This runs your webserver app in the background so you do not lose your command prompt.
-- **`--rm`** - The app will run until stopped, then immediately remove any trace of itself.
+- **`--rm`** - Eliminates the need to call `docker rm` after calling `docker stop`.
 - **`--publish`** - Containerized apps run in their own [Network namespace](https://en.wikipedia.org/wiki/Linux_namespaces#Network_(net)).
 They have their own private IP address and are **internally** free to occupy whatever ports they like.
 So whilst port collisions are unlikely inside any individual container it remains a concern on the host which might need to surface many containers from different teams all vying to occupy the same ports.
@@ -61,7 +61,7 @@ The `GREETING` environment variable was set in the Dockerfile which ensures it w
 As you launch your app in Docker you have the opportunity to provide override values for these variables.
 This technique of separating your code from its config is considered good practice and you will take advantage of it whenever you can.
 
-Run a second instance of your app with an alternative `GREETING`, taking care to target an unused port number on the host.
+Run a second instance of your app with an alternative `GREETING`, taking care to target an unused port on the host.
 ```bash
 container2_id=$(docker run --env "GREETING=Hi from" --detach --rm --publish 8082:80 demo:1.0.0)
 ```
@@ -71,30 +71,61 @@ Test it to see the `GREETING` override in effect.
 curl http://localhost:8082
 ```
 
-## Stop your containerized app instances
+## Containers are ephemeral
 
-When you are done running your app instances, you can stop then using `docker stop` as follows:
+Remind yourself of what is currently running.
 ```bash
-docker stop ${container_id} ${container2_id}
+docker ps --filter id=${container_id} --filter id=${container2_id}
+```
+
+The output shown below is similar to what you will see.
+{{< output >}}
+CONTAINER ID   IMAGE        COMMAND                  CREATED         STATUS         PORTS                                   NAMES
+63ab8c3fb819   demo:1.0.0   "docker-php-entrypoi…"   5 seconds ago   Up 4 seconds   0.0.0.0:8081->80/tcp, :::8081->80/tcp   great_pare
+2b2b0f8ace50   demo:1.0.0   "docker-php-entrypoi…"   2 minutes ago   Up 2 minutes   0.0.0.0:8082->80/tcp, :::8082->80/tcp   nifty_fermat
+{{< /output >}}
+
+You will often hear it said that containers are like lightweight virtual machines.
+You will also hear it said that virtual machines are ephemeral, meaning that you must expect that they will eventually fail.
+So what happens when a container fails in Docker?
+Run the following to simulate a failure in the second container then check the running processes.
+```bash
+docker exec -it ${container2_id} kill 1
+```
+```bash
+docker ps --filter id=${container_id} --filter id=${container2_id}
+```
+
+{{% notice note %}}
+Running containers have their own process namespaces so PID 1 always represents the root of its own process tree.
+{{% /notice %}}
+
+Docker provides container [restart policies](https://docs.docker.com/config/containers/start-containers-automatically/#use-a-restart-policy) but this is **not enabled by default**.
+Without a restart policy in place your Docker container is no better protected than a regular process and will not be replaced in the event of a failure.
+
+We will refer back to this theme once we start using Kubernetes.
+
+## Gracefully stop a containerized app
+
+You can request that your remaining container be stopped using `docker stop` as follows.
+```bash
+docker stop ${container_id}
 ```
 
 When your app instances are stopped, the `docker` command will respond with their container ids, such as:
 
 {{< output >}}
 4c91176464810c9b796516e1ed48e5361fe98f3ec7107081d5cab080b034a065
-576f8a79d1c65bdaa92d4259e6db8fbb68a1153b03a5ef3abcb78412c1e9e874
 {{< /output >}}
-
-{{% notice note %}}
-Under normal circumstances, you would typically remove your container using `docker rm ${container_id}` after you stop it. However, because you included the `--rm` option when you *ran* it with `docker run`, the Docker daemon automatically removes the container when it is stopped.
-{{% /notice %}}
 
 ## Success
 
-- You have successfully `run` a containerized app using `docker run`! 
+- You have successfully `run` a containerized app using `docker run`.
 - You checked the container's process status using `docker ps`.
 - Then you tested your app using `curl` which relied on port mapping to the running container.
-- Finally, you stopped your container with `docker stop` and in this case it was also removed from the container host (Cloud9).
+- You used `docker exec` which, a bit like `ssh` on a VM, allows you to invoke commands from directly within a runnning container.
+- You simulated container failure by terminating PID 1 from inside the container.
+- Finally, you stopped a container with `docker stop` and in this case it was also removed from the container host (Cloud9).
 
 {{% notice note %}}
 Note that the container *image* still exists in your Cloud9 environment, but the compute power for the container runtime was deallocated when the container was removed.
