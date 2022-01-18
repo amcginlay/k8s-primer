@@ -37,7 +37,7 @@ EOF
 Before we tackle containers, keep it simple.
 Just run this app as a webserver from your Cloud9 environment.
 ```bash
-GREETING="Hello fron" php -S localhost:8080
+GREETING="Hello from" php -S localhost:8080
 ```
 
 {{% notice note %}}
