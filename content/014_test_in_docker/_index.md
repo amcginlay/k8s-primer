@@ -55,6 +55,12 @@ In both cases the response to `gethostname()` inside our app will match the shor
 Hello from 63ab8c3fb819
 {{< /output >}}
 
+{{% notice note %}}
+You reference `localhost` from the Cloud9 instance.
+You also reference `localhost` from within the `exec`'d container but the context is different.
+Why is this?
+{{% /notice %}}
+
 ## Overriding environment variables
 
 The `GREETING` environment variable was set in the Dockerfile which ensures it will always be available from within your app.
@@ -69,7 +75,16 @@ container2_id=$(docker run --env "GREETING=Hi from" --detach --rm --publish 8082
 Test it to see the `GREETING` override in effect.
 ```bash
 curl http://localhost:8082
+# ... or ...
+docker exec -it ${container2_id} curl localhost:80
 ```
+
+{{% notice note %}}
+You previously referenced port `80` from within **${container_id}**.
+You just referenced port `80` from within **${container2_id}**.
+There appears to be no port collision there yet they are both running on the Cloud9 instance.
+How is that possible?
+{{% /notice %}}
 
 ## Containers are ephemeral
 
