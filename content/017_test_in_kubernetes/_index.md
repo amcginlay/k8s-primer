@@ -61,19 +61,14 @@ You will almost always want to place objects into an explicit namespace, so you 
 Create your namespaces manifest then instruct Kubernetes to ingest it using `kubectl apply` which will cause Kubernetes to translate your manifests into objects.
 This manifest defines two namespaces, `dev` and `test`.
 ```bash
-cat > ~/environment/001-namespaces.yaml << EOF
+cat > ~/environment/001-namespace-dev.yaml << EOF
 apiVersion: v1
 kind: Namespace
 metadata:
   name: dev
----                          # "---" marker allows YAML to support mulitple documents per file
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: test
 EOF
 
-kubectl apply -f ~/environment/001-namespaces.yaml
+kubectl apply -f ~/environment/001-namespace-dev.yaml
 ```
 
 `kubectl` will respond as follows.
@@ -92,7 +87,7 @@ Inspect the current list of namespaces as follows.
 kubectl get namespaces
 ```
 
-The list returned will include the newly created **dev** namespace.
+The list returned will include, among others, the newly created namespace.
 {{< output >}}
 NAME                 STATUS   AGE
 default              Active   17h
@@ -103,11 +98,11 @@ kube-system          Active   17h
 local-path-storage   Active   17h
 {{< /output >}}
 
-For the time being you only care about the new **dev** namespace so forget you have seen any others.
-You now have a namespace to host your app.
+For the time being you only care about your new **dev** namespace so forget the others you see.
+You now have a custom namespace which you will provide a home for your app.
 
 {{% notice note %}}
-If you ever need to dispose of this namespace object you could use either `kubectl delete -f ~/environment/001-dev-namespace.yaml` or simply `kubectl delete namespace dev`
+If you ever need to dispose of this namespace object you could use either `kubectl delete -f ~/environment/001-namespace-dev.yaml` or simply `kubectl delete namespace dev`
 {{% /notice %}}
 
 ## Container orchestration
