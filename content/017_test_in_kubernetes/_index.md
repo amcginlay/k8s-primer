@@ -59,15 +59,21 @@ If you fail to explicitly place any such object it will be sent to the **default
 You will almost always want to place objects into an explicit namespace, so you need to know how to create one.
 
 Create your namespace manifest then instruct Kubernetes to ingest it using `kubectl apply` which will cause Kubernetes to translate your manifests into objects.
+This manifest defines two namespaces, `dev` and `test`.
 ```bash
-cat > ~/environment/001-dev-namespace.yaml << EOF
+cat > ~/environment/001-namespaces.yaml << EOF
 apiVersion: v1
 kind: Namespace
 metadata:
   name: dev
+---                          # "---" marker allows YAML to support mulitple documents per file
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test
 EOF
 
-kubectl apply -f ~/environment/001-dev-namespace.yaml
+kubectl apply -f ~/environment/001-namespaces.yaml
 ```
 
 `kubectl` will respond as follows.
@@ -121,8 +127,8 @@ metadata:
   name: demo                 # a name for your POD
 spec:
   containers:                # a pod CAN consist of multiple containers, but this one has only one
-  - image: demo:1.0.0        # the tagged image we previously injected using "kind load"
-    name: demo               # a name for your CONTAINER
+  - name: demo               # a name for your CONTAINER
+    image: demo:1.0.0        # the tagged image we previously injected using "kind load"
 EOF
 ```
 
@@ -139,7 +145,7 @@ It is advantageous to build some muscle-memory around the consistent and explici
 
 Compared to Docker, Kubernetes is more conservative when it comes to exposure of your apps at the host (VM) level.
 How Kubernetes handles pod networking is deferred until a later section on [services](https://kubernetes.io/docs/concepts/services-networking/service/).
-In the meantime, we can `exec` into our running pod to test it from the inside as follows.
+In the meantime, we can `exec` into your running pod to test it from inside as follows.
 ```bash
 kubectl -n dev exec demo -it -- curl http://localhost:80
 ```
@@ -185,6 +191,50 @@ When Kubernetes ingests your manifests it becomes duty-bound to honour your requ
 This strategy is known as the [operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/) and is prevalent throughout Kubernetes in the form of [controllers](https://kubernetes.io/docs/concepts/architecture/controller/).
 Pod restarts are evidence of this strategy at work and an indicator that Kubernetes is more than a simple container runtime, it is a **container orchestrator**.
 
+## Overriding environment variables
+When you deployed your containerized app into Docker you observed how it was possible to provide overrides for environment variables which meant you were able to separate your code from its config.
+Your Kubernetes manifests are a form of [infrastructure as code](https://en.wikipedia.org/wiki/Infrastructure_as_code).
+As such you would normally be storing these YAML files under source control.
+Today, we will create the reconfigured manifest in a **new file** so you can observe the difference.
+
+First, dispose of your existing pod.
+```bash
+kubectl -n dev delete pod demo
+```
+
+Then deploy its replacement with the override in place.
+```bash
+cat << EOF | tee ~/environment/003-demo-pod.yaml | kubectl -n dev apply -f -
+apiVersion: v1
+kind: Pod                    # the object schema Kubernetes uses to validate this manifest
+metadata:
+  name: demo                 # a name for your POD
+spec:
+  containers:                # a pod CAN consist of multiple containers, but this one has only one
+  - name: demo               # a name for your CONTAINER
+    image: demo:1.0.0        # the tagged image we previously injected using "kind load"
+    env:
+    - name: GREETING         # the overridden environment variable
+      value: Hi from
+EOF
+```
+
+`exec` into your new pod to test it from inside as follows.
+```bash
+kubectl -n dev exec demo -it -- curl http://localhost:80
+```
+
+If successful you will see the following.
+{{< output >}}
+Hi from demo
+{{< /output >}}
+
+{{% notice note %}}
+Only a select few fields are supported by Kubernetes update/patch operations and the `env` field is not (yet?) one of them.
+This is why we deleted the original pod rather than applying a patch to the original - it would have failed otherwise.
+THis is also why the pursuit of **zero-downtime** strategies is such a hot topic!
+{{% /notice %}}
+
 ## Success
 
 In this exercise you did the following.
@@ -194,3 +244,4 @@ In this exercise you did the following.
 - Built your first pod manifest and used it to deploy a single instance of your app into Kubernetes.
 - Used `kubectl exec` to shell into your running app and tested it from within that session.
 - Witnessed Kubernetes restarting a pod.
+- Saw how manifests permit overrides for environment variables.
