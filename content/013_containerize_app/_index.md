@@ -111,6 +111,11 @@ With the app ready and the Dockerfile composed you can now build a container ima
 docker build --tag demo:1.0.0 ~/environment/
 ```
 
+{{% notice note %}}
+If you do not tag your images they will get auto-tagged as `latest`, over and over again.
+Explicitly tagging your images (i.e. `demo:1.0.0`) is considered good practice and ultimately aids the immutability of your deployments.
+{{% /notice %}}
+
 The output produced will look something like this.
 {{< output >}}
 Sending build context to Docker daemon  15.36kB
