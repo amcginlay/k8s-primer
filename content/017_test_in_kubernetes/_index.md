@@ -229,7 +229,7 @@ Hi from demo
 {{% notice note %}}
 Only a select few fields are supported by Kubernetes update/patch operations and the `env` field is not (yet?) one of them.
 This is why we deleted the original pod rather than applying a patch to the original - it would have failed otherwise.
-THis is also why the pursuit of **zero-downtime** strategies is such a hot topic!
+This is also why the pursuit of **zero-downtime** strategies is such a hot topic!
 {{% /notice %}}
 
 ## Success
