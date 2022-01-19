@@ -14,7 +14,7 @@ Familiarizing oneself with the structure of these manifests can be a significant
 Generators also supports a **dry run** facility, enabling them to serve as crude but effective manifest builders.
 This behaviour can be observed when executing the following command.
 ```bash
-kubectl run dummy-deployment --image dummy --dry-run=client -o yaml
+kubectl run dummy-pod --image dummy --dry-run=client -o yaml
 ```
 
 {{% notice note %}}
