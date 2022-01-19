@@ -1,7 +1,7 @@
 ---
 title: "Take Control of Kubernetes"
 chapter: false
-weight: 016
+weight: 017
 draft: false
 ---
 
