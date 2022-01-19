@@ -189,6 +189,7 @@ Pod restarts are evidence of this strategy at work and an indicator that Kuberne
 
 ## Overriding environment variables
 When you deployed your containerized app into Docker you observed how it was possible to provide overrides for environment variables which meant you were able to separate your code from its config.
+You can also provide [environment variable overrides in Kubernetes](https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/).
 Your Kubernetes manifests are a form of [infrastructure as code](https://en.wikipedia.org/wiki/Infrastructure_as_code).
 As such you would normally be storing these YAML files under source control.
 Today, we will create the reconfigured manifest in a **new file** so you can observe the difference.
