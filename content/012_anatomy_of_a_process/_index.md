@@ -6,16 +6,19 @@ draft: false
 ---
 
 ## Purpose
-Imagine you are driving up a hill in a high gear and the car starts to slow down.
+Imagine you are cycling up a hill in a high gear and the bicycle starts to slow down.
 You have two choices.
-You can either carry on in the hope your momentum will take you safely over the hill or you can drop down a gear and let the engine work harder.
-The latter option will work (almost) all of the time.
-The point is, it is not always desirable or efficient to slow down, but it is sometimes the necessary choice to get to where you are heading quickly.
+You can either carry on in the hope your momentum and strength will take you safely over the hill or you can drop down a gear and pedal faster.
+The latter option will (almost) always enable you to progres to the next hill.
+The point is, it is not always desirable or efficient to slow down but it is sometimes necessary choice to progress.
 
-So, you know a thing about computing and you know what a process is, right?
+So, as experienced technicians you know what a process is, correct?
+Of course you do.
 
-Well, maybe you know enough to get by, but do you know what you need to progress with speed?
-In order to learn Kubernetes with confidence you will likely benefit from revisiting the **Linux process** to gain a renewed appreciation how they behave and what unusual "tricks" they are capable of.
+Well, you likely know enough to get by, but do you know the detail required to progress to the next hill without stalling?
+In order to learn Kubernetes with confidence you will likely benefit from revisiting the **Linux process** to gain a renewed appreciation how they interract with each other and the "quirky tricks" they are capable of.
 
 ## Success
 TODO
+
+https://linuxcontainers.org/lxc/introduction/
