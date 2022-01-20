@@ -15,3 +15,4 @@ weight: 1
 * [Install kubectl](017_install_kubectl/)
 * [Test Your App In Kubernetes](018_test_in_kubernetes/)
 * [Move Configuration out of Pod](019_config_as_code/)
+* [Deploy a Fleet of Pods](020_deploy_pod_fleet/)
