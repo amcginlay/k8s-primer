@@ -1,7 +1,7 @@
 ---
 title: "Deploy a Fleet of Pods"
 chapter: false
-weight: 020
+weight: 100
 draft: false
 ---
 
@@ -24,6 +24,8 @@ deployment(Workload)-->|manages|podA[Pod A]
 deployment-->|manages|podB[Pod B]
 deployment-->|manages|podM[...]
 deployment-->|manages|podZ[Pod Z]
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+class podA,podB,podM,podZ yellow;
 {{< /mermaid >}}
 
 ## Workloads Manage Pods
@@ -94,6 +96,15 @@ deployment-->|manages|replicaSetB(New ReplicaSet)
 replicaSetB-->|manages|podN[Pod N]
 replicaSetB-->|manages|podO[...]
 replicaSetB-->|manages|podZ[Pod Z]
+
+  classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+  classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+  classDef blue fill:#69f,stroke:#333,stroke-width:4px;
+  classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+  class deployment orange;
+  class replicaSetA blue;
+  class replicaSetB green;
+  class podA,podB,podM,podN,podO,podZ yellow;
 {{< /mermaid >}}
 
 {{% notice tip %}}
@@ -261,91 +272,55 @@ In the `spec` section, note the following:
 
 Now, look back at the definition of the `DaemonSet`.
 
-TODO... wrangle this...
+```bash
+kubectl get daemonset kube-proxy -n kube-system   
+```
 
-DevAccountRole:~/environment $ kubectl get daemonset kube-proxy -n kube-system   
+{{< output >}}
 NAME         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
 kube-proxy   1         1         1       1            1           kubernetes.io/os=linux   9d
-DevAccountRole:~/environment $ kubectl get daemonset kube-proxy -n kube-system -o yaml
+{{< /output >}}
+
+Unlike the `Pod` **READY**, **STATUS**, and **RESTARTS** columns, the default `kubectl get` output for workloads such as `DaemonSet` and `Deployment` shows the following counts:
+- **DESIRED** - the number of pod replicas you *want* in this workload
+- **CURRENT** - how many replicas are *running*
+- **READY** - how many replicas are *ready*, and available to users/clients; note that for a `Deployment`, `kubectl get` will show *ready*/*desired* values as a fraction in the **READY** column, and not show separate **DESIRED** and **CURRENT**.
+- **UP-TO-DATE** - the number of pods which have been *updated* to the latest desired state. When you update the configuration of a workload, there will be some time period of transition from the prior state to the new desired state, thus this value can vary from **CURRENT** during updates.
+- **AVAILABLE** - how many pods are not only updated, but available. Like current relative to up-to-date, the **READY** count may vary from the **AVAILABLE** count during updates. 
+
+{{% notice tip %}}
+The UP-TO-DATE and AVAILABLE values are shown in DaemonSet and Deployment workloads by default, but not in ReplicaSet state. Also, as noted above, a Deployment will show a fraction like 1/1 in the READY column for ready/desired replica counts instead of separate READY, CURRENT, and DESIRED columns.
+{{% /notice %}}
+
+What does the definition of a `DaemonSet` look like? Check it out:
+
+```bash
+kubectl get daemonset kube-proxy -n kube-system -o yaml
+```
+
+{{% notice note %}}
+As with the pod details earlier, many details have been elided from the following view of this daemonset. 
+{{% /notice %}}
+
+{{< output >}}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  annotations:
-    deprecated.daemonset.template.generation: "1"
-  creationTimestamp: "2022-01-11T01:02:18Z"
   generation: 1
-  labels:
-    k8s-app: kube-proxy
   name: kube-proxy
   namespace: kube-system
   resourceVersion: "503"
-  uid: 61a669f1-9bf5-468f-af5e-bddbb70e0dd8
 spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
       k8s-app: kube-proxy
   template:
-    metadata:
-      creationTimestamp: null
-      labels:
-        k8s-app: kube-proxy
+    metadata: ...
     spec:
       containers:
-      - command:
-        - /usr/local/bin/kube-proxy
-        - --config=/var/lib/kube-proxy/config.conf
-        - --hostname-override=$(NODE_NAME)
-        env:
-        - name: NODE_NAME
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: spec.nodeName
-        image: k8s.gcr.io/kube-proxy:v1.21.1
-        imagePullPolicy: IfNotPresent
-        name: kube-proxy
-        resources: {}
-        securityContext:
-          privileged: true
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
-        volumeMounts:
-        - mountPath: /var/lib/kube-proxy
-          name: kube-proxy
-        - mountPath: /run/xtables.lock
-          name: xtables-lock
-        - mountPath: /lib/modules
-          name: lib-modules
-          readOnly: true
-      dnsPolicy: ClusterFirst
-      hostNetwork: true
-      nodeSelector:
-        kubernetes.io/os: linux
-      priorityClassName: system-node-critical
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      serviceAccount: kube-proxy
-      serviceAccountName: kube-proxy
-      terminationGracePeriodSeconds: 30
-      tolerations:
-      - key: CriticalAddonsOnly
-        operator: Exists
-      - operator: Exists
-      volumes:
-      - configMap:
-          defaultMode: 420
-          name: kube-proxy
-        name: kube-proxy
-      - hostPath:
-          path: /run/xtables.lock
-          type: FileOrCreate
-        name: xtables-lock
-      - hostPath:
-          path: /lib/modules
-          type: ""
-        name: lib-modules
+        ... command, env, image, etc. ...
+      ... other pod spec details ...
   updateStrategy:
     rollingUpdate:
       maxSurge: 0
@@ -359,70 +334,134 @@ status:
   numberReady: 1
   observedGeneration: 1
   updatedNumberScheduled: 1
+{{< /output >}}
 
---
+As you've already seen the kube-proxy-xyzzy pod (or whatever random name suffix) that this `DaemonSet` created, the `spec.template.metadata` and `spec.template.spec` details are not important right now. Focus on these four aspects:
+- The top-level `metadata` has `generation` and `resourceVersion` properties managed by Kubernetes for this provisioned workload. We'll come back to this when you are creating your own `Deployment` later.
+- `spec.revisionHistoryLimit` implies that the workload (e.g. daemonset or deployment) can manage rollout *history*.
+- `spec.updateStrategy` specifies how the daemonset or deployment will manage updates. Think of canary, blue-green, and other update strategies.
+- `status` is maintained for the workload, a subset of which we saw in the *summary* `kubectl get` output.
+
+The primary take-aways about `DaemonSet` for now are:
+1. Some of the background pods running your Kubernetes cluster are managed by `DaemonSet`.
+2. `kube-proxy` is an example of a `DaemonSet`.
+3. You can create your own daemonsets. Later.
+4. Daemonsets and deployments share many characteristics. This was an episode in foreshadowing.
+
+Let's move on to the *real* star of this show: deployments.
 
 ## What Deployments Keep Things Humming?
 
-TODO
+Before you create your own deployments, it may help to know at least one example of a deployment already running in your Kubernetes cluster. You didn't start it. It comes with the neighborhood (cluster).
 
-DevAccountRole:~/environment $ kubectl get deployments
+Check if you have any deployments running.
+
+```bash
+kubectl get deployments
+```
+
+{{< output >}}
 No resources found in default namespace.
-DevAccountRole:~/environment $ kubectl get deployments -n kube-system
+{{< /output >}}
+
+Is this a surprise? Did you want to have builtin deployments running in your **default** namespace? Which namespace would you expect them in?
+
+```bash
+kubectl get deployments -n kube-system
+```
+
+{{< output >}}
 NAME      READY   UP-TO-DATE   AVAILABLE   AGE
 coredns   2/2     2            2           9d
-DevAccountRole:~/environment $ kubectl describe deployment/coredns -n kube-system 
+{{< /output >}}
+
+Rather than using `kubectl get` with the `-o yaml` option, use `describe` instead:
+
+```bash
+kubectl describe deployment/coredns -n kube-system 
+```
+
+{{% notice note %}}
+Many details have been elided from the following output. Please read through the output of *your* command.
+{{% /notice %}}
+
+{{< output >}}
 Name:                   coredns
 Namespace:              kube-system
-CreationTimestamp:      Tue, 11 Jan 2022 01:02:18 +0000
-Labels:                 k8s-app=kube-dns
-Annotations:            deployment.kubernetes.io/revision: 1
 Selector:               k8s-app=kube-dns
 Replicas:               2 desired | 2 updated | 2 total | 2 available | 0 unavailable
 StrategyType:           RollingUpdate
-MinReadySeconds:        0
 RollingUpdateStrategy:  1 max unavailable, 25% max surge
 Pod Template:
   Labels:           k8s-app=kube-dns
-  Service Account:  coredns
   Containers:
    coredns:
-    Image:       k8s.gcr.io/coredns/coredns:v1.8.0
-    Ports:       53/UDP, 53/TCP, 9153/TCP
-    Host Ports:  0/UDP, 0/TCP, 0/TCP
-    Args:
-      -conf
-      /etc/coredns/Corefile
-    Limits:
-      memory:  170Mi
-    Requests:
-      cpu:        100m
-      memory:     70Mi
-    Liveness:     http-get http://:8080/health delay=60s timeout=5s period=10s #success=1 #failure=5
-    Readiness:    http-get http://:8181/ready delay=0s timeout=1s period=10s #success=1 #failure=3
-    Environment:  <none>
-    Mounts:
-      /etc/coredns from config-volume (ro)
+    ... image, ports, args, mounts ...
   Volumes:
-   config-volume:
-    Type:               ConfigMap (a volume populated by a ConfigMap)
-    Name:               coredns
-    Optional:           false
-  Priority Class Name:  system-cluster-critical
-Conditions:
-  Type           Status  Reason
-  ----           ------  ------
-  Available      True    MinimumReplicasAvailable
-  Progressing    True    NewReplicaSetAvailable
+   ... configmap to mount ...
 OldReplicaSets:  <none>
 NewReplicaSet:   coredns-558bd4d5db (2/2 replicas created)
-Events:          <none>
-DevAccountRole:~/environment $ kubectl get pods coredns -n kube-system
-Error from server (NotFound): pods "coredns" not found
-DevAccountRole:~/environment $ kubectl get pods -n kube-system | grep coredns
+{{< /output >}}
+
+Some of the most important aspects of a `Deployment` (like this `coredns` one) are:
+- The `Deployment` manages a set of **replica** pods for you.
+- You can specify the number of pod `replicas`. 
+- You can choose an update **strategy** to either replace old pods or gracefully roll out new version pods and decommision old version pods.
+- The `Deployment` manages **Old** and **New** replica sets (`kind: ReplicaSet`) according to your update strategy when you make changes to the deployment.
+- Some changes do not require a new `ReplicaSet` but can be made in-place. Other changes require the deployment to upgrade to a new `ReplicaSet`.
+
+Take a look at the `ReplicaSet` the `coredns` deployment is managing:
+
+```bash
+kubectl get replicasets  -n kube-system
+```
+
+{{< output >}}
+NAME                 DESIRED   CURRENT   READY   AGE
+coredns-558bd4d5db   2         2         2       10d
+{{< /output >}}
+
+Now look at the two `Pod`s that `ReplicaSet` manages:
+
+```bash
+kubectl get pods -n kube-system | grep -v kube | grep -v kind
+```
+
+{{< output >}}
+NAME                                         READY   STATUS    RESTARTS   AGE
 coredns-558bd4d5db-qxdcd                     1/1     Running   1          9d
 coredns-558bd4d5db-vzdrc                     1/1     Running   1          9d
+{{< /output >}}
 
+Note that `kubectl get pods -n kube-system | grep coredns` would show the same `coredns` pods, but without the header line. Certainly, `kubectl get pods -n kube-system` will suffice if you don't mind ignoring other pods.
+
+{{< mermaid >}}
+graph TB
+deployment(Deployment: coredns)
+replicaSetA(ReplicaSet: coredns-558bd4d5db)
+podA[Pod: coredns-558bd4d5db-qxdcd]
+podB[Pod: coredns-558bd4d5db-vzdrc]
+
+deployment-->|manages|replicaSetA
+replicaSetA-->|manages|podA
+replicaSetA-->|manages|podB
+
+  classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+  classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+  classDef blue fill:#69f,stroke:#333,stroke-width:4px;
+  classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+  class deployment green;
+  class replicaSetA orange;
+  class podA,podB blue;
+  %% class containerA,containerB yellow;
+{{< /mermaid >}}
+
+The primary take-aways about `Deployment` for now are:
+1. Some of the background pods running your Kubernetes cluster are managed by `Deployment`.
+2. `coredns` is an example of a `Deployment`.
+3. You can create your own deployments. Next!
+
+Now that you have looked at a pre-existing deployment, it is time to define your own.
 
 ## Deploy Your Own Deployment
 
@@ -433,6 +472,6 @@ TODO
 In this training adventure, you have:
 - Learned the purpose of Kubernetes workloads.
 - Learned the different types of workloads.
-- Inspected a `DaemonSet` in your Kubernetes cluster.
-- Looked at an existing `Deployment` in your cluster.
+- Inspected a `DaemonSet` in your Kubernetes cluster (`kube-proxy`).
+- Looked at an existing `Deployment` in your cluster (`coredns`).
 - Created your own `Deployment`.
