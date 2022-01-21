@@ -19,5 +19,17 @@ other = "Go to homepage"
 [Edit-this-page]
 other = "Edit this page"
 
+[Shortcuts-Title]
+other = "More"
+
 [Expand-title]
 other = "Expand me..."
+
+[Byte-symbol]
+other = "B"
+
+[Kilobyte-symbol]
+other = "KB"
+
+[Megabyte-symbol]
+other = "MB"
