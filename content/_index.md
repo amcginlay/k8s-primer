@@ -7,8 +7,8 @@ weight: 1
 # Kubernetes Primer
 
 * [Setup](011_setup/)
-* [The Anatomy of a process](012_anatomy_of_a_process/)
-* [The Anatomy of a Web Server](013_anatomy_of_a_web_server/)
+* [The Anatomy of a Web Server](012_anatomy_of_a_web_server/)
+* [The Anatomy of a process](013_anatomy_of_a_process/)
 * [Containerize Your App](014_containerize_app/)
 * [Test Your App In Docker](015_test_in_docker/)
 * [Install Kubernetes](016_install_kubernetes/)
