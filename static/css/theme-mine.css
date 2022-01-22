@@ -189,3 +189,19 @@ div.notices.info p {
   line-height: 150% !important;
 }
 
+/* Auto numbering of steps */
+body { counter-reset: step }
+
+div.step:before {  /* ::before for CSS3 didn't work? */
+    counter-increment: step;
+    content: counter(step) ". ";
+    color: violet;
+}
+
+div.step {
+    list-style: none;
+    padding-left: 40px;
+}
+
+
+

@@ -5,6 +5,20 @@ disableToc: true
 
 ## A place to try out Hugo features ...
 
+{{< step >}}
+Get your coffee. Always the first step.
+{{< /step >}}
+
+Then something else happens.
+
+{{< step >}}
+Download the `k8s-primer`.
+{{< /step >}}
+
+{{< step >}}
+Then launch Hugo.
+{{< /step >}}
+
 ## Quizdown
 
 Here is the demo quizdown quiz from https://github.com/bonartm/hugo-quiz/README.md:
