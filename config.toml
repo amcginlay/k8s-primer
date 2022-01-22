@@ -70,3 +70,8 @@ weight = 31
 [outputs]
 home = [ "HTML", "JSON"]
 page = [ "HTML" ]
+
+# adding for quizdown support, per https://github.com/bonartm/hugo-quiz/README.md
+[minify]
+disableHTML = true
+
