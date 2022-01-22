@@ -62,6 +62,11 @@ name = "<i class='fab fa-github'></i> GitHub Project"
 url = "https://github.com/amcginlay/k8s-primer"
 weight = 30
 
+[[menu.shortcuts]]
+name = "<i class='fas fa-bookmark'></i> Scratch"
+url = "/scratch/"
+weight = 31
+
 [outputs]
 home = [ "HTML", "JSON"]
 page = [ "HTML" ]
