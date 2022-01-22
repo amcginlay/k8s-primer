@@ -463,9 +463,205 @@ The primary take-aways about `Deployment` for now are:
 
 Now that you have looked at a pre-existing deployment, it is time to define your own.
 
-## Deploy Your Own Deployment
+## What's in a Manifest?
 
-TODO
+To create your own `Deployment`, you ned to add the proper `apiVersion` to your manifest.
+Recall that for a `Pod` we have `apiVersion: v1`. This is not the same for the less fundamental kinds of workloads.
+Run the following sequence of commands to create a reference for the Kubernetes workload objects.
+
+```bash
+kubectl api-resources | head -1 >workloads.txt    
+kubectl api-resources | grep batch >>workloads.txt
+kubectl api-resources | grep apps >>workloads.txt 
+cat workloads.txt 
+```
+
+{{< output >}}
+NAME                SHORTNAMES   APIVERSION     NAMESPACED   KIND
+cronjobs            cj           batch/v1       true         CronJob
+jobs                             batch/v1       true         Job
+controllerrevisions              apps/v1        true         ControllerRevision
+daemonsets          ds           apps/v1        true         DaemonSet
+deployments         deploy       apps/v1        true         Deployment
+replicasets         rs           apps/v1        true         ReplicaSet
+statefulsets        sts          apps/v1        true         StatefulSet
+{{< /output >}}
+
+As shown in the table, the API version for `Deployment` objects is `apps/v1`. A short command to check this is: `kubectl api-resources | grep Deployment`, but we used the sequence above to retain the column headings.
+
+So you know the `apiVersion` and the `kind`, but what else goes in a manifest? Like `Pod` manifests, a `Deployment` manifest will also include `metadata` and `spec` sections. However, the details will be different. Here are three other ways to find the details should go in your `Deployment` manifest:
+1. Read the Kubernetes [documentation for deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
+2. Look at the manifest for an *existing* deployment. For example, you could Use `kubectl get deploy coredns -n kube-system -o yaml` or any other deployment.
+3. You can use the ``--dry-run=client` option with a ***generator*** to show an example manifest.
+
+Use the third technique as follows:
+
+```bash
+kubectl create deployment demo --image demo:1.0.0 --dry-run=client -o yaml
+```
+
+{{< output >}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: demo
+  name: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: demo
+    spec:
+      containers:
+      - image: demo:1.0.0
+        name: demo
+        resources: {}
+status: {}
+{{< /output >}}
+
+Here is a graphical representation of the components of that YAML `Deployment` manifest.
+
+{{< mermaid >}}
+graph TB
+subgraph Deployment-manifest
+  apiVersion(apiVersion: apps/v1)
+  kind(kind: Deployment)
+  subgraph Deployment-metadata
+    name(name)
+    deploymentLabels[labels]
+  end
+  subgraph Deployment-spec
+    replicas(replicas)
+    strategy
+    selector
+    subgraph template
+      subgraph Pod-metadata
+        podLabels[labels]
+      end
+      subgraph Pod-spec
+        containers
+      end
+    end
+  end
+end
+{{< /mermaid >}}
+
+The critical ingredients in the deployment `spec` are:
+- `replicas` - you specify the desired number of pod replicas
+- `strategy` - choose the replacement or update strategy for new versions of your app
+- `selector` - the selector allows the deployment to own pods with certain `Pod` labels
+- `template` - the template allows the deployment to create new pods with specific metadata and `Pod` spec
+
+## Write your Deployment manifest
+
+Now that you know what goes in a `Deployment` manifest, it is time to create one. We'll skip the update `strategy`. For the `Pod` spec within, let's start simple, without the environment variables, volume mounts, and other fancy decorations.
+
+```bash
+cat << EOF | tee ~/environment/101-demo-deployment.yaml | kubectl -n dev apply -f -
+apiVersion: apps/v1          # remember to use apps/v1 instead of merely v1
+kind: Deployment             # the object schema Kubernetes uses to validate this manifest
+metadata:
+  name: demo                 # a name for your DEPLOYMENT
+  labels:                    # labels allow you to tag your DEPLOYMENT with a set of key/value pairs
+    app: demo                # it is customary to have an "app" key with a value to identify your deployment
+spec:                        # the DEPLOYMENT specification begins here, note no indentation!
+  replicas: 3                # the "spec.replicas" is one of the most important aspects of a Deployment
+  selector:                  # you can enable the Deployment to acquire/own pods which match your "selector"
+    matchLabels:             # the most common selector clause is to match labels on existing Pods
+      app: demo              # you want pre-existing pods with a label "app: demo" in this namespace
+  template:                  # the "spec.template" is where you specify the Pod "metadata" and "spec" to deploy
+    metadata:
+      labels:
+        app: demo
+    spec:                    # this is like a Pod spec, but indented two YAML level (four spaces customarily)
+      containers:            # a pod CAN consist of multiple containers, but this one has only one
+      - name: demo           # a name for your CONTAINER
+        image: demo:1.0.0    # the tagged image we previously injected using "kind load"
+EOF
+```
+
+Hopefully your deployment is successfully created.
+
+{{< output >}}
+deployment.apps/demo created
+{{< /output >}}
+
+Check the status of your deployment.
+
+```bash
+kubectl get deployment -n dev
+```
+
+{{< output >}}
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+demo   3/3     3            3           27s
+{{< /output >}}
+
+Check the name of the `ReplicaSet` that your `Deployment` created.
+
+```bash
+kubectl get replicaset -n dev
+```
+
+{{< output >}}
+NAME              DESIRED   CURRENT   READY   AGE
+demo-7c9cd496db   3         3         3       35s
+{{< /output >}}
+
+How is the name of this replica set related to the name of your deployment?
+
+Look at the pods your deployment created (using that replica set):
+
+```bash
+kubectl get pod -n dev
+```
+
+{{< output >}}
+NAME                    READY   STATUS    RESTARTS   AGE
+demo                    1/1     Running   0          2d9h
+demo-7c9cd496db-24kpc   1/1     Running   0          39s
+demo-7c9cd496db-fhgcj   1/1     Running   0          39s
+demo-7c9cd496db-zf5b5   1/1     Running   0          39s
+{{< /output >}}
+
+How are the pod names related to the names of the deployment and the replica set?
+
+{{% notice note %}}
+If you did not leave your "demo" `Pod` running from an earlier lesson, you may see *only* the newly created pods that are part of your deployment.
+{{% /notice %}}
+
+You have now successfully created a Kubernetes `Deployment` with three replicas!
+
+{{< mermaid >}}
+graph TB
+deployment(Deployment: demo)
+replicaSetA(ReplicaSet: demo-7c9cd496db)
+podA[Pod: demo-7c9cd496db-24kpc]
+podB[Pod: demo-7c9cd496db-fhgcj]
+podC[Pod: demo-7c9cd496db-zf5b5]
+
+deployment-->|manages|replicaSetA
+replicaSetA-->|manages|podA
+replicaSetA-->|manages|podB
+replicaSetA-->|manages|podC
+
+  classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+  classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+  classDef blue fill:#69f,stroke:#333,stroke-width:4px;
+  classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+  class deployment green;
+  class replicaSetA orange;
+  class podA,podB,podC blue;
+  %% class containerA,containerB yellow;
+{{< /mermaid >}}
 
 ## Success
 
