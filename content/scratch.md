@@ -19,6 +19,24 @@ Download the `k8s-primer`.
 Then launch Hugo.
 {{< /step >}}
 
+Now we have to test a longer step.
+
+{{< step >}}
+This is the time for all good steps to go in sequence, be properly indented, and maybe even contain a little markdown so we can indicate a `Pod` kind of thing, or a `spec.replicas` sort of notation. No, that was not the only sentence in the paragraph. It just keeps on going.
+{{< /step >}}
+
+{{< step >}}And this is yet another step. Remember to load your images. We should build another one besides `demo:1.0.0` to show them how the `Deployment` handles a change of image. That would be a good exercise. I think a separate exercise after the current deployment one.{{< /step >}}
+
+{{< step >}}Another step.{{< /step >}}
+{{< step >}}Another step.{{< /step >}}
+{{< step >}}Another step.{{< /step >}}
+{{< step >}}Another step.{{< /step >}}
+{{< step >}}Another step.{{< /step >}}
+{{< step >}}Another step.{{< /step >}}
+{{< step >}}Another step.{{< /step >}}
+{{< step >}}Another step.{{< /step >}}
+{{< step >}}Another step.{{< /step >}}
+
 ## Quizdown
 
 Here is the demo quizdown quiz from https://github.com/bonartm/hugo-quiz/README.md:

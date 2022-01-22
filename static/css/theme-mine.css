@@ -196,12 +196,14 @@ body { counter-reset: step }
 div.step:before {  /* ::before for CSS3 didn't work? */
     counter-increment: step;
     content: counter(step) ". ";
-    color: violet;
+    color: darkred;
+    font-weight: bold;
+    margin-left: -20px;
 }
 
 div.step {
     list-style: none;
-    padding-left: 40px;
+    margin-left: 60px;
 }
 
 
