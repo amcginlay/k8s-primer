@@ -10,7 +10,7 @@ Imagine you are cycling up a hill in a high gear and the bicycle starts to slow 
 You have two choices.
 You can either carry on in the hope your momentum and strength will take you safely over the hill or you can drop down a gear and pedal faster.
 The latter option will (almost) always enable you to progress to the next hill.
-The point is, it is not always desirable or efficient to slow down but it is sometimes necessary choice to progress.
+The point is, it is not always desirable or efficient to slow down but it is sometimes the necessary choice to progress.
 
 So, as experienced technicians you know what a process is, correct?
 Of course you do.
@@ -193,8 +193,8 @@ It is often useful to step back in time in order to see how we arrived to where 
 ![pangaea](/images/process/pangaea.gif)
 
 [Pangaea](https://en.wikipedia.org/wiki/Pangaea) was the single supercontinent that evolved to become continents of the earth we know today.
-Primitive mammals shared the single landmass but, as time passed, the continents formed and these inhabitants would become separated by the seas.
-The one constant over time is the earth.
+Primitive mammals **shared** the single landmass but, as time passed, the continents formed and these inhabitants would become separated by the seas.
+The one constant is the earth.
 
 <!-- Closer to modern times continents would be divided into countries and some these countries would be divided further into states, counties, etc. -->
 
@@ -206,12 +206,12 @@ In this analogy.
 {{% notice note %}}
 The term "namespace" is used in a variety of contexts.
 For example, **Kubernetes** namespaces are a different concept to **Linux** namespaces.
-To avoid confusion their use will always be qualified.
+For the duration of this chapter when you see the word namespace you must interpret that as **Linux namespace**.
 {{% /notice %}}
 
-As we will learn later, there are small handful of distinct Linux namespace types and each process must reside in **exactly** one instance of each namespace type at any single point in time.
+As we will learn later, there are a small handful of distinct namespace types and each process must reside in **exactly** one instance of each namespace type at any point in time.
 Some types are more interesting and/or simple to demonstrate than others.
-In the interests of practicality we will start by acknowledging just the [UTS](https://en.wikipedia.org/wiki/Linux_namespaces#UTS) Linux namespace type.
+In the interests of practicality we will start by acknowledging just the [UTS](https://en.wikipedia.org/wiki/Linux_namespaces#UTS) namespace type.
 
 ### The Linux UTS namespace
 
@@ -238,7 +238,7 @@ ip-172-31-62-220.us-west-2.compute.internal
 
 Now, as [superuser](https://en.wikipedia.org/wiki/Superuser), try **updating** the name of the host from within **shell one**.
 ```bash
-sudo hostname original-linux-uts-namespace
+sudo hostname original-uts-namespace
 ```
 
 Then repeat the original command in **both** shells.
@@ -248,10 +248,10 @@ hostname
 
 The response you see will be the **updated** name in both cases.
 {{< output >}}
-original-linux-uts-namespace
+original-uts-namespace
 {{< /output >}}
 
-Furthermore, we can confirm the use of shared Linux UTS namespace by inspecting details in the aforementioned virtual filesystem at `/proc`.
+Furthermore, we can confirm the use of a shared UTS namespace by inspecting details in the aforementioned virtual filesystem at `/proc`.
 Enter the following command in **both** shells.
 ```bash
 ls -l /proc/$$/ns/uts        # -l provides a long listing format, $$ is current shell PID
@@ -263,15 +263,15 @@ lrwxrwxrwx 1 ec2-user ec2-user 0 Jan 24 12:30 /proc/59266/ns/uts -> uts:[4026531
 {{< /output >}}
 
 The `uts:[XXXXXXXXXX]` identifier from **both** shells will be the same.
-This consistency exists only because the shell processes have "inherited" the **one and only** Linux UTS namespace from their parent process.
+This consistency exists only because the shell processes have "inherited" the **one and only** UTS namespace from their parent process.
 Do you sense a pattern emerging?
 
-You are ready now to introduce a **bespoke** instance of the Linux UTS namespace.
-To experiment with Linux namespaces in the shell you will use a pair of commands which are just thin wrappers around a specific set of [Linux kernel syscalls](https://en.wikipedia.org/wiki/System_call).
-- `unshare` - This command creates a child process as a member of a "bespoke" Linux namespace. It is saying, "Take my offspring to an uninhabited island"
-- `nsenter` - This command moves the current process into an existing Linux namespace. It is saying, "I wish to be alone with my family"
+You are ready now to introduce a **bespoke** instance of the UTS namespace.
+To experiment with Linux namespaces in the shell you will use a pair of commands which are just thin wrappers around a specific set of [kernel syscalls](https://en.wikipedia.org/wiki/System_call).
+- `unshare` - This command creates a child process as a member of a "bespoke" Linux namespace. It says, "Take my offspring to an uninhabited island"
+- `nsenter` - This command moves the current process into an existing Linux namespace. It says, "I wish to be alone with my family"
 
-From **shell one**, use `unshare` to spawn a child shell inside a bespoke instance of the Linux UTS namespace, inspecting the `uts:[XXXXXXXXXX]` identifier before and after to verify the transition.
+From **shell one**, use `unshare` to spawn a child shell inside a bespoke instance of the UTS namespace, inspecting the `uts:[XXXXXXXXXX]` identifier before and after to verify the transition.
 ```bash
 ls -l /proc/$$/ns/uts        # original namespace
 sudo unshare --uts bash
@@ -286,8 +286,8 @@ hostname                     # ... after
 ```
 
 {{< output >}}
-original-linux-uts-namespace
-bespoke-linux-uts-namespace
+original-uts-namespace
+bespoke-uts-namespace
 {{< /output >}}
 
 From **shell two**, confirm that the name of the host is unchanged.
@@ -296,18 +296,18 @@ hostname
 ```
 
 {{< output >}}
-original-linux-uts-namespace
+original-uts-namespace
 {{< /output >}}
 
-A process could also choose to coexist within the Linux UTS namespace of another running process.
-To migrate, a source process provides a PID which is a member of the destination Linux UTS namespace.
-As a process can only be a member of one Linux UTS namespace at a time it will be evicted from its current one during migration.
+A process could also choose to coexist within the UTS namespace of another running process.
+To migrate, a source process provides a PID which is a member of the destination UTS namespace.
+As a process can only be a member of one UTS namespace at a time it will be evicted from its current one during migration.
 From **shell one** grab the PID
 ```bash
 echo $$
 ```
 
-Replacing `<TARGET_PID_FROM_SHELL_ONE>` as appropriate, use `nsenter` in **shell two** to reunite the shells in your bespoke Linux UTS namespace.
+Replacing `<TARGET_PID_FROM_SHELL_ONE>` as appropriate, use `nsenter` in **shell two** to reunite the shells in your bespoke UTS namespace.
 ```bash
 PID=<TARGET_PID_FROM_SHELL_ONE>
 sudo nsenter --target ${PID} --uts bash
@@ -323,24 +323,24 @@ bespoke-linux-uts-namespace
 {{< /output >}}
 
 We can conclude from these experiments that the name of the host does not belonging merely to VMs.
-Instead, it is a setting that belongs to instances of the Linux UTS namespace.
+Instead, it is a setting that belongs to instances of the UTS namespace.
 This means we can fabricate **multiple hosts per VM**, a feat that was not possible before the Linux kernel exposed UTS namespaces.
 
 To ensure a smooth transition to the next section, close **both** terminal windows at this point.
 
 ### The Linux PID namespace (optional)
 
-As noted previously, there are different types of Linux namespaces that can be combined to deliver varying characteristics of process "isolation" which can help improve security.
-For example, a process inhabiting one bespoke [Linux PID namespaces](https://en.wikipedia.org/wiki/Linux_namespaces#Process_ID_.28pid.29) can only observe another process if that process also inhabits the same bespoke Linux PID namespace.
+As noted previously, there are different types of namespaces that can be combined to deliver varying characteristics of process "isolation" which can help improve security.
+For example, a process inhabiting one bespoke [PID namespaces](https://en.wikipedia.org/wiki/Linux_namespaces#Process_ID_.28pid.29) can only observe another process if that process also inhabits the same bespoke PID namespace.
 
-Try out Linux PID namespaces for yourself by creating a pair of terminal windows (**shell one** and **shell two**) inside Cloud9.
+Try out PID namespaces for yourself by creating a pair of terminal windows (**shell one** and **shell two**) inside Cloud9.
 
 Execute the following from **both** shells to verify that a long list of processes running on the VM can be viewed.
 ```bash
 sudo ps -e
 ```
 
-Execute the following in **both** shells to build bespoke Linux PID namespaces, **one in each shell**.
+Execute the following in **both** shells to build bespoke PID namespaces, **one in each shell**.
 ```bash
 ls -l /proc/$$/ns/pid                  # original namespace
 sudo unshare --pid --mount --fork bash # a little more unshare complexity this time
@@ -385,9 +385,9 @@ Noteworthy points from the response are as follows.
 - The list of member processes is reassuringly short.
 - All processes appear to have been run as the `root` user.
 
-## Summary of Linux namespace types
+## Summary of namespace types
 
-Here's the summary of the main Linux namespace types and word or two on their use.
+Here's the summary of the main namespace types and word or two on their use.
 - `UTS` - independent host names
 - `PID` - independent sets of process IDs
 - `Mount` - independent mount points for file/data access
@@ -402,6 +402,6 @@ However, we must not forget that containers can be further resource-constrained 
 In this exercise you did the following:
 - Discussed some common misconceptions
 - Put environment variables through their paces to reveal their true nature
-- Built and used instances of the Linux UTS namespace
-- Did the same for the Linux PID namespace
-- Summarized the main Linux namespaces in use today
+- Built and used instances of the UTS namespace
+- Did the same for the PID namespace
+- Summarized the main namespaces in use today
