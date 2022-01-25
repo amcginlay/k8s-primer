@@ -1,7 +1,7 @@
 ---
 title: "Setup"
 chapter: false
-weight: 011
+weight: 11
 draft: false
 ---
 

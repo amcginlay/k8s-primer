@@ -1,7 +1,7 @@
 ---
 title: "Move Configuration out of Pod"
 chapter: false
-weight: 019
+weight: 20
 draft: false
 ---
 

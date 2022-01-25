@@ -1,7 +1,7 @@
 ---
 title: "Install Kubernetes"
 chapter: false
-weight: 016
+weight: 17
 draft: false
 ---
 

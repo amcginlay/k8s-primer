@@ -1,7 +1,7 @@
 ---
 title: "Deploy a Fleet of Pods"
 chapter: false
-weight: 100
+weight: 21
 draft: false
 ---
 
