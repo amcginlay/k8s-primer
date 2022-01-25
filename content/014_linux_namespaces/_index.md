@@ -221,7 +221,6 @@ UID          PID    PPID  C STIME TTY          TIME CMD
 root           1       0  0 18:18 pts/2    00:00:00 bash
 root          15       1  0 18:18 pts/2    00:00:00 sleep 1001
 root          16       1  0 18:18 pts/2    00:00:00 ps -ef
-/home/ec2-user/environment $ 
 {{< /output >}}
 
 Noteworthy points from the response are as follows.
