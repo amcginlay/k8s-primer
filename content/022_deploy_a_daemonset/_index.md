@@ -144,6 +144,148 @@ If you had done `kind delete cluster` (or specifically `kind delete cluster --na
 
 ## Taint the Nodes
 
+You can configure a pod-spec (e.g. in a bare `Pod` object or in the `template` of a `Deployment` or `DaemonSet`) to be attracted to run on node(s) with specific criteria. For example, you may have a workload that requires graphics processing unit (GPU) capable compute power, thus could configure `nodeAffinity` for the pods in that workload to either *prefer* or *require* scheduling and execution on GPU-capable nodes. ***Affinity is attractive***--you can configure you pod specs to indicate the kinds of hardware and software environmets of the nodes they are attracted to.
+
+***Taints***, on the other hand, are **repulsive**--you can apply a *taints* to *nodes*--they repel pods that do not *tolerate* their particular taints.
+
+{{< step >}}Generate a manifest for a **taint**.{{< /step >}}
+
+```bash
+kubectl taint nodes four-node-kind-worker2 repeldaemons=true:NoSchedule --dry-run=client -o yaml >~/environment/104-taint-example.yaml
+head -26 104-taint-example.yaml | tail -9
+```
+
+{{< output >}}
+spec:
+  podCIDR: 10.244.2.0/24
+  podCIDRs:
+  - 10.244.2.0/24
+  providerID: kind://docker/four-node-kind/four-node-kind-worker2
+  taints:
+  - effect: NoSchedule
+    key: repeldaemons
+    value: "true"
+{{< /output >}}
+
+There are three parts to the `taint` specification. Let's look at the short form you used in the command and the long form in the manifest:
+- command line form: the short notation `repeldaemons=true:NoSchedule` specifies a key, value, and effect for the taint.
+- manifest form: the long form also specifies the key, value, and effect of the taint, typically as three separate lines in the manifest file:
+    - `effect: NoSchedule` -- the *effect* allows you to specify the way the taint affects scheduling and execution of pods.
+    - `key: repeldaemons` -- you can choose a *key* name that reminds you of the purpose of the taint.
+    - `value: "true"` -- the *value* part of the taint helps you remember the sense of how the key is interpreted.
+
+{{% notice tip %}}
+You could choose a key-value pair of `daemons=false` or `repeldaemons=true` to play into the repulsive nature of the taint. Kubernetes does not understand the key and value names, it only compares them to pods' tolerations for equality or existence. The *meaning* of the words you put in the key and value of the taint are for *you*.
+{{% /notice %}}
+
+There are three effects for taints and tolerations. unless, tolerated by one or more pods, these *effects** in a tainted node behave as follows:
+- **NoExecute** -- this effect will *evict* curently running pods, and will not *schedule* new pods on the node.
+- **NoSchedule** -- this effect will leave pre-existing pods running, but will not *schedule* new pods on the node.
+- **PreferNoSchedule** -- this effect will leave pre-existing pods running, the scheduler will attempt to find other nodes on which to run new pods, but ultimately the node could accept newly scheduled pods despite the taint.
+
+{{< step >}}Check which daemonsets are running now.{{< /step >}}
+
+```bash
+kubectl get daemonsets -n kube-system
+```
+
+{{< output >}}
+NAME         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+kindnet      4         4         4       4            4           <none>                   59m
+kube-proxy   4         4         4       4            4           kubernetes.io/os=linux   59m
+{{< /output >}}
+
+{{< step >}}Check which labels the pods in the `kube-proxy` daemonset have.{{< /step >}}
+
+```bash
+kubectl describe daemonset kube-proxy -n kube-system | grep Labels
+```
+
+{{< output >}}
+Labels:         k8s-app=kube-proxy
+  Labels:           k8s-app=kube-proxy
+{{< /output >}}
+
+{{< step >}}Get a list of the pods in that daemonset.{{< /step >}}
+
+```bash
+kubectl get pods -l k8s-app=kube-proxy -n kube-system
+```
+{{< output >}}
+NAME               READY   STATUS    RESTARTS   AGE
+kube-proxy-4cvhq   1/1     Running   0          62m
+kube-proxy-8gk9k   1/1     Running   0          62m
+kube-proxy-hq2d9   1/1     Running   0          62m
+kube-proxy-wzssr   1/1     Running   0          62m
+{{< /output >}}
+
+{{< step >}}Add the `-o wide` option to show the node names on which those pods are running.{{< /step >}}
+
+```bash
+kubectl get pods -l k8s-app=kube-proxy -n kube-system -o wide
+```
+
+{{< output >}}
+NAME               READY   STATUS    RESTARTS   AGE   IP           NODE                           NOMINATED NODE   READINESS GATES
+kube-proxy-4cvhq   1/1     Running   0          62m   172.18.0.3   four-node-kind-worker3         <none>           <none>
+kube-proxy-8gk9k   1/1     Running   0          62m   172.18.0.6   four-node-kind-worker          <none>           <none>
+kube-proxy-hq2d9   1/1     Running   0          62m   172.18.0.5   four-node-kind-worker2         <none>           <none>
+kube-proxy-wzssr   1/1     Running   0          63m   172.18.0.4   four-node-kind-control-plane   <none>           <none>
+{{< /output >}}
+
+
+{{< step >}}Taint your second and third worker nodes.{{< /step >}}
+
+```bash
+kubectl taint nodes four-node-kind-worker2 repeldaemons=true:NoSchedule 
+kubectl taint nodes four-node-kind-worker3 repeldaemons=true:NoSchedule 
+```
+
+{{< step >}}Check again to see the effects of the taints on those daemonsets.{{< /step >}}
+
+```bash
+kubectl get daemonset/kube-proxy -n kube-system
+```
+
+{{< output >}}
+NAME         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+kube-proxy   4         4         4       4            4           kubernetes.io/os=linux   59m
+{{< /output >}}
+
+{{< step >}}Replace those taints (delete and add new ones), with `NoExecute` instead of `NoSchedule`.{{< /step >}}
+
+```bash
+kubectl taint nodes four-node-kind-worker2 repeldaemons=true:NoSchedule-
+kubectl taint nodes four-node-kind-worker3 repeldaemons=true:NoSchedule-
+kubectl taint nodes four-node-kind-worker2 repeldaemons=true:NoExecute
+kubectl taint nodes four-node-kind-worker3 repeldaemons=true:NoExecute
+```
+
+{{< step >}}Check again to see the effects of the taints on those daemonsets.{{< /step >}}
+
+```bash
+kubectl get daemonset/kube-proxy -n kube-system
+```
+
+{{< output >}}
+NAME         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+kube-proxy   4         4         4       4            4           kubernetes.io/os=linux   59m
+{{< /output >}}
+
+## Write a DaemonSet Manifest
+
+TODO
+
+## Deploy Your DaemonSet
+
+## Untaint Nodes
+
+## DaemonSet Quiz
+
+## Success
+
+
+
 ## Write a DaemonSet Manifest
 
 ## Deploy Your DaemonSet
