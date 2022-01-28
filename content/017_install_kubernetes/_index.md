@@ -35,7 +35,8 @@ go version
 ```
 -->
 
-Install `kind` in your Cloud9 environment. 
+{{< step >}}Install `kind` in your Cloud9 environment.{{< /step >}}
+
 ```bash
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
 chmod +x ./kind
@@ -49,29 +50,59 @@ For further details or to install `kind` on macOS, Windows, or other Linux syste
 
 ## Create a Kubernetes cluster with `kind`
 
-Create a `kind` cluster.
+Your next task is to create a multi-node Kubernetes cluster. 
+Simply typing `kind create cluster` would create a one node cluster. *Please do **not** do that now.*
+
+Most Kubernetes clusters are composed of multiple servers:
+- **control plane** nodes -- a set of servers that provide container ***orchestration*** support features (like a queen bee of a hive or the government of a town/city)
+- **data plane** nodes -- a set of servers that run the container workloads; these servers are container hosts, sometimes called **workers**, like the worker bees in a colony, or the populace of a town/city.
+
+The `kind` documentation provides a [suggested configuration manifest for multi-node clusters](https://kind.sigs.k8s.io/docs/user/quick-start/#multinode-clusters). You can use such a file to create your multi-node Kubernetes cluster based on `kind`. Your cluster can have multiple worker nodes that are separate from the control plane node(s).
+
+{{< step >}}Create a Kubernetes cluster manifest file.{{< /step >}}
+
 ```bash
-kind create cluster
+cat <<EOF >~/environment/103-four-node-cluster.yaml 
+# four node (three workers) cluster config
+kind: Cluster            # this file describes the Kubernetes infrastructure -- a "cluster" 
+apiVersion: kind.x-k8s.io/v1alpha4
+name: kind               # this is a default for Kubernetes-in-Docker (KinD), but be explicit
+nodes:                   # the nodes are the host servers that implement your Kubernetes cluster
+- role: control-plane    # one control plane node offers no redundancy for high availability
+- role: worker           # each worker node can run your container workloads
+- role: worker           # having two or more worker nodes 
+- role: worker
+EOF
+```
+
+{{< step >}}Create your four node cluster{{< /step >}}
+
+```bash
+kind create cluster --config ~/environment/103-four-node-cluster.yaml
 ```
 
 This should result in a Kubernetes cluster (of the `kind` flavor) running in your Cloud9 environment.
+
 {{< output >}}
 Creating cluster "kind" ...
- ✓ Ensuring node image (kindest/node:v1.21.1) 🖼 
- ✓ Preparing nodes 📦  
+ ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
+ ✓ Preparing nodes 📦 📦 📦 📦  
  ✓ Writing configuration 📜 
  ✓ Starting control-plane 🕹️ 
  ✓ Installing CNI 🔌 
  ✓ Installing StorageClass 💾 
+ ✓ Joining worker nodes 🚜 
 Set kubectl context to "kind-kind"
 You can now use your cluster with:
 
 kubectl cluster-info --context kind-kind
 
-Thanks for using kind! 😊
+Have a nice day! 👋
 {{< /output >}}
 
-Although we didn't provide any fancy options for `kind create cluster` in this simple case, here are a few options that are supported on that command for when you want to customize the creation of the cluster. Use `kind create cluster --help` for further options.
+You have now created a multi-node Kubernetes cluster!
+
+Although we didn't provide many fancy options for `kind create cluster` beyond the configuration file, here are a few options that are supported on that command for when you want to customize the creation of the cluster. Use `kind create cluster --help` for further options.
 
 - `--image` - container image to use for the nodes when booting the cluster
 - `--kubeconfig` - sets kubeconfig path instead of `$KUBECONFIG` or `$HOME/.kube/config`

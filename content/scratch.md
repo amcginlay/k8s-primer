@@ -126,3 +126,102 @@ Sequence these pieces of software in order of operation from your shell to the c
 4. kubelet
 5. container runtime (e.g. containerd, dockerd, cri-o)
 {{< /quizdown >}}
+
+## More on Mermaid
+
+Removed this in the refactoring of the `Deployment` chapter...
+...definitely scratch material
+
+## Scratch
+
+Yes, a scratch section at the end of this lesson. I'll hoist one up to top-level soon.
+
+A test diagram to ensure that removing `./static/mermaid/` and the ancient `./static/mermaid/mermaid.min.js` 
+has resolved the issue with that old mermaid version blocking the much more recent one in the hugo and hugo learn theme locations. 
+
+{{< mermaid >}}
+graph TD
+subgraph some-id[Title]
+    A --> B
+end
+
+style some-id fill:#F77,stroke:#F00,stroke-width:2px
+{{< /mermaid >}}
+
+Hurray! It worked. We can now have separate id and title for subgraph and even style subgraphs with the revised mermaid.
+
+Therefore, we can style subgraphs within the `graph` diagram style.
+
+{{< mermaid >}}
+graph TB
+subgraph Deployment-manifest
+  apiVersion(apiVersion: apps/v1)
+  kind(kind: Deployment)
+  subgraph Deployment-metadata[Deployment metadata]
+    name(name)
+    deploymentLabels[labels]
+  end
+  subgraph Deployment-spec[Deployment spec]
+    replicas(replicas)
+    strategy
+    selector
+    subgraph template
+      subgraph Pod-metadata
+        podLabels[labels]
+      end
+      subgraph Pod-spec
+        containers
+      end
+    end
+  end
+end
+
+classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+classDef blue fill:#69f,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+class Deployment-manifest orange;
+class Deployment-metadata blue;
+class Deployment-spec green;
+class template yellow;
+{{< /mermaid >}}
+
+And even do the `flowchart` style which has proper direction flow inherited into its subgraphs.
+So we can go vertical instead of horizontal with a depiction of the Deployment manifest.
+
+{{< mermaid >}}
+flowchart TB
+subgraph Deployment-manifest
+  apiVersion(apiVersion: apps/v1)
+  kind(kind: Deployment)
+  subgraph Deployment-metadata[Deployment metadata]
+    name(name)
+    deploymentLabels[labels]
+  end
+  subgraph Deployment-spec[Deployment spec]
+    subgraph spec-top-level[ ]
+      replicas(replicas)
+      strategy
+      selector
+    end
+    subgraph template
+      subgraph Pod-metadata
+        podLabels[labels]
+      end
+      subgraph Pod-spec
+        containers
+      end
+    end
+  end
+end
+
+style spec-top-level fill:#F77,stroke:#F00,stroke-width:0px,color:#000
+
+classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+classDef blue fill:#69f,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+%% class Deployment-metadata orange;
+%% class Deployment-spec yellow;
+{{< /mermaid >}}
+

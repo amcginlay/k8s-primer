@@ -13,7 +13,7 @@ Among the [tools for managing Kubernetes](https://kubernetes.io/docs/tasks/tools
 
 ## Install `kubectl`
 
-Within your Cloud9 instance, [install `kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
+{{< step >}}Within your Cloud9 instance, [install `kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).{{< /step >}}
 
 ```bash
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" # download tool
@@ -37,7 +37,9 @@ Now that you have `kubectl`, you can manage the operations within your Kubernete
 - **control plane** - government of your cluster
 - **components** - members of the government
 
-Take a look at the nodes in your `kind` cluster.
+Take a look at the nodes in your Kubernetes `kind` cluster.
+
+{{< step >}}Confirm the list of nodes in your cluster{{< /step >}}
 
 ```bash
 kubectl get nodes
@@ -46,11 +48,40 @@ kubectl get nodes
 You should see results which note the Kubernetes software version and the roles each node performs.
 
 {{< output >}}
-NAME                 STATUS   ROLES                  AGE   VERSION
-kind-control-plane   Ready    control-plane,master   14h   v1.21.1
+NAME                 STATUS   ROLES                  AGE     VERSION
+kind-control-plane   Ready    control-plane,master   2m31s   v1.21.1
+kind-worker          Ready    <none>                 2m3s    v1.21.1
+kind-worker2         Ready    <none>                 2m2s    v1.21.1
+kind-worker3         Ready    <none>                 2m2s    v1.21.1
 {{< /output >}}
 
-Check what is running in your cluster.
+Graphically, this could be depicted as follows:
+
+{{< mermaid >}}
+graph TB
+subgraph Kubernetes-cluster[Kubernetes Cluster]
+  subgraph Control-plane[Control Plane]
+    kind-control-plane
+  end
+  subgraph Data-plane[Data Plane]
+    kind-worker1
+    kind-worker2
+    kind-worker3
+  end
+end
+
+classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+classDef blue fill:#69f,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+class Kubernetes-cluster orange;
+class Control-plane blue;
+class Data-plane green;
+{{< /mermaid >}}
+
+## The Government With No Ordinary Citizens
+
+{{< step >}}Check what is running in your cluster.{{< /step >}}
 
 ```bash
 kubectl get pods
@@ -72,15 +103,21 @@ kubectl get pods -A
 
 {{< output >}}
 NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
-kube-system          coredns-558bd4d5db-qxdcd                     1/1     Running   0          14h
-kube-system          coredns-558bd4d5db-vzdrc                     1/1     Running   0          14h
-kube-system          etcd-kind-control-plane                      1/1     Running   0          14h
-kube-system          kindnet-hmwbj                                1/1     Running   0          14h
-kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          14h
-kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          14h
-kube-system          kube-proxy-sc7qw                             1/1     Running   0          14h
-kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          14h
-local-path-storage   local-path-provisioner-547f784dff-ckbn8      1/1     Running   0          14h
+kube-system          coredns-558bd4d5db-ck5ft                     1/1     Running   0          13m
+kube-system          coredns-558bd4d5db-l29q2                     1/1     Running   0          13m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          14m
+kube-system          kindnet-bmxfq                                1/1     Running   0          13m
+kube-system          kindnet-dvqbz                                1/1     Running   0          13m
+kube-system          kindnet-nj56c                                1/1     Running   0          13m
+kube-system          kindnet-w84f2                                1/1     Running   0          13m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          14m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          14m
+kube-system          kube-proxy-2wm8s                             1/1     Running   0          13m
+kube-system          kube-proxy-gtmt5                             1/1     Running   0          13m
+kube-system          kube-proxy-l8mkf                             1/1     Running   0          13m
+kube-system          kube-proxy-xvbs6                             1/1     Running   0          13m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          14m
+local-path-storage   local-path-provisioner-547f784dff-dtnp2      1/1     Running   0          13m
 {{< /output >}}
 
 When you use the `-A` option with `kubectl get pods` you are presented with the list of your pods and the Kubernetes system pods. This is like getting a list of both the passengers and crew of a ship.
@@ -108,7 +145,32 @@ local-path-storage   Active   14h
 The term Namespaces can be abbreviated "ns" as in `kubectl get ns`. 
 {{% /notice %}}
 
-Kubernetes namespaces are logical subdivisions of your cluster. Please don't confuse these with Linux namespaces (used in containization by the way), DNS namespaces (used for public, private, and protected network naming), or other varieties of namespaces. Each app, microservice, or project you deploy could be in its own namespace. It is up to you.
+Kubernetes namespaces are ***logical*** administrative subdivisions of your cluster. Please don't confuse these with Linux namespaces (used in containization by the way), DNS namespaces (used for public, private, and protected network naming), or other varieties of namespaces. Each app, microservice, or project you deploy could be in its own namespace. It is up to you.
+
+
+{{< mermaid >}}
+graph TB
+subgraph Kubernetes-cluster[Kubernetes Cluster]
+  subgraph Namespaces
+    dee-fault-en-ess[default]
+    kube-node-lease
+    kube-public
+    kube-system
+    local-path-storage
+  end
+end
+
+classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+classDef blue fill:#69f,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+class Kubernetes-cluster orange;
+class Namespaces yellow;
+{{< /mermaid >}}
+
+{{% notice tip %}}
+Remember: Nodes are physical host servers in your Kubernetes cluster. Namespaces are logical administrative units of your Kubernetes cluster.
+{{% /notice %}}
 
 ## Success
 
@@ -121,7 +183,6 @@ You have successfully installed the `kubectl` software to manage your Kubernetes
 
 Now you are ready to create your own resources, such as your own Kubernetes:
 - namespaces
-- configmaps
-- secrets
 - pods
+- configmaps
 and more…
