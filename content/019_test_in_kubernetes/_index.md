@@ -40,7 +40,10 @@ kind load docker-image demo:1.0.0
 
 The output you see will be as follows.
 {{< output >}}
-Image: "demo:1.0.0" with ID "sha256:893d88f41297dc99cf7a294ba7edfedca5d063facf6e89a59a608cc5f7502688" not yet present on node "kind-control-plane", loading...
+Image: "demo:1.0.0" with ID "sha256:4de6cdb3317520c3e606e62a0abc0bc14b4766c3ab26d35c47abb3bf9379e913" not yet present on node "kind-worker3", loading...
+Image: "demo:1.0.0" with ID "sha256:4de6cdb3317520c3e606e62a0abc0bc14b4766c3ab26d35c47abb3bf9379e913" not yet present on node "kind-worker2", loading...
+Image: "demo:1.0.0" with ID "sha256:4de6cdb3317520c3e606e62a0abc0bc14b4766c3ab26d35c47abb3bf9379e913" not yet present on node "kind-worker", loading...
+Image: "demo:1.0.0" with ID "sha256:4de6cdb3317520c3e606e62a0abc0bc14b4766c3ab26d35c47abb3bf9379e913" not yet present on node "kind-control-plane", loading...
 {{< /output >}}
 
 {{% notice note %}}
@@ -66,6 +69,11 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test
 EOF
 
 kubectl apply -f ~/environment/001-dev-namespace.yaml
@@ -96,6 +104,7 @@ kube-node-lease      Active   17h
 kube-public          Active   17h
 kube-system          Active   17h
 local-path-storage   Active   17h
+test                 Active   8m
 {{< /output >}}
 
 For the time being you only care about your new **dev** namespace so forget the others you see.
