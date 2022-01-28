@@ -261,6 +261,10 @@ kubectl taint nodes four-node-kind-worker2 repeldaemons=true:NoExecute
 kubectl taint nodes four-node-kind-worker3 repeldaemons=true:NoExecute
 ```
 
+{{% notice note %}}
+The notation `key=value:effect` ***adds*** a taint, whereas the notation `key=value:effect-` *(with the minus sign on the end)* ***deletes*** a taint--i.e. **untaints** the node. Thus, this sequence untaints the two nodes of the `repeldaemons=true:NoSchedule` then *taints* them each with `repeldaemons=true:NoExecute`.
+{{% /notice %}}
+
 {{< step >}}Check again to see the effects of the taints on those daemonsets.{{< /step >}}
 
 ```bash
@@ -271,6 +275,50 @@ kubectl get daemonset/kube-proxy -n kube-system
 NAME         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
 kube-proxy   4         4         4       4            4           kubernetes.io/os=linux   59m
 {{< /output >}}
+
+Again, of the three effects--`PreferNoSchedule`, `NoSchedule`, and `NoExecute`--this `NoExecute` you just tained two of your worker nodes with is the **strongest taint effect** you can place on nodes. How is it possible that those nodes are running pods provisioned by this `DaemonSet`, such that there are still four ready and available pods?
+
+{{< step >}}Check the `tolerations` on the pod-spec in the `kube-proxy` `DaemonSet` template.{{< /step >}}
+
+```bash
+kubectl get ds/kube-proxy -n kube-system -o yaml >~/environment/105-kube-proxy-ds.yaml
+grep tolerations -A 3 ~/environment/105-kube-proxy-ds.yaml                                                             
+```
+
+{{< output >}}
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - operator: Exists
+{{< /output >}}
+
+{{< step >}}Show those `tolerations` in JSON format using a JSON-**path** specification.{{< /step >}}
+
+```bash
+kubectl get ds/kube-proxy -n kube-system -o jsonpath-as-json={.spec.template.spec.tolerations}
+```
+
+{{< output >}}
+[
+    [
+        {
+            "key": "CriticalAddonsOnly",
+            "operator": "Exists"
+        },
+        {
+            "operator": "Exists"
+        }
+    ]
+]
+{{< /output >}}
+
+What both the YAML and JSON notations show is that the pods created by the `kube-proxy` daemonset will have two tolerations:
+1. Tolerate taints on nodes which have a key of "CriticalAddonsOnly" and ***any*** value. The operator `Exists` (as opposed to `Equals`) matches taints with that key and anyvalue.
+2. Tolerate taints on nodes which have ***ANY TAINT***. Seriously. The notation in the second toleration with just `"operator": "Exists"` will match and tolerate any taints with ***any*** key **and** ***any*** value.
+
+{{% notice note %}}
+Configuring a pod (via a `DaemonSet` or `Deployment` or otherwise) to tolerate ***any and all*** taints like this means that it is immune and unaffected by taints. System-critical pods like `kube-proxy` are the only pods that should be configured this way. The `DaemonSet` you'll create next will not have such a strong toleration.
+{{% /notice %}}
 
 ## Write a DaemonSet Manifest
 
