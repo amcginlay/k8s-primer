@@ -75,7 +75,7 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
-- role: worker
+- role: worker          # this is a two node cluster
 - role: worker
 EOF
 ```
@@ -320,24 +320,44 @@ What both the YAML and JSON notations show is that the pods created by the `kube
 Configuring a pod (via a `DaemonSet` or `Deployment` or otherwise) to tolerate ***any and all*** taints like this means that it is immune and unaffected by taints. System-critical pods like `kube-proxy` are the only pods that should be configured this way. The `DaemonSet` you'll create next will not have such a strong toleration.
 {{% /notice %}}
 
+## Create a Separate Namespace for Your DaemonSet
+
+{{< step >}}Write a Kubernetes manifest for a `dev-system` namespace.{{< /step >}}
+
+```bash
+cat > ~/environment/106-dev-system-namespace.yaml << EOF
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-system
+EOF
+
+kubectl apply -f ~/environment/106-dev-system-namespace.yaml
+```
+
+`kubectl` will respond as follows.
+{{< output >}}
+namespace/dev-system created
+{{< /output >}}
+
+
 ## Write a DaemonSet Manifest
 
 Like a `Deployment`, a `DaemonSet` Kubernetes manifest includes 
 
-Here is a graphical representation of the components of that YAML `Deployment` manifest.
+Here is a graphical representation of the components of that YAML `DaemonSet` manifest.
 
 {{< mermaid >}}
 graph TB
-subgraph Deployment-manifest
+subgraph DaemonSet-manifest
   apiVersion(apiVersion: apps/v1)
-  kind(kind: Deployment)
-  subgraph Deployment-metadata
+  kind(kind: DaemonSet)
+  subgraph DaemonSet-metadata
     name(name)
     deploymentLabels[labels]
   end
-  subgraph Deployment-spec
-    replicas(replicas)
-    strategy
+  subgraph DaemonSet-spec
+    updateStrategy
     selector
     subgraph template
       subgraph Pod-metadata
@@ -351,36 +371,33 @@ subgraph Deployment-manifest
 end
 {{< /mermaid >}}
 
-The critical ingredients in the deployment `spec` are:
-- `strategy` - choose the replacement or update strategy for new versions of your app
-- `selector` - the selector allows the deployment to own pods with certain `Pod` labels
-- `template` - the template allows the deployment to create new pods with specific metadata and `Pod` spec
+The critical ingredients in the daemonset `spec` are:
+- `selector` - the selector allows the daemonset to own pods with certain `Pod` labels
+- `template` - the template allows the daemonset to create new pods with specific metadata and `Pod` spec
+- `updateStrategy` - (optional) choose the replacement or update strategy for new versions of your app
 
 {{% notice note %}}
 Unlike a `Deployment`, your `DaemonSet` will not specify a number of `replicas` each node will have one `Pod` for this `DaemonSet`. Well, each untained node; more on that later.
 {{% /notice %}}
 
-## Write your Deployment manifest
-
-Now that you know what goes in a `Deployment` manifest, it is time to create one. We'll skip the update `strategy`. For the `Pod` spec within, let's start simple, without the environment variables, volume mounts, and other fancy decorations.
+Now that you know what goes in a `DaemonSet` manifest, it is time to create one. We'll skip the `updateStrategy`. For the `Pod` spec within, let's start simple, without the environment variables, volume mounts, and other fancy decorations.
 
 ```bash
-cat << EOF | tee ~/environment/101-demo-deployment.yaml | kubectl -n dev apply -f -
+cat << EOF >~/environment/107-demo-daemonset.yaml 
 apiVersion: apps/v1          # remember to use apps/v1 instead of merely v1
-kind: Deployment             # the object schema Kubernetes uses to validate this manifest
+kind: DaemonSet              # the object schema Kubernetes uses to validate this manifest
 metadata:
-  name: demo                 # a name for your DEPLOYMENT
-  labels:                    # labels allow you to tag your DEPLOYMENT with a set of key/value pairs
-    app: demo                # it is customary to have an "app" key with a value to identify your deployment
-spec:                        # the DEPLOYMENT specification begins here, note no indentation!
-  replicas: 3                # the "spec.replicas" is one of the most important aspects of a Deployment
-  selector:                  # you can enable the Deployment to acquire/own pods which match your "selector"
+  name: demo-daemon          # a name for your DAEMONSET
+  labels:                    # labels allow you to tag your DAEMONSET with a set of key/value pairs
+    app: demo-daemon         # it is customary to have an "app" key with a value to identify your daemonset
+spec:                        # the DAEMONSET specification begins here, note no indentation!
+  selector:                  # you can enable the DaemonSet to acquire/own pods which match your "selector"
     matchLabels:             # the most common selector clause is to match labels on existing Pods
-      app: demo              # you want pre-existing pods with a label "app: demo" in this namespace
+      app: demo-daemon       # you want pre-existing pods with a label "app: demo-daemon" in this namespace
   template:                  # the "spec.template" is where you specify the Pod "metadata" and "spec" to deploy
     metadata:
       labels:
-        app: demo
+        app: demo-daemon
     spec:                    # this is like a Pod spec, but indented two YAML level (four spaces customarily)
       containers:            # a pod CAN consist of multiple containers, but this one has only one
       - name: demo           # a name for your CONTAINER
@@ -388,25 +405,32 @@ spec:                        # the DEPLOYMENT specification begins here, note no
 EOF
 ```
 
-Hopefully your deployment is successfully created.
+## Deploy Your DaemonSet
 
-{{< output >}}
-deployment.apps/demo created
-{{< /output >}}
+{{< step >}}Deploy your daemonset.{{< /step >}}
 
-Check the status of your deployment.
-
-```bash
-kubectl get deployment -n dev
+```kubectl
+kubectl -n dev-system apply -f ~/environment/107-demo-daemonset.yaml 
 ```
 
 {{< output >}}
-NAME   READY   UP-TO-DATE   AVAILABLE   AGE
-demo   3/3     3            3           27s
+daemonset.apps/demo-daemon created
 {{< /output >}}
-TODO
 
-## Deploy Your DaemonSet
+Hopefully your daemonset is successfully created.
+
+{{< step >}}Check the status of your daemonset.{{< /step >}}
+
+```bash
+kubectl get daemonset -n dev-system
+```
+
+{{< output >}}
+NAME          DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+demo-daemon   1         1         1       1            1           <none>          4m53s
+{{< /output >}}
+
+TODO
 
 ## Untaint Nodes
 
