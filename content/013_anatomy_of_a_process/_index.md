@@ -62,7 +62,8 @@ So lets switch our attention to our Cloud9 environment and see some of this in a
 
 Return to your existing Cloud9 environment and, if necessary, start a new command line session using `Window -> New Terminal`.
 Each shell instance is a process like any other and each process has a [process identifier](https://en.wikipedia.org/wiki/Process_identifier) (PID) which is, ostensibly, unique across any single virtual machine instance.
-You can identify the PID of the current shell as follows.
+
+{{< step >}}You can identify the PID of the current shell as follows.{{< /step >}}
 ```bash
 echo $$
 ```
@@ -79,7 +80,8 @@ You will revisit the /proc virtual filesystem later.
 
 The numerical response to `echo $$` is the PID for the current shell.
 Upon repeat invocations its response is consistent but will differ between any `New Terminal` sessions you create.
-Now check the collection of currently running processes under the current user ID (UID) `ec2-user`.
+
+{{< step >}}Now check the collection of currently running processes under the current user ID (UID) `ec2-user`.{{< /step >}}
 ```bash
 ps -f
 ```
@@ -103,9 +105,24 @@ Noteworthy points from the response are as follows.
 The PPID of the current shell can be discovered using `echo $PPID`.
 {{% /notice %}}
 
+This can be depicted graphically as follows:
+
+{{< mermaid >}}
+graph TB
+proc1((PID 5830<br>bash -c ...))
+proc2((PID 5831<br>bash -l))
+proc3((PID 6443<br>ps -f))
+proc1 --> proc2
+proc2 --> proc3
+
+classDef blue fill:#0cf,stroke:#333,stroke-width:4px;
+class proc1,proc2,proc3 blue;
+{{< /mermaid >}}
+
+## Environmental Inheritance
 
 Now you can experiment.
-Create an environment variable and check it was successfully set.
+{{< step >}}Create an environment variable and check it was successfully set.{{< /step >}}
 ```bash
 K8S_PRIMER=before            # create a local variable
 export K8S_PRIMER            # "promote" as an environment variable
@@ -118,14 +135,15 @@ Local variables and environment variables look and behave the same but **only** 
 This difference is subtle but important.
 {{% /notice %}}
 
-Next, create a child process which sticks around a little longer than `ps`.
-The easiest way to achieve this is to ask your shell (Bash) to spawn another shell.
+{{< step >}}Next, create a child process which sticks around a little longer than `ps`.
+The easiest way to achieve this is to ask your shell (Bash) to spawn another shell.{{< /step >}}
 ```bash
 bash
 ```
 
 The new child shell becomes your currently active shell.
-Now inspect your current PID and summarize your running processes.
+
+{{< step >}}Now inspect your current PID and summarize your running processes.{{< /step >}}
 ```bash
 echo $$
 ps -f
@@ -133,7 +151,6 @@ ps -f
 
 {{< output >}}
 48558
-UID          PID    PPID  C STIME TTY          TIME CMD
 UID          PID    PPID  C STIME TTY          TIME CMD
 ec2-user    5830    5829  0 14:26 pts/1    00:00:00 bash -c export ISOUTPUTPANE=0;bash -l
 ec2-user    5831    5830  0 14:26 pts/1    00:00:00 bash -l
@@ -145,7 +162,7 @@ ec2-user   48591   48558  0 15:54 pts/1    00:00:00 ps -f
 Observe that the PPID of your current shell matches the PID of your original shell.
 {{% /notice %}}
 
-Now check that the variable you initialized in the parent process is visible from the child process.
+{{< step >}}Now check that the variable you initialized in the parent process is visible from the child process.{{< /step >}}
 ```bash
 echo ${K8S_PRIMER}
 ```
@@ -155,6 +172,7 @@ before
 {{< /output >}}
 
 So the variable is visible and set appropriately, but what about making modifications to variables from within the child process?
+{{< step >}}Modify the variable.{{< /step >}}
 ```bash
 K8S_PRIMER=after
 echo ${K8S_PRIMER}
@@ -165,9 +183,26 @@ after
 {{< /output >}}
 
 Also good.
-So this modification from `true` to `false` must be visible from the parent process too, correct?
+
+{{< mermaid >}}
+graph TB
+proc1((PID 5830<br>bash -c ...))
+proc2((PID 5831<br>bash -l))
+proc3((PID 48558<br>bash))
+proc1 --> proc2
+proc2 --> proc3
+env2>K8S_PRIMER=before]
+env3>K8S_PRIMER=after]
+proc2 -.->|has env| env2
+proc3 -.->|has env| env3
+
+classDef blue fill:#0cf,stroke:#333,stroke-width:4px;
+class proc1,proc2,proc3 blue;
+{{< /mermaid >}}
+
+So this modification from `before` to `after` must be visible from the parent process too, correct?
 The original shell is still there, in a passive state, patiently waiting for the child to pass control back to it.
-Use `exit` to terminate the child process so the parent regains input from the keyboard and you can verify this assertion.
+{{< step >}}Use `exit` to terminate the child process so the parent regains input from the keyboard and you can verify this assertion.{{< /step >}}
 ```bash
 exit                         # head back in the originating shell (PPID)
 echo $$                      # back in the original shell
