@@ -1,7 +1,7 @@
 languageCode = "en-us"
 ignoreFiles = [ "\\.files/README.md$",  "content/intermediate/260_weave_flux/app.files/"]
 defaultContentLanguage = "en"
-title = "Kubernetes Primer"
+title = "Domain Starter: Kubernetes"  # was Kubernetes Primer
 theme = "learn"
 uglyurls = false
 # googleAnalytics = "UA-44634850-4"
@@ -16,7 +16,7 @@ editURL = "https://github.com/amcginlay/k8s-primer/edit/main/content/"
 themeVariant = "mine"
 showVisitedLinks = false
 author = "Alan McGinlay"
-description = "Kubernetes Primer"
+description = "Domain Starter: Kubernetes"  # was Kubernetes Primer
 disableSearch = false
 disableAssetsBusting = false
 disableLanguageSwitchingButton = true
