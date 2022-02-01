@@ -505,8 +505,73 @@ You have successfully removed the taints from both those worker nodes.
 
 ## DaemonSet Quiz
 
-TODO
+Please take the following quiz to review your knowledge of `DaemonSet` objects.
+
+{{< quizdown >}}
+
+---
+primary_color: orange
+secondary_color: lightgray
+text_color: black
+shuffle_questions: false
+---
+
+## Which nodes?
+
+---
+shuffle_answers: false
+---
+
+Which nodes does a `DaemonSet` deploy pods to?
+
+> How is a daemonset different than a deployment?
+
+- [ ] a specific list of nodes in your `DaemonSet` spec
+- [ ] randomly scheduled to the number of `replicas` you specify
+- [ ] all nodes, always, no exceptions
+- [x] all nodes, except for nodes that repel the pods
+
+## Repel pods
+
+Which Kubernetes property **repels** certain pods?
+
+> Soft Cell sang about what kind of love?
+
+- [ ] Schedule
+- [x] Taint
+- [ ] Toleration
+- [ ] MatchLabels
+
+## Kubernetes manifests
+
+What is the typical order we have used to write Kubernetes manifests?
+
+> Though not a mandatory order, we have followed a pattern in this workshop.
+
+1. apiVersion
+2. kind
+3. metadata
+4. spec
+
+## Tolerations
+
+Where do you put tolerations in a `DaemonSet` manifest?
+
+> What kind of Kubernetes object does the `DaemonSet` manage?
+
+- [ ] `metadata.tolerations`
+- [ ] `spec.tolerations`
+- [ ] `spec.template.tolerations`
+- [x] `spec.template.spec.tolerations`
+
+{{< /quizdown >}}
 
 ## Success
 
-TODO
+
+In this training adventure, you have:
+- Deployed a `DaemonSet` in your cluster (`demo-daemon`).
+- Investigated a key difference between *your* daemonset and `kube-proxy`--*tolerations*.
+- Tainted some nodes in the cluster and observed the effects.
+- Patched your `DaemonSet` to **tolerate** those taints.
+- Untainted the nodes.
