@@ -152,10 +152,6 @@ status:
 
 TODO - inherit from - https://github.com/amcginlay/eks-demos/blob/main/doc/12-clusterip-services/README.md
 
-# K8s ClusterIP Services - because pods need to talk to each other
-
-This section assumes that your `echo-frontend` app is deployed and scaled to 3 instances.
-
 ### Using `nginx` as a "jumpbox"
 
 ClusterIP services are intended to establish dynamic communication channels between individual pods inside your cluster.
@@ -216,9 +212,7 @@ That's [netfilter/iptables](https://netfilter.org/) at work.
 When pods belonging to services are started/stopped, the **node-proxy** components on the worker nodes all simultaneously modify their routes, creating a consistent kernel-level load balancer per service.
 As a result, it doesn't matter which worker node receives the request, the routing behaviour is consistently well distributed.
 
-We will use the "jumpbox" again so leave it in place for now.
 
-[Return To Main Menu](/README.md)
 
 ## Test Your Service
 
