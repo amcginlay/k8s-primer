@@ -14,7 +14,9 @@ Where should your configuration values go? There's a kind of Kubernetes object f
 
 A [`ConfigMap`](https://kubernetes.io/docs/concepts/configuration/configmap/) is a kind of Kubernetes resource that implements as **key-value** store, like many other configuration file and key-value database technologies. The values in a `ConfigMap` can be simple values or complicated structures of values.
 
-Let's start simple. Make a `ConfigMap` with the value you used to directly put in the `env` portion of a container definition in a `Pod` spec.
+Let's start simple. 
+
+{{< step >}}Make a `ConfigMap` with the value you used to directly put in the `env` portion of a container definition in a `Pod` spec.{{< /step >}}
 
 ```bash
 cat > ~/environment/004-greeting-configmap.yaml << EOF
@@ -40,6 +42,7 @@ configmap/greeting created
 You can refer to `ConfigMap` resources within other Kubernetes resources. 
 For example, you can change your `Pod` spec to [pull the value of a container's environment variables from a `ConfigMap`](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#define-container-environment-variables-using-configmap-data). Do that now.  
 
+{{< step >}}Create this new version of your pod manifest with the `configMapKeyRef` section as follows.{{< /step >}}
 ```bash
 cat << EOF >~/environment/005-demo-pod.yaml 
 apiVersion: v1
@@ -59,20 +62,20 @@ spec:
 EOF
 ```
 
-Delete the prior version of the pod.
+{{< step >}}Delete the prior version of the pod.{{< /step >}}
 
 ```bash
 kubectl -n dev delete -f ~/environment/003-demo-pod.yaml 
 ```
 
-Then deploy this replacement pod which uses the `ConfigMap`.
+{{< step >}}Then deploy this replacement pod which uses the `ConfigMap`.{{< /step >}}
 
 ```bash
 kubectl -n dev apply -f ~/environment/005-demo-pod.yaml 
 ```
 
 
-`exec` into your new pod to test it from inside as follows.
+{{< step >}}`exec` into your new pod to test it from inside as follows.{{< /step >}}
 ```bash
 kubectl -n dev exec demo -it -- curl http://localhost:80
 ```
@@ -84,7 +87,9 @@ Bonjour de demo
 
 ## Check when a container picks up changes
 
-If you change a value in a `ConfigMap`, does the container in your pod automatically receive the change? To find out, change the value in the configmap:
+If you change a value in a `ConfigMap`, does the container in your pod automatically receive the change? 
+
+{{< step >}}To find out, change the value in the configmap:{{< /step >}}
 
 ```bash
 sed <~/environment/004-greeting-configmap.yaml -e 's/Bonjour de/Hallo aus/' >~/environment/006-greeting-configmap.yaml
@@ -97,7 +102,7 @@ which is confirmed as follows:
 configmap/greeting configured
 {{< /output >}}
 
-Confirm the change is in your "greeting" `ConfigMap`:
+{{< step >}}Confirm the change is in your "greeting" `ConfigMap`:{{< /step >}}
 ```bash
 kubectl get cm -n dev greeting -o yaml
 ```
@@ -120,7 +125,7 @@ metadata:
   uid: ac32805a-78fd-4f70-82c0-8678525f7825
 {{< /output >}}
 
-Run the web query to see the current value in the running container:
+{{< step >}}Run the web query to see the current value in the running container:{{< /step >}}
 
 ```bash
 kubectl -n dev exec demo -it -- curl http://localhost:80
@@ -136,6 +141,7 @@ This is the *old* value you had assigned previously. Why?
 In *processes*, and therefore the *containers* that contain them, values of environment variables ***bind*** (are assigned) their values at process start (`exec(2)`, not `fork(2)`) time. Therefore, because the pod's container and its processes continued to run, but was *not restarted*, it is still running with the old stale value.
 {{% /notice %}}
 
+{{< step >}}Check the state of your pod again.{{< /step >}}
 ```bash
 kubectl get pod -n dev demo
 ```
@@ -147,6 +153,8 @@ demo   1/1     Running   0          10h
 
 How do you get the container to restart, which will restart the process which has the stale value?
 
+{{< step >}}Kill the current instance of the container by killing the process at the root of its process hierarchy.{{< /step >}}
+
 ```bash
 kubectl -n dev exec demo -it -- kill 1
 kubectl get pods -n dev
@@ -157,7 +165,7 @@ NAME   READY   STATUS    RESTARTS   AGE
 demo   1/1     Running   1          10h
 {{< /output >}}
 
-Now that the container has restarted, check if it picked up the new value from the `ConfigMap`.
+{{< step >}}Now that the container has restarted, check if it picked up the new value from the `ConfigMap`.{{< /step >}}
 
 ```bash
 kubectl -n dev exec demo -it -- curl http://localhost:80
@@ -175,6 +183,7 @@ A process does not pick up new environment variable values until it is restarted
 
 In the first `ConfigMap` example, you referred to one single datum within that map. `ConfigMap`s can be more complicated than that one, therefore you should know how to reference values from more complex structures. Let's take a small step. 
 
+{{< step >}}Create another `greeting` configmap manifest with more interesting key-value pairs in the data section, and apply it.{{< /step >}}
 ```bash
 cat > ~/environment/007-greeting-configmap.yaml << EOF
 apiVersion: v1
@@ -192,7 +201,7 @@ EOF
 kubectl apply -f ~/environment/007-greeting-configmap.yaml
 ```
 
-Now change the way your container refers to that `ConfigMap`. Select the value `messages.greeting` this time.
+{{< step >}}Now change the way your container refers to that `ConfigMap`. Select the value `messages.greeting` this time.{{< /step >}}
 
 ```bash
 cat << EOF >~/environment/008-demo-pod.yaml 
@@ -213,20 +222,20 @@ spec:
 EOF
 ```
 
-Delete the prior version of the pod.
+{{< step >}}Delete the prior version of the pod.{{< /step >}}
 
 ```bash
 kubectl -n dev delete -f ~/environment/005-demo-pod.yaml 
 ```
 
-Then deploy this replacement pod which uses the revised `ConfigMap`.
+{{< step >}}Then deploy this replacement pod which uses the revised `ConfigMap`.{{< /step >}}
 
 ```bash
 kubectl -n dev apply -f ~/environment/008-demo-pod.yaml 
 ```
 
 
-`exec` into your new pod to test it from inside as follows.
+{{< step >}}`exec` into your new pod to test it from inside as follows.{{< /step >}}
 ```bash
 kubectl -n dev exec demo -it -- curl http://localhost:80
 ```
@@ -261,7 +270,7 @@ Environment variables are just one of the ways you can use `ConfigMap` values. A
 While the "greeting" config map could be mounted in a volume, let's look at another style of `ConfigMap` as well.
 {{% /notice %}}
 
-Create a "quotes" `ConfigMap` as follows:
+{{< step >}}Create a "quotes" `ConfigMap` as follows:{{< /step >}}
 
 ```bash
 cat > ~/environment/009-quotes-configmap.yaml << EOF
@@ -298,7 +307,7 @@ Take note of the two ***keys*** in the `data` section:
 
 Each of these keys has a multi-line value. Why is the punctuation different after the colon and before those value lines? We'll refer back this source YAML later and look at the effects of the `|` used with `dasiy-bell.txt` and the `>` used with `hamlet-nutshell.txt`.
 
-Get a list of the current `ConfigMap` objects in the `dev` Kubernetes namespace:
+{{< step >}}Get a list of the current `ConfigMap` objects in the `dev` Kubernetes namespace:{{< /step >}}
 ```bash
 kubectl get configmaps -n dev
 ```
@@ -310,7 +319,7 @@ kube-root-ca.crt   1      16h
 quotes             2      2m8s
 {{< /output >}}
 
-Witness how Kubernetes has formatted and stored those two quotes:
+{{< step >}}Witness how Kubernetes has formatted and stored those two quotes:{{< /step >}}
 
 ```bash
 kubectl get cm -n dev quotes -o yaml
@@ -349,6 +358,7 @@ The choice of which notation you use depends largely on the needs of the softwar
 
 Now for the ***fun*** part. You can create `volumes` in your pods which refer to config maps. Then you can mount any of that pod's volumes within each of the pod's containers' *filesystem* namespaces. The power of this should not be underestimated. Not only can you map *arguments* and *environment variables* into your running containers, but you can map `ConfigMap` data as files into your containers. Think about that for a moment. You do not have to build new container *images* when simply want containers to use different files. These files could be data files, configuration files, et cetera. Let's note in passing that a `ConfigMap` can not only have a `data` section, but a `binaryData` section as well. How do you want to get those beautiful `png` graphic images into your pods? More on that later. For now, let's simply mount a volume with some simple text files.
 
+{{< step >}}Create yet another version of your pod manifest, this one with both the `env` reference, and now adding a `volumeMounts` to the newer configmap.{{< /step >}}
 ```bash
 cat << EOF >~/environment/010-demo-pod.yaml 
 apiVersion: v1
@@ -375,30 +385,30 @@ spec:
 EOF
 ```
 
-Delete the prior version of the pod.
+{{< step >}}Delete the prior version of the pod.{{< /step >}}
 
 ```bash
 kubectl -n dev delete -f ~/environment/008-demo-pod.yaml 
 ```
 
-Now deploy this pod which uses one `ConfigMap` for the `env` variable and consumes another `ConfigMap` as a volume.
+{{< step >}}Now deploy this pod which uses one `ConfigMap` for the `env` variable and consumes another `ConfigMap` as a volume.{{< /step >}}
 
 ```bash
 kubectl -n dev apply -f ~/environment/010-demo-pod.yaml 
 ```
 
 
-`exec` into your new pod and list the files in `/var/quotes`.
+{{< step >}}`exec` into your new pod and list the files in `/var/quotes`.{{< /step >}}
 ```bash
 kubectl -n dev exec demo -it -- ls /var/quotes
 ```
 
-Now see what that `daisy-bell.txt` file looks like inside the container.
+{{< step >}}Now see what that `daisy-bell.txt` file looks like inside the container.{{< /step >}}
 ```bash
 kubectl -n dev exec demo -it -- cat /var/quotes/daisy-bell.txt
 ```
 
-Remember that you used `>` to told the lines of the Hamlet quote. Take a look at the result.
+{{< step >}}Remember that you used `>` to told the lines of the Hamlet quote. Take a look at the result.{{< /step >}}
 ```bash
 kubectl -n dev exec demo -it -- cat /var/quotes/hamlet-nutshell.txt
 ```
@@ -423,6 +433,7 @@ Create two new configmaps similar to the `~/environment/007-greeting-configmap.y
 The following assumes that you have already created a `test` namespace. If not, create one as follows before making the next configmap.
 {{% /notice %}}
 
+{{< step >}}If you do not *already* have a `test` namespace, create one now. Skip this if you have one.{{< /step >}}
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -432,7 +443,7 @@ metadata:
 EOF
 ```
 
-Create the English version of the "greeting" config map in the "test" namespace.
+{{< step >}}Create the English version of the "greeting" config map in the "test" namespace.{{< /step >}}
 
 ```bash
 cat > ~/environment/011-greeting-configmap-en.yaml << EOF
@@ -450,7 +461,7 @@ EOF
 kubectl -n test apply -f ~/environment/011-greeting-configmap-en.yaml 
 ```
 
-Make another namespace for "staging".
+{{< step >}}Make another namespace for "staging".{{< /step >}}
 
 ```bash
 cat <<EOF | tee ~/environment/012-staging-namespace.yaml | kubectl apply -f -
@@ -461,7 +472,7 @@ metadata:
 EOF
 ```
 
-And yet another config map for that staging namespace.
+{{< step >}}And yet another config map for that staging namespace.{{< /step >}}
 
 ```bash
 cat > ~/environment/013-greeting-configmap-de.yaml << EOF
@@ -479,7 +490,7 @@ EOF
 kubectl -n staging apply -f ~/environment/013-greeting-configmap-de.yaml 
 ```
 
-If you already have the "demo" pod running in the `dev` namespace, simply:
+{{< step >}}If you already have the "demo" pod running in the `dev` namespace, simply:{{< /step >}}
 
 ```bash
 kubectl -n test apply -f ~/environment/008-demo-pod.yaml 
@@ -490,7 +501,7 @@ kubectl -n staging apply -f ~/environment/008-demo-pod.yaml
 Be careful to use the pod manifest that does *not* have the "quotes" volume mapping, as the supporting "quotes" `ConfigMap` is only in the `dev` namespace, and *not* in the `test` and `staging` namespaces.
 {{% /notice %}}
 
-Check which pods are running:
+{{< step >}}Check which pods are running:{{< /step >}}
 ```bash
 kubectl get pods -A | grep demo
 ```
@@ -506,7 +517,7 @@ staging          demo         1/1     Running   0          43s
 test             demo         1/1     Running   0          43s
 {{< /output >}}
 
-Query each of the pods using `exec` in and `curl` from the inside:
+{{< step >}}Query each of the pods using `exec` in and `curl` from the inside:{{< /step >}}
 ```bash
 kubectl -n dev exec demo -it -- curl http://localhost:80
 ```
