@@ -118,7 +118,9 @@ With this in mind, to learn more about workloads, you can:
 
 ## What Daemons are in Your Cluster?
 
-`DaemonSet` workloads are typically used to provide useful background services that should be available on most nodes or every node in your Kubernetes clusters. Check to see if you have any daemonsets running in your cluster:
+`DaemonSet` workloads are typically used to provide useful background services that should be available on most nodes or every node in your Kubernetes clusters. 
+
+{{< step >}}Check to see if you have any daemonsets running in your cluster:{{< /step >}}
 
 ```bash
 kubectl get ds
@@ -128,7 +130,9 @@ kubectl get ds
 No resources found in default namespace.
 {{< /output >}}
 
-If there are no daemonsets running in the **default** namespace of your cluster, which other namespace could they be in? Check what namespaces you have:
+If there are no daemonsets running in the **default** namespace of your cluster, which other namespace could they be in? 
+
+{{< step >}}Check what namespaces you have:{{< /step >}}
 
 ```bash
 kubectl get ns
@@ -154,7 +158,7 @@ Which namespace contains some default `DaemonSet` objects?
 It is the `kube-system` namespace that contains several built-in `DaemonSet` and `Deployment` workloads.
 {{% /notice %}}
 
-Query for the list in `kube-system`:
+{{< step >}}Query for the list in `kube-system`:{{< /step >}}
 
 ```bash
 kubectl get daemonsets -n kube-system
@@ -168,7 +172,9 @@ kindnet      1         1         1       1            1           <none>        
 kube-proxy   1         1         1       1            1           kubernetes.io/os=linux   9d
 {{< /output >}}
 
-Workloads, like these daemonsets, ***managed*** pods. Check what pods you have in the `kube-system` namespace.
+Workloads, like these daemonsets, ***managed*** pods. 
+
+{{< step >}}Check what pods you have in the `kube-system` namespace.{{< /step >}}
 
 ```bash
 kubectl get pods -n kube-system
@@ -187,7 +193,8 @@ kube-scheduler-kind-control-plane            1/1     Running   1          9d
 {{< /output >}}
 
 Some of these pods were created by the daemonsets, while others were created by deployments.
-Get the details of the `kube-proxy` pod:
+
+{{< step >}}Get the details of the `kube-proxy` pod:{{< /step >}}
 
 ```bash
 kppod=$(kubectl get pods -n kube-system | grep kube-proxy | sed 's/ .*//')
@@ -200,7 +207,7 @@ Notice the `Pod` name is derived from the `DaemonSet` name. The suffix after "ku
 kube-proxy-sc7qw
 {{< /output >}}
 
-Confirm again the basic properties of the pod.
+{{< step >}}Confirm again the basic properties of the pod.{{< /step >}}
 
 ```bash
 kubectl get pods $kppod -n kube-system            
@@ -213,7 +220,7 @@ kube-proxy-sc7qw   1/1     Running   1          9d
 
 As usual, the **READY** column shows the number of containers running within the pod.
 
-Now get further details of that pod:
+{{< step >}}Now get further details of that pod:{{< /step >}}
 
 ```bash
 kubectl get pods $kppod -n kube-system -o yaml
@@ -270,7 +277,7 @@ In the `spec` section, note the following:
 - a single container runs a program which refers to both the environment variable and `config.conf` data from the mounted volume as follows:
     - `/usr/local/bin/kube-proxy --config=/var/lib/kube-proxy/config.conf --hostname-override=$(NODE_NAME)` 
 
-Now, look back at the definition of the `DaemonSet`.
+{{< step >}}Now, look back at the definition of the `DaemonSet`.{{< /step >}}
 
 ```bash
 kubectl get daemonset kube-proxy -n kube-system   
@@ -292,7 +299,7 @@ Unlike the `Pod` **READY**, **STATUS**, and **RESTARTS** columns, the default `k
 The UP-TO-DATE and AVAILABLE values are shown in DaemonSet and Deployment workloads by default, but not in ReplicaSet state. Also, as noted above, a Deployment will show a fraction like 1/1 in the READY column for ready/desired replica counts instead of separate READY, CURRENT, and DESIRED columns.
 {{% /notice %}}
 
-What does the definition of a `DaemonSet` look like? Check it out:
+{{< step >}}What does the definition of a `DaemonSet` look like? Check it out:{{< /step >}}
 
 ```bash
 kubectl get daemonset kube-proxy -n kube-system -o yaml
@@ -366,6 +373,7 @@ No resources found in default namespace.
 
 Is this a surprise? Did you want to have builtin deployments running in your **default** namespace? Which namespace would you expect them in?
 
+{{< step >}}Check for deployments in the `kube-system` namespace.{{< /step >}}
 ```bash
 kubectl get deployments -n kube-system
 ```
@@ -375,7 +383,7 @@ NAME      READY   UP-TO-DATE   AVAILABLE   AGE
 coredns   2/2     2            2           9d
 {{< /output >}}
 
-Rather than using `kubectl get` with the `-o yaml` option, use `describe` instead:
+{{< step >}}Rather than using `kubectl get` with the `-o yaml` option, use `describe` instead:{{< /step >}}
 
 ```bash
 kubectl describe deployment/coredns -n kube-system 
@@ -410,7 +418,7 @@ Some of the most important aspects of a `Deployment` (like this `coredns` one) a
 - The `Deployment` manages **Old** and **New** replica sets (`kind: ReplicaSet`) according to your update strategy when you make changes to the deployment.
 - Some changes do not require a new `ReplicaSet` but can be made in-place. Other changes require the deployment to upgrade to a new `ReplicaSet`.
 
-Take a look at the `ReplicaSet` the `coredns` deployment is managing:
+{{< step >}}Take a look at the `ReplicaSet` the `coredns` deployment is managing:{{< /step >}}
 
 ```bash
 kubectl get replicasets  -n kube-system
@@ -421,7 +429,7 @@ NAME                 DESIRED   CURRENT   READY   AGE
 coredns-558bd4d5db   2         2         2       10d
 {{< /output >}}
 
-Now look at the two `Pod`s that `ReplicaSet` manages:
+{{< step >}}Now look at the two `Pod`s that `ReplicaSet` manages:{{< /step >}}
 
 ```bash
 kubectl get pods -n kube-system | grep -v kube | grep -v kind
@@ -467,7 +475,8 @@ Now that you have looked at a pre-existing deployment, it is time to define your
 
 To create your own `Deployment`, you ned to add the proper `apiVersion` to your manifest.
 Recall that for a `Pod` we have `apiVersion: v1`. This is not the same for the less fundamental kinds of workloads.
-Run the following sequence of commands to create a reference for the Kubernetes workload objects.
+
+{{< step >}}Run the following sequence of commands to create a reference for the Kubernetes workload objects.{{< /step >}}
 
 ```bash
 kubectl api-resources | head -1 >workloads.txt    
@@ -494,7 +503,7 @@ So you know the `apiVersion` and the `kind`, but what else goes in a manifest? L
 2. Look at the manifest for an *existing* deployment. For example, you could Use `kubectl get deploy coredns -n kube-system -o yaml` or any other deployment.
 3. You can use the ``--dry-run=client` option with a ***generator*** to show an example manifest.
 
-Use the third technique as follows:
+{{< step >}}Use the third technique as follows:{{< /step >}}
 
 ```bash
 kubectl create deployment demo --image demo:1.0.0 --dry-run=client -o yaml
@@ -573,6 +582,8 @@ The critical ingredients in the deployment `spec` are:
 
 Now that you know what goes in a `Deployment` manifest, it is time to create one. We'll skip the update `strategy`. For the `Pod` spec within, let's start simple, without the environment variables, volume mounts, and other fancy decorations.
 
+{{< step >}}Create this deployment manifest and apply it.{{< /step >}}
+
 ```bash
 cat << EOF | tee ~/environment/101-demo-deployment.yaml | kubectl -n dev apply -f -
 apiVersion: apps/v1          # remember to use apps/v1 instead of merely v1
@@ -603,7 +614,7 @@ Hopefully your deployment is successfully created.
 deployment.apps/demo created
 {{< /output >}}
 
-Check the status of your deployment.
+{{< step >}}Check the status of your deployment.{{< /step >}}
 
 ```bash
 kubectl get deployment -n dev
@@ -614,7 +625,7 @@ NAME   READY   UP-TO-DATE   AVAILABLE   AGE
 demo   3/3     3            3           27s
 {{< /output >}}
 
-Check the name of the `ReplicaSet` that your `Deployment` created.
+{{< step >}}Check the name of the `ReplicaSet` that your `Deployment` created.{{< /step >}}
 
 ```bash
 kubectl get replicaset -n dev
@@ -627,7 +638,7 @@ demo-7c9cd496db   3         3         3       35s
 
 How is the name of this replica set related to the name of your deployment?
 
-Look at the pods your deployment created (using that replica set):
+{{< step >}}Look at the pods your deployment created (using that replica set):{{< /step >}}
 
 ```bash
 kubectl get pod -n dev
