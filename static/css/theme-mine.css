@@ -206,5 +206,19 @@ div.step {
     margin-left: 60px;
 }
 
+/* side-by-side column display for shell1+shell2 style */
+div.column-container {
+    display: flex;
+}
 
+div.column-child {
+    flex: 1;
+    border: 2px solid teal;
+    margin-right: 20px; /* moved here instead of just first-child - so 3 columns okay */
+}
+
+/* when playing favorites, does anyone really win? */
+/* div.column-child:first-child {
+    margin-right: 20px;
+} */
 
