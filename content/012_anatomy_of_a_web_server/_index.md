@@ -123,7 +123,7 @@ request
 
 {{% notice note %}}
 The empty output on the `CLIENT` side is expected.
-It means everything worked and there was nothing unexpected to report.
+It means everything worked and nothing untoward happened.
 In the world of Linux, **no news is usually good news!**
 {{% /notice %}}
 
