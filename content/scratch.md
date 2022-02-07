@@ -166,20 +166,20 @@ original-uts-namespace
 {{< /column >}}
 {{< /columns >}}
 
-## Alan's attempts ...
+## Alan's attempt ...
 {{< columns >}}
-{{< column >}}{{% example %}}
+{{% column %}}
 ```bash
 # SERVER
 nc --listen 8000
 ```
-{{% /example %}}{{< /column >}}
-{{< column >}}{{% example %}}
+{{% /column %}}
+{{% column %}}
 ```bash
 # CLIENT
 cat <<< "request" > /dev/tcp/127.0.0.1/8000
 ```
-{{% /example %}}{{< /column >}}
+{{% /column %}}
 {{< /columns >}}
 
 A process could also choose to coexist within the UTS namespace of another running process.
