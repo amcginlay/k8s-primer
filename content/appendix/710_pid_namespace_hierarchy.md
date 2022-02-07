@@ -1,7 +1,7 @@
 ---
 title: "Linux Namespaces - Appendix"
 chapter: false
-weight: 900
+weight: 710
 draft: false
 ---
 
