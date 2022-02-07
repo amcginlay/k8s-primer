@@ -30,4 +30,3 @@ phases:
        - echo "invalidating caches"
        - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT} --paths /*
        - echo "done"
-
