@@ -1,0 +1,34 @@
+version: 0.2
+
+env:
+  variables:
+    CLOUDFRONT: E9C1KRXJZFEBW
+    PRIMARY_BUCKET: k8s-primer
+
+phases:
+  install:
+    commands:
+      - echo installing hugo
+      - wget https://github.com/gohugoio/hugo/releases/download/v0.71.0/hugo_extended_0.71.0_Linux-64bit.tar.gz -O hugo_extended_0.71.0_Linux-64bit.tar.gz
+      - HUGO_TAR="$(find . -name "*Linux-64bit.tar.gz")"
+      - tar -xzf $HUGO_TAR
+      - chmod +x hugo
+      - mv hugo /usr/local/bin
+  pre_build:
+    commands:
+       - echo "dump vars"
+       - env
+  build:
+    commands:
+       - echo "building"
+       - echo "<p class="build-number">$(cut -c1-8 <<< ${CODEBUILD_RESOLVED_SOURCE_VERSION})</p>" >> layouts/partials/menu-footer.html
+       - cat layouts/partials/menu-footer.html
+       - npm run build
+       - echo "deploying"
+       - aws s3 sync public/ s3://${PRIMARY_BUCKET}/ --cache-control 'max-age=3600' --exclude '' --include '.html' --include '.xml';
+       - aws s3 sync public/ s3://${PRIMARY_BUCKET}/ --cache-control 'max-age=86400' --exclude '.html' --exclude '*.xml';
+  post_build:
+    commands:
+       - echo "invalidating caches"
+       - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT} --paths /*
+       - echo "done"

@@ -7,13 +7,16 @@ draft: false
 
 ## Purpose
 
-Prior to working with *containers* and *Kubernetes* it is helpful to have a dedicated workspace you can use to work, learn, and play with those. This **Setup** guides you through the process of setting up an isolated environment in the cloud that you can use independent of your local computer(s). The rest of this workshop assumes you have created a **Cloud9** environment in which you can perform the tasks and learn at your own pace. You may choose to delete one environment whenever you are done learning or set up a new one when you wish to start over.
+Prior to working with *containers* and *Kubernetes* it is helpful to have a dedicated workspace you can use to work, learn, and play with these things.
+This chapter guides you through the process of provisioning an isolated environment in the cloud that you can use independently of your local computer(s).
+The rest of this workshop assumes you have created a **Cloud9** environment in which you can perform the tasks and learn at your own pace.
+You may choose to delete one environment whenever you are done learning or set up a new one when you wish to start over.
 
 ## Prerequisutes
 
-- These instructions build a [Cloud9](https://aws.amazon.com/cloud9/) environment and assume you have access to an [AWS](https://aws.amazon.com/) account in order to do so.
-- For ensure reproducibility we will create all our infrastructure in the `us-west-2` region. 
-- CloudShell is used here as a temporary bootstrap to help you build your Cloud9 environment.
+- These instructions build a [Cloud9](https://aws.amazon.com/cloud9/) environment and assume you have access to a sufficiently privileged [AWS](https://aws.amazon.com/) account in order to do so.
+- To ensure reproducibility we will create all our infrastructure in the `us-west-2` region. 
+- **CloudShell** is used here as a temporary bootstrap to provision your Cloud9 environment.
 
 ## Configure CloudShell
 
@@ -51,7 +54,8 @@ env_id=$(
 ```
 
 {{% notice note %}}
-NOTE: The assignment of `subnet_id` here assumes that you have a *Default VPC* in the default region with a subnet in availability zone `a`. If this is not the case, either:
+NOTE: The assignment of `subnet_id` here assumes that you have a *Default VPC* in the default region with a subnet in availability zone `a`.
+If this is not the case, either:
 - use an alternative region which still has a *Default VPC*
 - or use a different account with a *Default VPC* in `us-west-2`
 - or modify the subnet query accordingly to choose an adequate subnet for the Cloud9 instance.
@@ -67,7 +71,8 @@ echo "https://${AWS_DEFAULT_REGION}.console.aws.amazon.com/cloud9/ide/${env_id}"
 If the Cloud9 URL is unresponsive, wait 30 seconds and try again.
 
 {{% notice note %}}
-From this point on you will no longer require access to the CloudShell environment. 
+Henceforth, your terminal interactions will exclusively take place via your **Cloud9** environment.
+You may initiate new command line sessions inside **Cloud9** at any time using `Window -> New Terminal`
 {{% /notice %}}
 
 From **within your Cloud9 environment**, to ensure we don't exhaust disk space, extend the root volume storage to 30gb.

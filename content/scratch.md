@@ -5,6 +5,10 @@ disableToc: true
 
 ## A place to try out Hugo features ...
 
+```bash
+dummy change
+```
+
 {{< step >}}
 Get your coffee. Always the first step.
 {{< /step >}}
@@ -160,6 +164,22 @@ hostname
 original-uts-namespace
 {{< /output >}}
 {{< /column >}}
+{{< /columns >}}
+
+## Alan's attempt ...
+{{< columns >}}
+{{% column %}}
+```bash
+# SERVER
+nc --listen 8000
+```
+{{% /column %}}
+{{% column %}}
+```bash
+# CLIENT
+cat <<< "request" > /dev/tcp/127.0.0.1/8000
+```
+{{% /column %}}
 {{< /columns >}}
 
 A process could also choose to coexist within the UTS namespace of another running process.
