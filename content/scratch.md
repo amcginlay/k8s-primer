@@ -5,6 +5,10 @@ disableToc: true
 
 ## A place to try out Hugo features ...
 
+```bash
+dummy change
+```
+
 {{< step >}}
 Get your coffee. Always the first step.
 {{< /step >}}
