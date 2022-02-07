@@ -166,6 +166,22 @@ original-uts-namespace
 {{< /column >}}
 {{< /columns >}}
 
+## Alan's attempts ...
+{{< columns >}}
+{{< column >}}{{% example %}}
+```bash
+# SERVER
+nc --listen 8000
+```
+{{% /example %}}{{< /column >}}
+{{< column >}}{{% example %}}
+```bash
+# CLIENT
+cat <<< "request" > /dev/tcp/127.0.0.1/8000
+```
+{{% /example %}}{{< /column >}}
+{{< /columns >}}
+
 A process could also choose to coexist within the UTS namespace of another running process.
 To migrate, a source process provides a PID which is a member of the destination UTS namespace.
 As a process can only be a member of one UTS namespace at a time it will be evicted from its current one during migration.
