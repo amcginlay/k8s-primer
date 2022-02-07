@@ -15,8 +15,8 @@ The point is, it is not always desirable or efficient to slow down but it is som
 So, as experienced technicians you know what a process is, correct?
 Of course you do.
 
-You likely know enough to get by, but do you know the detail required to progress to the next hill without stalling?
-In order to learn Kubernetes with confidence you will likely benefit from revisiting the humble **process** to gain a renewed appreciation how they interact with each other and the "quirky tricks" they are capable of.
+You likely know enough to survive, but do you know the detail required to progress to the next big hill without stalling?
+In order to tackle Kubernetes with confidence you will revisit the humble **process** to gain a renewed appreciation how they relate to one another and the "quirky tricks" they are capable of.
 
 ## Common misconceptions about processes
 There are **two** common, yet significant, misconceptions about processes that need to be dispelled.
@@ -29,7 +29,7 @@ Is this screen familiar to you?
 ![task-manager](/images/process/task-manager.png)
 
 Tools like the [Task Manager](https://en.wikipedia.org/wiki/Task_Manager_(Windows)), the [Activity Monitor](https://en.wikipedia.org/wiki/List_of_macOS_components#Activity_Monitor) or even the [top](https://en.wikipedia.org/wiki/Top_(software)) utility may be partially to blame for this.
-Running processes are **not** always in perfect (sibling) alignment with each other.
+Running processes are often **not** siblings.
 Much like a file system of directories and files, running processes form a tree (or hierarchy) of parents, children, grandchildren and so on.
 Any running process can spawn children and those processes will "inherit" some of the DNA of its parent (see point 2).
 
@@ -49,11 +49,10 @@ Is this screen familiar to you?
 
 If you need to add or edit a Windows [environment variable](https://en.wikipedia.org/wiki/Environment_variable) you just make the change in this dialog and it is immediately available from within your [Windows CMD sessions]((https://en.wikipedia.org/wiki/Cmd.exe)), correct?
 Not quite.
-You may recall that you would also need to **restart** your CMD sessions for those changes to be visible from inside the session.
+You may recall that you would also need to **restart** your CMD sessions for those changes to be visible from **within** the sessions.
 This is because the settings you make via the Environment Variables dialog belong to a top-level process (**explorer.exe**) which represents your desktop environment.
-Whenever you create a CMD session, your desktop environment spawns a **child process** which takes a **point-in-time** copy of these environment variables from this top-level process and this is why existing sessions require a restart.
+Whenever you create a CMD session, your desktop environment spawns a **child process** which takes a **point-in-time** copy of these environment variables from the originating process and this is why existing sessions require a restart.
 At this point, if you restart just **some** CMD sessions but not others then the `env` command will yield inconsistent results.
-Enough said.
 
 This behavior is by design and consistent across all popular operating systems, including Linux.
 So lets switch our attention to our Cloud9 environment and see some of this in action.
@@ -61,7 +60,7 @@ So lets switch our attention to our Cloud9 environment and see some of this in a
 ## Hands on with processes
 
 Return to your existing Cloud9 environment and, if necessary, start a new command line session using `Window -> New Terminal`.
-Each shell instance is a process like any other and each process has a [process identifier](https://en.wikipedia.org/wiki/Process_identifier) (PID) which is, ostensibly, unique across any single virtual machine instance.
+Each shell instance is a process like any other and each possesses a [process identifier](https://en.wikipedia.org/wiki/Process_identifier) (PID) which is, ostensibly, unique across any single virtual machine instance.
 
 {{< step >}}You can identify the PID of the current shell as follows.{{< /step >}}
 ```bash
@@ -78,7 +77,7 @@ You can inspect information pertaining the current shell by running `ls -l /proc
 You will revisit the /proc virtual filesystem later.
 {{% /notice %}}
 
-The numerical response to `echo $$` is the PID for the current shell.
+The numerical response to `echo $$` is the PID for the **current** shell.
 Upon repeat invocations its response is consistent but will differ between any `New Terminal` sessions you create.
 
 {{< step >}}Now check the collection of currently running processes under the current user ID (UID) `ec2-user`.{{< /step >}}
@@ -99,7 +98,7 @@ Noteworthy points from the response are as follows.
 - [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) is the default shell in Cloud9 and it runs as a regular process.
 - The `-f` switch on `ps` provides a full-format listing which enables you to identify the **parent PIDs** (PPID) of your processes.
 - Your call to `ps` is itself (momentarily) a child process of your current shell.
-- You will observe three processes and three generations of processes. In the above example, PID `6443` is a child of PID `5831` which is a child of PID `5830`.
+- You will observe three processes which collectively belong to three generations of processes. In the above example, PID `6443` is a child of PID `5831` which is a child of PID `5830`.
 
 {{% notice note %}}
 The PPID of the current shell can be discovered using `echo $PPID`.
@@ -159,7 +158,7 @@ ec2-user   48591   48558  0 15:54 pts/1    00:00:00 ps -f
 {{< /output >}}
 
 {{% notice note %}}
-Observe that the PPID of your current shell matches the PID of your original shell.
+Observe that the PPID of your current shell matches the PID of its originating shell.
 {{% /notice %}}
 
 {{< step >}}Now check that the variable you initialized in the parent process is visible from the child process.{{< /step >}}
@@ -200,9 +199,9 @@ classDef blue fill:#0cf,stroke:#333,stroke-width:4px;
 class proc1,proc2,proc3 blue;
 {{< /mermaid >}}
 
-So this modification from `before` to `after` must be visible from the parent process too, correct?
+So you **may** expect the variable modification, which occurred in the child process, to be visible from within the parent process.
 The original shell is still there, in a passive state, patiently waiting for the child to pass control back to it.
-{{< step >}}Use `exit` to terminate the child process so the parent regains input from the keyboard and you can verify this assertion.{{< /step >}}
+{{< step >}}Use `exit` to terminate the child process so the parent regains input from the keyboard and you can **verify** this assertion.{{< /step >}}
 ```bash
 exit                         # head back in the originating shell (PPID)
 echo $$                      # back in the original shell
@@ -214,13 +213,13 @@ echo ${K8S_PRIMER}
 before
 {{< /output >}}
 
-So the modification made in the child is **not** visible here in the originating parent process.
+So the modification made in the child process is **not** visible back in the originating parent process.
 This is because it **never** was the exact same variable, it just happened to have the same name.
 Recall from our earlier discussion (re. Windows CMD sessions) that when a child process is spawned it takes a point-in-time **copy** of the variables.
 We have just observed the same behavior in a different operating system.
 
 To be clear, the "copied state" behavior that exists for variables between parent and child processes is observable at **any** depth in the tree and it transpires that this **pattern** is not merely confined to variables.
-This allows you to do some pretty amazing things as you will find out in the next chapter.
+This allows you to do some pretty amazing things, as you will discover in the next chapter.
 
 ## Success
 
