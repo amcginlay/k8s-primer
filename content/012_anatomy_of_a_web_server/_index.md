@@ -121,6 +121,13 @@ request
 {{< /column >}}
 {{< /columns >}}
 
+{{% notice note %}}
+The empty output on the `CLIENT` side is expected.
+It means there was nothing to report, but everything works.
+In the world of Linux, **no news is usually good news!**
+{{% /notice %}}
+
+
 Do that again, this time putting the server into a loop so it can handle subsequent requests.
 {{< columns >}}
 {{% column %}}
@@ -269,7 +276,7 @@ Accept: */*
 {{< /columns >}}
 
 It may not be all that exciting but this is our minimum viable web server.
-There is no longer a failure in `curl` command (in true Linux style, no news is good news!) but there is also no tangible response from the **beyond** the successful receipt of a `200` [status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_success) in the [HTTP header](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields).
+There is no longer a failure in `curl` command (remember, no news is good news!) but there is also no tangible response from the **beyond** the successful receipt of a `200` [status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_success) in the [HTTP header](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields).
 
 {{% notice note %}}
 Pass the `--verbose` switch to `curl` if you wish to see proof that the 200 status code was consumed by the `CLIENT`.
