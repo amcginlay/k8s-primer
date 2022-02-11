@@ -75,7 +75,7 @@ Henceforth, your terminal interactions will exclusively take place via your **Cl
 You may initiate new command line sessions inside **Cloud9** at any time using `Window -> New Terminal`
 {{% /notice %}}
 
-## Extend the root volume
+## Extend your root volume
 
 From **within your Cloud9 environment**, to ensure we don't exhaust disk space, extend the root volume storage to 30gb.
 ```bash
@@ -112,7 +112,7 @@ sudo xfs_growfs -d /
 df -T # ... check disk use percentage has been reduced
 ```
 
-## Reconfigure the Cloud9 terminal prompt
+## Reconfigure your terminal prompt
 
 The Cloud9 terminal prompt is configured to do some pretty smart things but it can also misbehave, so dumb it down now.
 
@@ -121,7 +121,7 @@ echo "export PS1='$ '" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-## Dispose of the pre-loaded Docker images
+## Dispose of your pre-loaded Docker images
 
 Each Cloud9 instance has the [Docker](https://www.docker.com/) build/runtime tooling.
 Docker provides a local cache feature so it can make efficient re-use of downloaded container images.
