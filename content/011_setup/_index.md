@@ -117,7 +117,7 @@ df -T # ... check disk use percentage has been reduced
 The Cloud9 terminal prompt is configured to do some pretty smart things but it can also misbehave, so dumb it down now.
 
 ```
-echo "export PS1='[\w] \$ '" >> ~/.bashrc
+echo "export PS1='$ '" >> ~/.bashrc
 source ~/.bashrc
 ```
 
