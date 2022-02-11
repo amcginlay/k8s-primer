@@ -29,10 +29,36 @@ In this lesson, you will:
 3. delve into how virtual ethernet interfaces (**veths**) are used by the containers running in pods.
 
 {{% notice note %}}
-Pods using **veth** network interfaces is the foundation for facilitating communications pod-to-pod, pod-to-node, pod-to-control plane, pod-to-cloud, and pot-to-outside.
+Pods using **veth** network interfaces is the foundation for facilitating communications pod-to-pod, pod-to-node, pod-to-control plane, pod-to-cloud, and pod-to-outside.
 {{% /notice %}}
 
-## Talking Within Your Pod - Loopback Interface
+{{< mermaid >}}
+graph LR
+subgraph orange-ns[Orange Network Namespace]
+  curl((PID 6042<br>curl<br>port 49152))
+  tap1((Tap 1))
+end
+subgraph green-ns[Green Network Namespace]
+  nginx((PID 157<br>nginx<br>port 80))
+  tap2((Tap 2))
+end
+curl -->tap1
+tap1 ===|VETH Pair| tap2
+tap2 -->nginx
+classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+classDef blue fill:#6495ed,stroke:#333,stroke-width:4px;
+classDef blue2 fill:#0af,stroke:#333,stroke-width:4px;
+classDef cyan fill:#0ff,stroke:#333,stroke-width:4px;
+classDef lavender fill:#fcf,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+class orange-ns orange;
+class green-ns green;
+class tap1,tap2 cyan;
+class curl,nginx blue2;
+{{< /mermaid >}}
+
+## Talk Within Your Pod - Loopback Interface
 
 You can use loopback interfaces to communicate between containers running in the same pod. Before we get into that scenario, let's review the basics of loopback interfaces. Loopback interfaces can also be used to communicate between processes in the same container.
 
@@ -201,7 +227,7 @@ class curl,nginx blue2;
 Because the UNIX Time-Sharing (`uts`) namespace and Network (`net`) namespace is *shared* between the containers in a pod, we can go one step further. Inter-container communications within the pod can also run over the loopback interface.
 {{% /notice %}}
 
-## Talking to Another Process - Through a Pipe
+## Talk to Another Process - Through a Pipe
 
 Another mechanism you can use to communicate between processes is a **pipe**.
 
@@ -390,45 +416,67 @@ docker exec kind-worker ip address | grep -v inet6 | grep -v forever
 
 ## Building Veth Pairs
 
-Build veth pairs like the techniques used in the Linux Namespaces section...
+You can build veth pairs like the techniques used in the [Linux Namespaces section]({{< ref "014_linux_namespaces" >}}). This exercise is intended to help you understand the mechanics and nature of `veth` interfaces, and `veth` pairs. Kubernetes manages `veth` pairs for you via the `kubelet` working with the container runtime (e.g. `containerd`) and container network interface (CNI) such as `kindnet`, `flannel`, or `aws-node`.
 
-...
+{{< step >}}Obtain some basic information about the `ip link` command.{{< /step >}}
 
-
+```bash
 man ip-link | grep -B 3 -A 3 veth
-       ip link help [ TYPE ]
+```
 
-       TYPE := [ bridge | bond | can | dummy | hsr | ifb | ipoib |
-               macvlan | macvtap | vcan | vxcan | veth | vlan |
-               vxlan | ip6tnl | ipip | sit | gre | gretap | erspan
-               | ip6gre | ip6gretap | ip6erspan | vti | nlmon |
-               ipvlan | lowpan | geneve | vrf | macsec ]
+{{< output >}}
+    ip link help [ TYPE ]
+
+    TYPE := [ bridge | bond | can | dummy | hsr | ifb | ipoib |
+            macvlan | macvtap | vcan | vxcan | veth | vlan |
+            vxlan | ip6tnl | ipip | sit | gre | gretap | erspan
+            | ip6gre | ip6gretap | ip6erspan | vti | nlmon |
+            ipvlan | lowpan | geneve | vrf | macsec ]
 --
-                      vxcan - Virtual Controller Area Network tun‐
-                      nel interface
+        ...
+        veth - Virtual ethernet interface
+        ...
+    and this "4" priority can be used in the
+    egress qos mapping to set VLAN prio "5":
 
-                      veth - Virtual ethernet interface
-
-                      vlan - 802.1q tagged virtual LAN interface
-
+        ip link set veth0.10 type vlan egress 4:5
 --
-                          and this "4" priority can be used in the
-                          egress qos mapping to set VLAN prio "5":
+    For a link of types VETH/VXCAN the following additional arguments are supported:
 
-                              ip link set veth0.10 type vlan
-                              egress 4:5
-
-
---
-              For a link of types VETH/VXCAN the following addi‐
-              tional arguments are supported:
-
-              ip link add DEVICE type { veth | vxcan } [ peer name
-              NAME ]
+        ip link add DEVICE type { veth | vxcan } [ peer name NAME ]
+{{< /output >}}
 
 veth
 
 https://man7.org/linux/man-pages/man4/veth.4.html
+
+
+Virtual Ethernet Pair
+{{< mermaid >}}
+graph LR
+subgraph orange-ns[Orange Network Namespace]
+  curl((PID 6042<br>curl<br>port 49152))
+  tap1((Tap 1))
+end
+subgraph green-ns[Green Network Namespace]
+  nginx((PID 157<br>nginx<br>port 80))
+  tap2((Tap 2))
+end
+curl -->tap1
+tap1 ===|VETH Pair| tap2
+tap2 -->nginx
+classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+classDef blue fill:#6495ed,stroke:#333,stroke-width:4px;
+classDef blue2 fill:#0af,stroke:#333,stroke-width:4px;
+classDef cyan fill:#0ff,stroke:#333,stroke-width:4px;
+classDef lavender fill:#fcf,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+class orange-ns orange;
+class green-ns green;
+class tap1,tap2 cyan;
+class curl,nginx blue2;
+{{< /mermaid >}}
 
 [Introduction to Container Networking - September 10, 2019 | By: Rancher Admin](https://www.suse.com/c/rancher_blog/introduction-to-container-networking/)
 
