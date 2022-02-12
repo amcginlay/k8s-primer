@@ -1,5 +1,5 @@
 ---
-title: "The Anatomy Of A Web Server"
+title: "Anatomy Of A Web Server"
 chapter: false
 weight: 12
 draft: false

@@ -1,5 +1,5 @@
 ---
-title: "The Anatomy Of A Process"
+title: "Anatomy Of A Process"
 chapter: false
 weight: 13
 draft: false

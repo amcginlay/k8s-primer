@@ -1,5 +1,5 @@
 ---
-title: "Containerize Your App"
+title: "Build Containers"
 chapter: false
 weight: 15
 draft: false
@@ -14,7 +14,7 @@ Training material often jumps straight into Kubernetes from a heavily operationa
 
 We will take a different approach.
 We will first **produce** a simple app before containerizing it.
-Only once we're happy with the app in container form will we **consume** it from Kubernetes.
+Only once we are happy with the app in its container form will we **consume** it from Kubernetes.
 Hopefully this end to end approach can help to close some knowledge gaps that might be holding you back from embracing Kubernetes. 
 
 In this exercise you will do the following:
