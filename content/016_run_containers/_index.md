@@ -187,6 +187,8 @@ Eeeek!
 So the contents of `/` inside the container are simply the re-mapped contents of some regular subdirectory under the control of the Docker runtime.
 You have just witnessed how Docker exploits **Mount namespaces** to provide the illusion of file-system isolation inside containers.
 
+To close out this section you may also like to try `exec`ing into a container and issuing the `mount -t overlay` command to see the `var/lib/docker` references here.
+
 ## Gracefully stop a containerized app
 
 You can request that your remaining container be stopped using `docker stop` as follows.
