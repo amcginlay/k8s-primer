@@ -15,7 +15,7 @@ Training material often jumps straight into Kubernetes from a heavily operationa
 We will take a different approach.
 We will first **produce** a simple app before containerizing it.
 Only once we are happy with the app in its container form will we **consume** it from Kubernetes.
-Hopefully this end to end approach can help to close some knowledge gaps that might be holding you back from embracing Kubernetes. 
+Hopefully this end-to-end approach can help to close some knowledge gaps that might be holding you back from embracing Kubernetes. 
 
 In this exercise you will do the following:
 1. Build a *simple* app and test it *locally* in the Cloud9 environment. 
@@ -35,10 +35,20 @@ EOF
 ```
 
 Before we tackle containers, keep it simple.
-Just run this app as a webserver from your Cloud9 environment.
+Set the `hostname` to something appropriate and run this app as a webserver from your Cloud9 environment.
 ```bash
+sudo hostname Cloud9
 GREETING="Hello from" php -S localhost:8080
 ```
+
+Example output:
+{{< output >}}
+PHP 7.2.24 Development Server started at Sat Feb 12 18:24:28 2022
+Listening on http://localhost:8080
+Document root is /home/ec2-user/environment
+Press Ctrl-C to quit.
+{{< /output >}}
+
 
 {{% notice note %}}
 The above syntax demonstrates the ability to inject environment variables (e.g. `GREETING`) into child processes at the point of creation.
@@ -57,15 +67,17 @@ In the second terminal session, use the `curl` command to send an HTTP GET reque
 curl http://localhost:8080
 ```
 
-As each Cloud9 environment is hosted on a regular EC2 instance, the response indicates the private DNS name of the underlying instance. Your output from `curl` will display the value of the `GREETING` environment variable alongside a DNS name similar to the following, but with your Cloud9 instance's private IP as part of the DNS name.
+Example output:
 {{< output >}}
-Hello from ip-172-31-58-96.us-west-2.compute.internal
+Hello from Cloud9
 {{< /output >}}
 
-Now we have tested the app works, head back the first terminal session and hit `Ctrl+C` to stop the `php` webserver.
+Your output from `curl` will display the value of the `GREETING` environment variable alongside the hostname which you set earlier.
 
-Containers exploit the use of [Linux namespaces](https://en.wikipedia.org/wiki/Linux_namespaces) so once the app is packaged as a containerized process its hostname will appear to become independent of the underlying host.
-It is this behaviour which gives rise to containers being perceived as lightweight virtual machines.
+Now you have tested the app works, head back the first terminal session and hit `Ctrl+C` to stop the PHP webserver.
+
+Containers exploit the use of [namespaces](https://en.wikipedia.org/wiki/Linux_namespaces) so once the app is packaged as a containerized process its hostname will appear to become independent of the underlying host.
+It is this behavior which gives rise to containers often being described as lightweight virtual machines.
 
 ## Construct the Dockerfile
 
@@ -73,7 +85,7 @@ As mentioned in the [Setup](../011_setup) section, each Cloud9 instance comes wi
 In this section you will build a container image for your app using Docker.
 The Docker build tool uses [Dockerfiles](https://docs.docker.com/engine/reference/builder/) for this.
 A `Dockerfile` is a text document stored alongside your app code.
-It consists of scripted commands used by the Docker build tool to assemble a container image which packages your app and its dependencies. In this sense, your `Dockerfile` is like a recipe for cooking your raw `index.php` app into a cooked form--a *container image*.
+It consists of scripted commands used by the Docker build tool to assemble a container image which packages your app and its dependencies. In this sense, your `Dockerfile` is like a recipe for cooking a **container image** and `index.php` is the main ingredient.
 
 The Dockerfile for your app is very simple and is created as follows. Run this in your Cloud9 terminal.
 ```bash
@@ -85,8 +97,6 @@ RUN chmod a+rx index.php
 EOF
 ```
 
-Now, you could keep your app (`index.php`) and its dependencies (`Dockerfile`) in lockstep under source control.
-
 Here is a quick summary of your `Dockerfile`.
 
 - **`FROM php:8.0.1-apache`** Our app depends upon a webserver and PHP libraries to work.
@@ -95,14 +105,19 @@ Historically, all apps running on your host would have no option but to trust th
 Incompatibilities which arise from shared dependencies are avoidable with containers via [Mount namespaces](https://en.wikipedia.org/wiki/Linux_namespaces#Mount_(mnt)).
 Containers can internally switch their perceived location of `/`, away from the shared location to a mountpoint specifically dedicated to the running container, and safely fill it with just the dependencies it needs.
 The `FROM` instruction indicates a version-specific archive of files, known as a base layer, which get extracted into the dedicated mountpoint before being customized by the remaining instructions.
-As with any image, the base layer may also inject [`ENV`](https://docs.docker.com/engine/reference/builder/#env) variables,  [`EXPOSE`](https://docs.docker.com/engine/reference/builder/#expose) ports and [`RUN`](https://docs.docker.com/engine/reference/builder/#run) processes, etc in the running process space.
+As with any image, the base layer may also inject [`ENV`](https://docs.docker.com/engine/reference/builder/#env) variables,  [`EXPOSE`](https://docs.docker.com/engine/reference/builder/#expose) ports and [`RUN`](https://docs.docker.com/engine/reference/builder/#run) processes, etc in the target habitat defined by its namespaces.
 Base layers are themselves just published container images which are sourced from registries such as [Dockerhub](https://hub.docker.com/).
 In this example `php` is the name of an image and `8.0.1-apache` is the immutable version of that image.
 - **`COPY index.php /var/www/html/`** - The default virtual directory for our webserver is at `/var/www/html/`.
 The `COPY` instruction takes your app (`index.php`) from the local file system (on your Cloud9 instance in this case) and lays it down as the homepage for your webserver inside the container image.
-- **`RUN chmod a+rx index.php`** - A Linux command that will be familiar to you, `chmod` sets the access permissions of our app to ensure it is executable from any context within the contianer.
+- **`RUN chmod a+rx index.php`** - A Linux command that will be familiar to you, `chmod` sets the access permissions of our app to ensure it is executable from any context within the container.
+- **`CMD`(or `ENTRYPOINT`)** - this Dockerfile is slightly unusual in that these instructions, which are commonplace, **do not** appear.
+In your case the base layer initiates the webserver so once your (interpreted) PHP app is deposited and configured correctly everything is just ready to go.
 
-Each instruction in the Dockerfile adds new layers to your container image which are used to extend or override the detail of preceding layers.
+You could now, if you wish, keep your app (`index.php`) and its dependencies (`Dockerfile`) in lockstep under source control.
+Each container image begins as an empty collection of files with zero configuration.
+When processed, each instruction in the Dockerfile will add one **layer** of files and/or configuration to your container image.
+Each layer is used to extend or override the preceding layers.
 
 ## Build the container image
 
@@ -111,12 +126,7 @@ With the app ready and the Dockerfile composed you can now build a container ima
 docker build --tag demo:1.0.0 ~/environment/
 ```
 
-{{% notice note %}}
-If you do not tag your images they will get auto-tagged as `latest`, over and over again.
-Explicitly tagging your images (i.e. `demo:1.0.0`) is considered good practice and ultimately aids the immutability of your deployments.
-{{% /notice %}}
-
-The output produced will look something like this.
+Example output:
 {{< output >}}
 Sending build context to Docker daemon  15.36kB
 Step 1/4 : FROM php:8.0.1-apache
@@ -142,7 +152,8 @@ Successfully tagged demo:1.0.0
 {{< /output >}}
 
 {{% notice note %}}
-When you run `docker build` like this, it is like following your `Dockerfile` recipe to cook your raw app into a cooked (**containerized**) app. The result is a *container image*.
+If you do not tag your images they will get auto-tagged as `latest`, over and over again.
+Explicitly tagging your images (i.e. `demo:1.0.0`) is considered good practice and ultimately aids your deployments.
 {{% /notice %}}
 
 Once complete, list the images in the local cache.
@@ -150,21 +161,22 @@ Once complete, list the images in the local cache.
 docker images
 ```
 
-You will observe two images.
-
+Example output:
 {{< output >}}
 REPOSITORY   TAG            IMAGE ID       CREATED         SIZE
 demo         1.0.0          3e88e08548ff   2 minutes ago   417MB
 php          8.0.1-apache   6ad14718b8c3   10 months ago   417MB
 {{< /output >}}
 
-- **`php:8.0.1-apache`** is the versioned base layer you referenced in the Dockerfile `FROM` command
+You will observe two images.
+
+- **`php:8.0.1-apache`** is the versioned base layer you referenced in the Dockerfile `FROM` instruction
 - **`demo:1.0.0`** is the newly built and tagged container image for your app which sits down upon the `php` base layer
 
 ## Success
 
 In this exercise you did the following:
-1. Built a *simple* app and test it *locally* in the Cloud9 environment (like eating raw food).
+1. Built a *simple* app and tested it *locally* in the Cloud9 environment (like eating raw food).
 2. Wrote a `Dockerfile` with instructions for how to ***containerize*** your simple app (like writing a recipe).
 3. Built a *container image* using your `Dockerfile` using `docker build` (like cooking according to your recipe).
 
