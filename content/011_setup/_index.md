@@ -112,15 +112,6 @@ sudo xfs_growfs -d /
 df -T # ... check disk use percentage has been reduced
 ```
 
-## Reconfigure your terminal prompt
-
-The Cloud9 terminal prompt is configured to do some pretty smart things but it can also misbehave, so dumb it down now.
-
-```
-echo "export PS1='$ '" >> ~/.bashrc
-source ~/.bashrc
-```
-
 ## Dispose of your pre-loaded Docker images
 
 Each Cloud9 instance has the [Docker](https://www.docker.com/) build/runtime tooling.
@@ -128,6 +119,15 @@ Docker provides a local cache feature so it can make efficient re-use of downloa
 Cloud9 pre-loads the cache with images we will not need in this tutorial so flush out the cache as follows.
 ```bash
 docker system prune --all --force
+```
+
+## Reconfigure your terminal prompt
+
+The Cloud9 terminal prompt is configured to do some pretty smart things but it can also misbehave, so dumb it down now.
+
+```
+echo "export PS1='$ '" >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ## Success
