@@ -570,6 +570,8 @@ class proc6,proc7,proc8 orange;
 Even though processes from within different custom namespaces (e.g. `sleep 1001` and `sleep 1002`) cannot see each other, **all** processes remain visible from the root namespace.
 How you might go about testing that the previous statement is true?
 
+{{< step >}}To ensure a smooth transition to the next section, close **both** terminal windows at this point.{{< /step >}}
+
 ## Summary of namespace types
 
 Here's the summary of the main namespace types and word or two on their use.
