@@ -42,7 +42,7 @@ You will almost always want to place objects into an explicit namespace, so you 
 
 {{< step >}}Create your namespaces manifest then instruct Kubernetes to ingest it using `kubectl apply` which will cause Kubernetes to translate your manifests into objects.
 This manifest defines two namespaces, `dev` and `test`.{{< /step >}}
-```bash
+```yaml
 cat <<EOF | tee ~/environment/001-dev-test-namespaces.yaml | kubectl apply -f -
 apiVersion: v1
 kind: Namespace
@@ -138,7 +138,7 @@ To run a pod you need a YAML manifest which represents the pod.
 As per the namespaces created previously, with some judicious use of [piped commands](https://en.wikipedia.org/wiki/Pipeline_(Unix)) you can build and persist your pod manifest before asking Kubernetes to ingest it, as follows.
 
 {{< step >}}Create a `Pod` manifest, then use `kubectl apply` to provision the pod in your Kubernetes cluster.{{< /step >}}
-```bash
+```yaml
 cat <<EOF | tee ~/environment/002-demo-pod.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: Pod                    # the object schema Kubernetes uses to validate this manifest
@@ -215,6 +215,9 @@ When Kubernetes ingests your manifests it becomes duty-bound to **continually** 
 This strategy is known as the [operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/) and is prevalent throughout Kubernetes in the form of [controllers](https://kubernetes.io/docs/concepts/architecture/controller/).
 Pod restarts are evidence of this strategy at work and an indicator that Kubernetes is more than a simple container runtime, it is a **container orchestrator**.
 
+Obviously there is more to being a container orchestrator than just automatic restarts but this will suffice for now.
+You will learn more as you progress.
+
 ## Overriding environment variables
 When you deployed your containerized app into Docker you observed how it was possible to provide overrides for environment variables which meant you were able to separate your code from its config.
 You can also provide [environment variable overrides in Kubernetes](https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/).
@@ -239,7 +242,7 @@ Deletion implies downtime, and much of your future endeavors with Kubernetes wil
 {{% /notice %}}
 
 {{< step >}}Then deploy its replacement with the override in place.{{< /step >}}
-```bash
+```yaml
 cat <<EOF | tee ~/environment/003-demo-pod.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: Pod                    # the object schema Kubernetes uses to validate this manifest

@@ -84,7 +84,7 @@ The simple selector used in `Service` objects contains a single `key: value` pai
 
 {{< step >}}Write a simple `Service` manifest.{{< /step >}}
 
-```bash
+```yaml
 cat <<EOF >~/environment/113-demo-service.yaml
 apiVersion: v1
 kind: Service
