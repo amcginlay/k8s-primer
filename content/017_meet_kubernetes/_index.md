@@ -182,6 +182,20 @@ class Control-plane blue;
 class Data-plane green;
 {{< /mermaid >}}
 
+So you created a local cluster and installed the CLI.
+Then, as if by magic, you successfully established a line of communication between CLI and cluster.
+How did the CLI know where the Kubernetes API endpoint was located?
+How did the CLI authenticate and authorize with the Kubernetes API?
+
+After `KinD` created your cluster it deposited a fully formed config file at `~/.kube/config`.
+Take a quick look at that file.
+Try **carefully** renaming that file and see if `kubectl get nodes` still works.
+This file is commonly referred to as `kubeconfig` and it is a requirement for `kubectl` to function correctly.
+
+{{% notice note %}}
+Make sure you replace your original `~/.kube/config` before moving on.
+{{% /notice %}}
+
 {{< step >}}Check what is running in your cluster.{{< /step >}}
 
 ```bash
