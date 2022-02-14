@@ -51,7 +51,7 @@ Simply typing `kind create cluster` would create a one node cluster.
 *Please do **not** do that now.*
 
 Most Kubernetes clusters are composed of multiple compute resources.
-These are referred to as **nodes** and they come in a couple of varieties, as follows.
+These are referred to as [nodes](https://kubernetes.io/docs/concepts/architecture/nodes/) and they come in a couple of varieties, as follows.
 - **control plane** nodes -- a set of servers that provide container ***orchestration*** support features (like a queen bee of a hive or the government of a town/city)
 - **data plane** nodes -- a set of servers that run the container workloads; these servers are container hosts, sometimes called **workers**, like the worker bees in a colony, or the populace of a town/city.
 Each data plane node hosts an OCI compliant container runtime.
@@ -123,7 +123,8 @@ Among the [tools for Kubernetes](https://kubernetes.io/docs/tasks/tools/) there 
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" # download tool
 curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256" # download checksum
 echo "$(<kubectl.sha256)  kubectl" | sha256sum --check # confirm checksum
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl # install CLI
+rm kubectl* # dispose of installation files
 kubectl version --client
 ```
 
@@ -183,20 +184,20 @@ class Data-plane green;
 {{< /mermaid >}}
 
 So you created a local cluster and installed the CLI.
-Then, as if by magic, you successfully established a line of communication between CLI and cluster.
-How did the CLI know where the Kubernetes API endpoint was located?
+Then, as if by magic, you successfully established a line of communication between them.
+How did the CLI know where the cluster endpoint (or [Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/)) was located?
 How did the CLI authenticate and authorize with the Kubernetes API?
 
 After `KinD` created your cluster it deposited a fully formed config file at `~/.kube/config`.
-Take a quick look at that file.
+Take a quick look at that file and see if you can identify which port the Kubernetes API is occupying.
 Try **carefully** renaming that file and see if `kubectl get nodes` still works.
-This file is commonly referred to as `kubeconfig` and it is a requirement for `kubectl` to function correctly.
+This file is commonly referred to as `kubeconfig` and, as you can see, it is a requirement for `kubectl` to function correctly.
 
 {{% notice note %}}
 Make sure you replace your original `~/.kube/config` before moving on.
 {{% /notice %}}
 
-{{< step >}}Check what is running in your cluster.{{< /step >}}
+{{< step >}}Check what workloads are running in your cluster.{{< /step >}}
 
 ```bash
 kubectl get pods
@@ -208,7 +209,7 @@ No resources found in default namespace.
 {{< /output >}}
 
 {{% notice note %}}
-A `Pod` in Kubernetes is a collection of one or more containers that get scheduled and run together, like cetaceans (whales, orca, porpoises) traveling together. More on that later.
+A [Pod](https://kubernetes.io/docs/concepts/workloads/pods/) in Kubernetes is a collection of one or more containers that get scheduled and run together, like cetaceans (whales, orca, porpoises) traveling together. More on that later.
 {{% /notice %}}
 
 If you just created your Kubernetes cluster with `kind`, but have not yet deployed any apps to run in it, the cluster will have no pods in the **default** namespace, like a ship with no passengers. But… there is still a crew!
@@ -243,7 +244,7 @@ When you use the `-A` option with `kubectl get pods` you are presented with the 
 {{% notice note %}}
 The term "namespace" is used in a variety of contexts.
 For example, **Linux** namespaces, which we encountered in previous chapters, are a different concept to **Kubernetes** namespaces.
-For the remainder of this course when you see the word namespace you must interpret that as **Kubernetes namespace**.
+For the remainder of this course when you see the word namespace you must interpret this as **Kubernetes namespace** unless otherwise stated.
 {{% /notice %}}
 
 Consider a class in which two students named Elizabeth enrolled.
