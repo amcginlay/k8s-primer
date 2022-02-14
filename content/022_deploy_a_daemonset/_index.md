@@ -85,7 +85,7 @@ Now that you know what goes in a `DaemonSet` manifest, it is time to create one.
 {{< step >}}Create the manifest file.{{< /step >}}
 
 ```bash
-cat << EOF >~/environment/107-demo-daemonset.yaml 
+cat <<EOF >~/environment/107-demo-daemonset.yaml 
 apiVersion: apps/v1          # remember to use apps/v1 instead of merely v1
 kind: DaemonSet              # the object schema Kubernetes uses to validate this manifest
 metadata:

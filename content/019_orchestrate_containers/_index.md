@@ -1,9 +1,11 @@
 ---
-title: "Test Your App in Kubernetes"
+title: "Orchestrate Containers"
 chapter: false
 weight: 19
 draft: false
 ---
+
+With your cluster in place and your CLI operational, you are now poised to run some containerized workloads on Kubernetes.
 
 ## Manifest generation (a side note)
 
@@ -28,33 +30,6 @@ Generators are incredibly useful for when you are getting started and need remin
 For this reason you will not be using them today.
 Whenever you require an object you will, with the help of this tutorial, build a YAML manifest.
 
-## Image registries
-
-Once a container image has been successfully built and tagged it is typically published (**push**) to an image registry.
-The most well known registry is [Docker Hub](https://hub.docker.com/) but others such as [Amazon Elastic Container Registry](https://aws.amazon.com/ecr/) exist.
-Registries are to your container images what GitHub is to your source code - a place where a wider range of consumers can fetch from (**pull**).
-You will ultimately need to know how image registries work.
-Today, to keep your TODO list manageable, you will inject your container image **directly** from your local Docker image cache into your Kubernetes cluster.
-This allows you to develop your images locally and completely bypass the **push** and **pull** mechanisms.
-
-{{< step >}}Load your `demo:1.0.0` container image into your `kind`-based Kubernetes cluster.{{< /step >}}
-```bash
-kind load docker-image demo:1.0.0
-```
-
-The output you see will be as follows.
-{{< output >}}
-Image: "demo:1.0.0" with ID "sha256:4de6cdb3317520c3e606e62a0abc0bc14b4766c3ab26d35c47abb3bf9379e913" not yet present on node "kind-worker3", loading...
-Image: "demo:1.0.0" with ID "sha256:4de6cdb3317520c3e606e62a0abc0bc14b4766c3ab26d35c47abb3bf9379e913" not yet present on node "kind-worker2", loading...
-Image: "demo:1.0.0" with ID "sha256:4de6cdb3317520c3e606e62a0abc0bc14b4766c3ab26d35c47abb3bf9379e913" not yet present on node "kind-worker", loading...
-Image: "demo:1.0.0" with ID "sha256:4de6cdb3317520c3e606e62a0abc0bc14b4766c3ab26d35c47abb3bf9379e913" not yet present on node "kind-control-plane", loading...
-{{< /output >}}
-
-{{% notice note %}}
-This image injection technique is specific to `kind` and is just for use in dev environments.
-You would **never** normally attempt to bypass your image registry like this.
-{{% /notice %}}
-
 ## Namespace creation
 
 <!-- Imagine you need to address two individuals named, for example, Elizabeth and Elizabeth.
@@ -68,7 +43,7 @@ You will almost always want to place objects into an explicit namespace, so you 
 {{< step >}}Create your namespaces manifest then instruct Kubernetes to ingest it using `kubectl apply` which will cause Kubernetes to translate your manifests into objects.
 This manifest defines two namespaces, `dev` and `test`.{{< /step >}}
 ```bash
-cat > ~/environment/001-dev-namespace.yaml << EOF
+cat <<EOF | tee ~/environment/001-dev-test-namespaces.yaml | kubectl apply -f -
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -79,11 +54,9 @@ kind: Namespace
 metadata:
   name: test
 EOF
-
-kubectl apply -f ~/environment/001-dev-namespace.yaml
 ```
 
-`kubectl` will respond as follows.
+Example output:
 {{< output >}}
 namespace/dev created
 namespace/test created
@@ -91,7 +64,8 @@ namespace/test created
 
 
 {{% notice note %}}
-The result of the commands you ran are identical to using `kubectl create namespace dev` (a generator) except the one-line version would not capture and/or persist the associated manifest to the local filesystem (Cloud9).
+Whilst building the manifest, you will have observed the use of the [tee](https://en.wikipedia.org/wiki/Tee_(command)) command which helps condense the file persistence and manifest application steps.
+The result of the command you ran is identical to using `kubectl create namespace <NAME>` (i.e. a generator) except the one-line version would not capture and/or persist any associated manifest to the local filesystem (Cloud9).
 {{% /notice %}}
 
 {{< step >}}Inspect the current list of namespaces as follows.{{< /step >}}
@@ -99,7 +73,7 @@ The result of the commands you ran are identical to using `kubectl create namesp
 kubectl get namespaces
 ```
 
-The list returned will include, among others, the newly created namespace.
+Example output:
 {{< output >}}
 NAME                 STATUS   AGE
 default              Active   17h
@@ -111,11 +85,45 @@ local-path-storage   Active   17h
 test                 Active   8m
 {{< /output >}}
 
+The list returned will include, among others, the newly created namespaces.
 For the time being you only care about your new **dev** namespace so forget the others you see.
-You now have a custom namespace which you will provide a home for your app.
+You now have a custom namespace which will provide a home for your app.
 
 {{% notice note %}}
-If you ever need to dispose of this namespace object you could use either `kubectl delete -f ~/environment/001-namespace-dev.yaml` or simply `kubectl delete namespace dev`
+If you ever need to dispose of this namespace object you could use either `kubectl delete -f ~/environment/001-dev-test-namespaces.yaml` or simply `kubectl delete namespace <NAME>`
+{{% /notice %}}
+
+## Image registries (not today, thanks!)
+
+Once a container image has been successfully built and tagged (e.g. `docker build`) it is typically published (**push**ed) to an image registry.
+The most well known registry is [Docker Hub](https://hub.docker.com/) but others such as [Amazon Elastic Container Registry](https://aws.amazon.com/ecr/) exist.
+Registries are to your container images what GitHub is to your source code - a place where a wider range of consumers can fetch (**pull**) your wares.
+You will ultimately need to know how image registries work.
+Today, to keep your TODO list manageable, you will inject your container image **directly** from your Cloud9 Docker image cache into your Kubernetes cluster.
+This allows you to develop your images locally and completely bypass the **push** and **pull** mechanisms.
+
+{{< step >}}Confirm that `demo:1.0.0` is still cached locally.{{< /step >}}
+```bash
+docker images demo:1.0.0
+```
+
+{{< step >}}Load your container image into your `kind`-based Kubernetes cluster.
+This step populates the node caches which suppresses the need to **pull** your image.{{< /step >}}
+```bash
+kind load docker-image demo:1.0.0
+```
+
+The output you see will be as follows.
+{{< output >}}
+Image: "demo:1.0.0" with ID "sha256:4de...913" not yet present on node "kind-worker3", loading...
+Image: "demo:1.0.0" with ID "sha256:4de...913" not yet present on node "kind-worker2", loading...
+Image: "demo:1.0.0" with ID "sha256:4de...913" not yet present on node "kind-worker", loading...
+Image: "demo:1.0.0" with ID "sha256:4de...913" not yet present on node "kind-control-plane", loading...
+{{< /output >}}
+
+{{% notice note %}}
+This image injection technique is specific to `kind` and is just for use in dev environments.
+You would **never** normally attempt to bypass your image registry like this.
 {{% /notice %}}
 
 ## Container orchestration
@@ -124,14 +132,14 @@ The daemon component of Docker is an example of a [container runtime](https://ku
 Kubernetes extends the functionailty of container runtimes and is more appropriately referred to as a [container orchestrator](https://docs.docker.com/get-started/orchestration/).
 You will start by proving that Kubernetes can replicate the functionality of Docker (i.e. run a single container).
 Pods are the smallest deployable units of compute resource you can create and manage in Kubernetes.
-Pods can be comprised of multiple containers but since we are starting with just one, you can think about these two terms as being interchangeable.
+Pods can be comprised of multiple containers but since we are starting with just one you can, **for now**, think about the terms container and pod as being broadly interchangeable.
 
 To run a pod you need a YAML manifest which represents the pod.
-With judicious use of some [piped commands](https://en.wikipedia.org/wiki/Pipeline_(Unix)) you can build and persist your pod manifest before asking Kubernetes to ingest it, as follows.
+As per the namespaces created previously, with some judicious use of [piped commands](https://en.wikipedia.org/wiki/Pipeline_(Unix)) you can build and persist your pod manifest before asking Kubernetes to ingest it, as follows.
 
 {{< step >}}Create a `Pod` manifest, then use `kubectl apply` to provision the pod in your Kubernetes cluster.{{< /step >}}
 ```bash
-cat << EOF | tee ~/environment/002-demo-pod.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/002-demo-pod.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: Pod                    # the object schema Kubernetes uses to validate this manifest
 metadata:
@@ -143,31 +151,31 @@ spec:
 EOF
 ```
 
-`kubectl` will respond as follows.
+Example output:
 {{< output >}}
 pod/demo created
 {{< /output >}}
 
 {{% notice note %}}
 Many Kubernetes objects, including pods, are destined for a namespace.
-Recognise how the above invocation reads `kubectl -n dev ...` which ensures the pod is created in the `dev` namespace.
+Recognize how the above invocation includes `kubectl -n dev` which ensures the pod is created in the `dev` namespace.
 It is advantageous to build some muscle-memory around the consistent and explicit use of namespaces.
 {{% /notice %}}
 
 Compared to Docker, Kubernetes is more conservative when it comes to exposure of your apps at the host (VM) level.
 How Kubernetes handles pod networking is deferred until a later section on [services](https://kubernetes.io/docs/concepts/services-networking/service/).
-{{< step >}}In the meantime, we can `exec` into your running pod to test it from inside as follows.{{< /step >}}
+{{< step >}}In the meantime, as you did with the Docker CLI, you can `kubectl exec` into your running pod to test it from inside as follows.{{< /step >}}
 ```bash
 kubectl -n dev exec demo -it -- curl http://localhost:80
 ```
 
-If successful you will see the following.
+Example output:
 {{< output >}}
 Hello from demo
 {{< /output >}}
 
 Congratulations.
-You have now reproduced the standard behaviour of Docker but there is an important difference we need to discuss.
+You have now reproduced the standard behavior of Docker but there is an important difference we need to discuss.
 Kubernetes supports **restarts** by default.
 
 {{< step >}}To see this, begin by inspecting the single running pod.{{< /step >}}
@@ -175,30 +183,35 @@ Kubernetes supports **restarts** by default.
 kubectl -n dev get pods
 ```
 
-`kubectl` will respond as follows.
-Check the `RESTARTS` column.
-It is unlikely that your pod will have been restarted yet.
+Example output:
 {{< output >}}
 NAME   READY   STATUS    RESTARTS   AGE
 demo   1/1     Running   0          5m14s
 {{< /output >}}
 
-{{< step >}}As you did with Docker, run the following command to simulate a failure in the pod then recheck the running processes.{{< /step >}}
+`kubectl` will respond as shown.
+Check the `RESTARTS` column.
+It is unlikely that your pod will have been restarted yet.
+
+{{< step >}}As you did with the Docker CLI, run the following `kubectl` command to simulate a failure in the pod.{{< /step >}}
 ```bash
 kubectl -n dev exec demo -it -- kill 1
 ```
+
+{{< step >}}Then recheck the `RESTARTS`{{< /step >}}
 ```bash
 kubectl -n dev get pods
 ```
 
-You will now see how Kubernetes has automatically restarted your pod.
+Example output:
 {{< output >}}
 NAME   READY   STATUS    RESTARTS   AGE
 demo   1/1     Running   1          16m
 {{< /output >}}
 
+This reveals evidence that Kubernetes automatically restarted your pod.
 You have witnessed something simple but very important about Kubernetes.
-When Kubernetes ingests your manifests it becomes duty-bound to honour your requirements, continually, until your requirements are altered.
+When Kubernetes ingests your manifests it becomes duty-bound to **continually** honour those requirements, until those requirements are altered.
 This strategy is known as the [operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/) and is prevalent throughout Kubernetes in the form of [controllers](https://kubernetes.io/docs/concepts/architecture/controller/).
 Pod restarts are evidence of this strategy at work and an indicator that Kubernetes is more than a simple container runtime, it is a **container orchestrator**.
 
@@ -206,17 +219,28 @@ Pod restarts are evidence of this strategy at work and an indicator that Kuberne
 When you deployed your containerized app into Docker you observed how it was possible to provide overrides for environment variables which meant you were able to separate your code from its config.
 You can also provide [environment variable overrides in Kubernetes](https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/).
 Your Kubernetes manifests are a form of [infrastructure as code](https://en.wikipedia.org/wiki/Infrastructure_as_code).
-As such you would normally be storing these YAML files under source control.
-Today, we will create the reconfigured manifest in a **new file** so you can observe the difference.
+As such you would normally be storing versioned YAML files under source control.
+Today, we will create the reconfigured manifest under a **new** file name so you can observe the difference.
 
 {{< step >}}First, dispose of your existing pod.{{< /step >}}
 ```bash
 kubectl -n dev delete pod demo
 ```
 
+Example output:
+{{< output >}}
+pod/demo deleted
+{{< /output >}}
+
+{{% notice note %}}
+When reconfiguring running Kubernetes objects, such as your `demo` pod, there are some field mutations which can be handled in-place and some which cannot.
+Your change falls into the latter variety, hence the `delete` operation.
+Deletion implies downtime, and much of your future endeavors with Kubernetes will be in the pursuit of zero downtime.
+{{% /notice %}}
+
 {{< step >}}Then deploy its replacement with the override in place.{{< /step >}}
 ```bash
-cat << EOF | tee ~/environment/003-demo-pod.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/003-demo-pod.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: Pod                    # the object schema Kubernetes uses to validate this manifest
 metadata:
@@ -231,21 +255,20 @@ spec:
 EOF
 ```
 
+Example output:
+{{< output >}}
+pod/demo created
+{{< /output >}}
+
 {{< step >}}`exec` into your new pod to test it from inside as follows.{{< /step >}}
 ```bash
 kubectl -n dev exec demo -it -- curl http://localhost:80
 ```
 
-If successful you will see the following.
+Example output:
 {{< output >}}
 Hi from demo
 {{< /output >}}
-
-{{% notice note %}}
-Only a select few fields are supported by Kubernetes update/patch operations and the `env` field is not (yet?) one of them.
-This is why we deleted the original pod rather than applying a patch to the original - it would have failed otherwise.
-This is also why the pursuit of **zero-downtime** strategies is such a hot topic!
-{{% /notice %}}
 
 ## Success
 

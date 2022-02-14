@@ -38,13 +38,13 @@ Prior to updating your deployment, you should have one. If you don't already hav
 
 ## Update Your Deployment
 
-You started by building the simplest of simple [PHP](https://www.php.net/) apps back in the [Containerize Your App]({{< ref "015_containerize_app" >}}) lesson. Now it is time to revise that app to include a little more detail.
+You started by building the simplest of simple [PHP](https://www.php.net/) apps back in the [Containerize Your App]({{< ref "015_build_containers" >}}) lesson. Now it is time to revise that app to include a little more detail.
 Beyond that one that just returns the value of the `GREETING` environment variable and the hostname of the server,
 this version also includes the pod IP address with the container hosting PHP (`SERVER_ADDR`) and the pod IP address of the client--e.g. the jumpbox pod--as seen from the PHP server (`REMOTE_ADDR`).
 
 {{< step >}}Create another PHP file which includes web pod IP address and client IP address. Call this `index2.php` on the development system.{{< /step >}}
 ```bash
-cat >~/environment/index2.php <<EOF
+cat <<EOF >~/environment/index2.php
 <?php
   echo getenv("GREETING") . " " . gethostname() . " at " . $_SERVER['SERVER_ADDR'] . " back to " . $_SERVER['REMOTE_ADDR'] . "\n";
 ?>
@@ -54,7 +54,7 @@ EOF
 {{< step >}}Write a new `Dockerfile` that uses this `index2.php` and copies it to `index.php` in the container image.{{< /step >}}
 
 ```bash
-cat >~/environment/Dockerfile-with-ip <<EOF
+cat <<EOF >~/environment/Dockerfile-with-ip
 FROM php:8.0.1-apache
 COPY index2.php /var/www/html/index.php
 ENV GREETING="Hello from"

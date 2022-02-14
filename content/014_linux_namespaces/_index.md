@@ -15,26 +15,26 @@ Perhaps first, as technologists, you really ought to know what they are.
 
 > **“Any sufficiently advanced technology is indistinguishable from magic”** - Arthur C Clarke
 
-Once upon a not-so-long-ago a peculiar bunch of [Linux system calls](https://en.wikipedia.org/wiki/System_call) emerged that appeared to bend the "laws" of processes.
+Once upon a not-so-long-ago a peculiar bunch of [Linux system calls](https://en.wikipedia.org/wiki/System_call) emerged that appeared to fundamentally twist the relationship between processes and their hosts.
 A handful of innovative disruptors seized the moment, recognizing the importance of these kernel extensions.
-The world gazed in amazement as early adopters performed acts of "magic" with their workloads, operating at hitherto unimaginable scale and speed.
-As time passed, and with a little assistance, we all caught up.
-Now everyone has access to shrink-wrapped tools, allowing you to achieve the same feats with your own workloads.
-Any process treated to a sprinkle of this kernel "magic" can become elevated to the status of a container.
+The world gazed in amazement as early adopters performed acts of "magic" with their workloads, operating at a scale and speed not previously possible.
 
-Building and running containers is not magic, but it is also not exactly obvious.
+Processes treated to a sprinkle of this kernel wizardry become elevated to the status of containers.
+With the passage of time the use of containers, somewhat inevitably, became [democratized](https://en.wikipedia.org/wiki/Democratization_of_technology) and the air of mystique that previously surrounded them faded.
+
+You would rarely build a container by hand these days because you tend to have more productive things to do with your time.
+That said, if we want to gain a deeper appreciation of the technology that underpins Kubernetes pausing for a moment to do exactly that can provide a powerful accelerant to your learning.
+
+Building and running rudimentary containers by hand is perhaps not for the faint of heart but neither is it magic.
 
 ## Linux namespaces
 
-It is often useful to step back in time in order to see how we arrived to where we are today.
+It is often useful to step back in time in order to see how we got here.
 
 ![pangaea](/images/process/pangaea.gif)
 
 [Pangaea](https://en.wikipedia.org/wiki/Pangaea) was the single supercontinent that evolved to become the continents of the earth we know today.
-Primitive mammals **shared** the single landmass but, as time passed, the continents formed and these inhabitants would become isolated by the seas.
-The one constant throughout these formative years was the earth.
-
-<!-- Closer to modern times continents would be divided into countries and some these countries would be divided further into states, counties, etc. -->
+Primitive mammals **shared** the land but, as time passed, the continents formed and the inhabitants would become isolated by the seas.
 
 In this analogy.
 - The earth represents a single Linux virtual machine (VM)
@@ -47,15 +47,14 @@ For example, **Kubernetes** namespaces are a different concept to **Linux** name
 For the duration of this chapter when you see the word namespace you must interpret that as **Linux namespace**.
 {{% /notice %}}
 
-As we will learn later, there are a small handful of distinct namespace types and each process must reside in **exactly** one instance of each namespace type at any point in time.
-Some types are more interesting and/or simple to demonstrate than others.
-In the interests of practicality we will start by acknowledging just the [UTS](https://en.wikipedia.org/wiki/Linux_namespaces#UTS) namespace type.
+As we will learn later, there are a small handful of distinct namespace **types**.
+Each process **must** reside in a collection of namespaces but **just one** of each type.
+Furthermore, any child processes will reside in the same namespaces of their parent process unless they request otherwise, as we will see.
 
-### The Linux UTS namespace
+Some types of namespaces are more interesting and/or simple to demonstrate than others.
+In the interests of practicality we will start by acknowledging just one of them.
 
-Because each Linux VM starts with a single UTS namespace **shared** across all running processes you will likely remain oblivious to its existence.
-As an example, consider the [hostname](https://en.wikipedia.org/wiki/Hostname) command.
-It consistently responds with a single (global) value across all shells and changes are observable from all shells.
+### UTS namespaces
 
 {{% notice note %}}
 UTS stands for UNIX Time-Sharing.
@@ -63,127 +62,304 @@ It is not important why this name was chosen and most would agree it is not the 
 If it helps, you can think of it as the **host namespace**.
 {{% /notice %}}
 
-{{< step >}}Try this out for yourself by creating a pair of terminal windows (**shell one** and **shell two**) inside Cloud9.{{< /step >}}
-Your screen layout may look something like this.
+Each Linux VM begins its life with a single instance of the [UTS namespace](https://en.wikipedia.org/wiki/Linux_namespaces#UTS) which is, by default, shared across all its running process.
+The ubiquitous nature of root namespaces is the likely reason you may have been oblivious to their existence.
+To illustrate its presence, consider the [hostname](https://en.wikipedia.org/wiki/Hostname) command.
+By default the "value" of `hostname`, and any modification to it, is observable and consistent across all shell instances (processes).
 
-![shell-one-two](/images/process/shell-one-two.png)
+{{< step >}}Try this out for yourself by creating side-by-side terminal windows (**shell one** and **shell two**) inside Cloud9.
+Now execute the following in **both** shells.{{< /step >}}
 
-{{< step >}}Now execute the following in **both** shells.{{< /step >}}
+{{< columns >}}
+{{% column %}}
 ```bash
+# shell one
 hostname
 ```
+{{% /column %}}
+{{% column %}}
+```bash
+# shell two
+hostname
+```
+{{% /column %}}
+{{< /columns >}}
 
-The response you see from both windows will look something like the following.
+Example output:
+{{< columns >}}
+{{< column >}}
 {{< output >}}
-ip-172-31-62-220.us-west-2.compute.internal
+ip-172-31-49-172.us-west-2.compute.internal
 {{< /output >}}
+{{< /column >}}
+{{< column >}}
+{{< output >}}
+ip-172-31-49-172.us-west-2.compute.internal
+{{< /output >}}
+{{< /column >}}
+{{< /columns >}}
 
-
-{{< step >}}Now, as [superuser](https://en.wikipedia.org/wiki/Superuser), try **updating** the name of the host from within **shell one**.{{< /step >}}
+{{< step >}}Now, as [superuser](https://en.wikipedia.org/wiki/Superuser), try **updating** the name of the host from within **shell one**, then **repeat** the original command in **both** shells.{{< /step >}}
+{{< columns >}}
+{{% column %}}
 ```bash
-sudo hostname original-uts-namespace
-```
-
-{{< step >}}Then repeat the original command in **both** shells.{{< /step >}}
-```bash
+# shell one - rename the host
+sudo hostname this-is-root-uts
 hostname
 ```
+{{% /column %}}
+{{% column %}}
+```bash
+# shell two - no rename required
+
+hostname
+```
+{{% /column %}}
+{{< /columns >}}
+
+Example output:
+{{< columns >}}
+{{< column >}}
+{{< output >}}
+this-is-root-uts
+{{< /output >}}
+{{< /column >}}
+{{< column >}}
+{{< output >}}
+this-is-root-uts
+{{< /output >}}
+{{< /column >}}
+{{< /columns >}}
 
 The response you see will be the **updated** name in both cases.
-{{< output >}}
-original-uts-namespace
-{{< /output >}}
+Furthermore, we can confirm the use of a shared namespaces (including UTS) by inspecting details in the aforementioned virtual filesystem at `/proc`.
+{{< step >}}Enter the following command in **both** shells, recalling that `$$` retrieves the `PID` of the current shell. You will use `&&` here to execute two commands consecutively, improving the readability of the output.{{< /step >}}
 
-Furthermore, we can confirm the use of a shared UTS namespace by inspecting details in the aforementioned virtual filesystem at `/proc`.
-{{< step >}}Enter the following command in **both** shells.{{< /step >}}
+{{< columns >}}
+{{% column %}}
 ```bash
-ls -l /proc/$$/ns/uts        # -l provides a long listing format, $$ is current shell PID
+# shell one
+echo "PID=$$" && ls -ld /proc/$$/ns/*
 ```
+{{% /column %}}
+{{% column %}}
+```bash
+# shell two
+echo "PID=$$" && ls -ld /proc/$$/ns/*
+```
+{{% /column %}}
+{{< /columns >}}
 
-Output will look something like the following.
+Example output:
+{{< columns >}}
+{{< column >}}
 {{< output >}}
-lrwxrwxrwx 1 ec2-user ec2-user 0 Jan 24 12:30 /proc/59266/ns/uts -> uts:[4026531838]
+8241
+lrwxrwxrwx ... cgroup -> cgroup:[4026531835]
+lrwxrwxrwx ... ipc -> ipc:[4026531839]
+lrwxrwxrwx ... mnt -> mnt:[4026531840]
+lrwxrwxrwx ... net -> net:[4026531993]
+lrwxrwxrwx ... pid -> pid:[4026531836]
+lrwxrwxrwx ... pid_for_children -> pid:[4026531836]
+lrwxrwxrwx ... user -> user:[4026531837]
+lrwxrwxrwx ... uts -> uts:[4026531838]
 {{< /output >}}
+{{< /column >}}
+{{< column >}}
+{{< output >}}
+8498
+lrwxrwxrwx ... cgroup -> cgroup:[4026531835]
+lrwxrwxrwx ... ipc -> ipc:[4026531839]
+lrwxrwxrwx ... mnt -> mnt:[4026531840]
+lrwxrwxrwx ... net -> net:[4026531993]
+lrwxrwxrwx ... pid -> pid:[4026531836]
+lrwxrwxrwx ... pid_for_children -> pid:[4026531836]
+lrwxrwxrwx ... user -> user:[4026531837]
+lrwxrwxrwx ... uts -> uts:[4026531838]
+{{< /output >}}
+{{< /column >}}
+{{< /columns >}}
 
-The `uts:[XXXXXXXXXX]` identifier from **both** shells will be the same.
-This consistency exists only because the shell processes have "inherited" the **one and only** UTS namespace from their parent process.
+Whilst the PIDs are clearly different, **all** the namespace identifiers (e.g. `uts:[4026531838]`) will match, type for type.
+This consistency exists because the shell processes are both inhabiting the same namespaces.
+It follows that, if we were to traverse up the "family" tree, these shells would ultimately converge on a **shared** ancestor which also inhabits those same namespaces.
+
 Based upon our previous experiments with environment variables, do you sense a pattern emerging?
-It appears as if child processes, in many respects, begin their lives as clones of their parents.
+It appears as if child processes, in many respects, begin their lives as clones of their parents and this pattern can be tracked right the way back to an initiating process with `PID` 1.
+
+{{% notice note %}}
+The process with `PID` 1 is unusual in that it has a `PPID` of 0, yet no such process exists, therefore it has no parent.
+{{% /notice %}}
 
 You are ready now to introduce a **new** instance of the UTS namespace.
-To experiment with Linux namespaces in the shell you will use a pair of commands which are just thin wrappers around a specific set of kernel syscalls.
-- `unshare` - This command creates a child process as a member of a "new" Linux namespace. It says, "Take my offspring to an uninhabited island"
-- `nsenter` - This command moves the current process into an existing Linux namespace. It says, "I wish to be alone with my family"
+To experiment with namespaces in the shell you will use a pair of commands which are just thin wrappers around a small collection of kernel syscalls.
+- [unshare](https://man7.org/linux/man-pages/man1/unshare.1.html) spawns a child process as a member of a **new** namespace.
+- [nsenter](https://man7.org/linux/man-pages/man1/nsenter.1.html) spawns a child process as a member of an **existing** namespace.
 
-{{< step >}}From **shell one**, use `unshare` to spawn a child shell inside a new instance of the UTS namespace, inspecting the `uts:[XXXXXXXXXX]` identifier before and after to verify the transition.{{< /step >}}
+{{< step >}}From **shell one**, use `unshare` to spawn a child shell into a **new** instance of the UTS namespace, inspecting the `uts:[XXXXXXXXXX]` identifier before and after to verify the transition.{{< /step >}}
+
+{{< columns >}}
+{{% column %}}
 ```bash
-ls -l /proc/$$/ns/uts        # original namespace
+# shell one
+echo "PID=$$" && ls -l /proc/$$/ns/uts
 sudo unshare --uts bash
-ls -l /proc/$$/ns/uts        # new child shell has a different uts:[XXXXXXXXXX] identifier
-```
-
-{{< step >}}From **shell one**, confirm that the new child shell "inherited" the name of the host and can change it.{{< /step >}}
-```bash
-hostname                     # before ...
-sudo hostname new-linux-uts-namespace
-hostname                     # ... after
-```
-
-{{< output >}}
-original-uts-namespace
-new-uts-namespace
-{{< /output >}}
-
-{{< step >}}From **shell two**, confirm that the name of the host is unchanged.{{< /step >}}
-```bash
+echo "PID=$$" && ls -l /proc/$$/ns/uts
 hostname
 ```
+{{% /column %}}
+{{% column %}}
+```bash
+# shell two - no action required
+```
+{{% /column %}}
+{{< /columns >}}
 
+Example output:
+{{< columns >}}
+{{< column >}}
 {{< output >}}
-original-uts-namespace
+PID=8241
+lrwxrwxrwx ... /proc/8241/ns/uts -> uts:[4026531838]
+PID=32609
+lrwxrwxrwx ... /proc/32609/ns/uts -> uts:[4026532177]
+this-is-root-uts
 {{< /output >}}
+{{< /column >}}
+{{< column >}}
+{{< output >}}
+{{< /output >}}
+{{< /column >}}
+{{< /columns >}}
 
-A process could also choose to coexist within the UTS namespace of another running process.
-To migrate, a source process provides a PID which is a member of the destination UTS namespace.
-As a process can only be a member of one UTS namespace at a time it will be evicted from its current one during migration.
-{{< step >}}From **shell one** grab the PID.{{< /step >}}
-```bash
-echo $$
-```
+In the output of the second `ls` command you can observe how the child process which was spawned from the `unshare` command and is now active in **shell one** has a new `uts:[XXXXXXXXXX]` identifier.
+Curiously the `hostname` command appears to reveal that this **new** namespace was initialized with a **copy** of the name of the **root** namespace.
+This is just the default behavior.
 
-{{< step >}}Replacing `<TARGET_PID_FROM_SHELL_ONE>` as appropriate, use `nsenter` in **shell two** to reunite the shells in your new UTS namespace.{{< /step >}}
-```bash
-PID=<TARGET_PID_FROM_SHELL_ONE>
-sudo nsenter --target ${PID} --uts bash
-```
+{{< step >}}To prove the name was indeed **copied**, change it in **shell one** and compare it to **shell two**.{{< /step >}}
 
-{{< step >}}Execute the following from **shell two** to verify that the shells are reunited.{{< /step >}}
+{{< columns >}}
+{{% column %}}
 ```bash
+# shell one - change hostname
+sudo hostname this-is-new-uts
 hostname
 ```
+{{% /column %}}
+{{% column %}}
+```bash
+# shell two - leave hostname UNCHANGED
 
+hostname
+```
+{{% /column %}}
+{{< /columns >}}
+
+Example output:
+{{< columns >}}
+{{< column >}}
 {{< output >}}
-new-linux-uts-namespace
+this-is-new-uts
 {{< /output >}}
+{{< /column >}}
+{{< column >}}
+{{< output >}}
+this-is-root-uts
+{{< /output >}}
+{{< /column >}}
+{{< /columns >}}
 
-We can conclude from these experiments that the name of the host does not belonging merely to VMs.
-Instead, it is a setting that belongs to instances of the UTS namespace.
-This means we can fabricate **multiple hosts per VM**, a feat that was not possible before the Linux kernel exposed UTS namespaces.
+These are different, proving that the active processes of **shell one** and **shell two** reside in independent namespaces.
 
-{{< step >}}To ensure a smooth transition to the next section, close **both** terminal windows at this point.{{< /step >}}
+With the help of `nsenter` a process can choose to spawn a child into the UTS namespace of another running process.
+To achieve this, the spawning process needs to target an active PID.
+Upon birth, the child process will inhabit the UTS namespace of the target PID.
 
+{{< step >}}Dump the PID of **shell one** to a temp file then, within **shell two**, tell `nsenter` to target that PID's UTS namespace whilst spawning a child process.{{< /step >}}
+{{< columns >}}
+{{% column %}}
+```bash
+# shell one
+echo "PID=$$" && echo $$ > /tmp/target-pid
+```
+{{% /column %}}
+{{% column %}}
+```bash
+# shell two
+echo "PID=$$" && target=$(cat /tmp/target-pid)
+echo "TARGET=${target}"
+sudo nsenter --target ${target} --uts bash 
+echo "PID=$$"
+```
+{{% /column %}}
+{{< /columns >}}
+
+Example output:
+{{< columns >}}
+{{< column >}}
+{{< output >}}
+PID=32609
+{{< /output >}}
+{{< /column >}}
+{{< column >}}
+{{< output >}}
+PID=8498
+TARGET=32609
+PID=11587
+{{< /output >}}
+{{< /column >}}
+{{< /columns >}}
+
+From which you can observe that the PID of **shell two** has changed to that of the child process `nsenter` spawned.
+
+{{< step >}}Execute the following from from **both shells** to verify that the shells are reunited in the **new** UTS namespace.{{< /step >}}
+
+{{< columns >}}
+{{% column %}}
+```bash
+# shell one
+hostname
+```
+{{% /column %}}
+{{% column %}}
+```bash
+# shell two
+hostname
+```
+{{% /column %}}
+{{< /columns >}}
+
+Example output:
+{{< columns >}}
+{{< column >}}
+{{< output >}}
+this-is-new-uts
+{{< /output >}}
+{{< /column >}}
+{{< column >}}
+{{< output >}}
+this-is-new-uts
+{{< /output >}}
+{{< /column >}}
+{{< /columns >}}
+
+The above experiment demonstrated how it is possible to create the illusion of multiple hosts on a single Linux VM.
+Prior to the introduction of UTS namespaces this was not possible.
+This was a minimal example of what is possible when we target just one of the namespace types.
+
+The following diagram illustrates the steps you just performed.
 
 {{< mermaid >}}
 graph TB
-    subgraph original-uts-namespace
-         proc1((PID 5830<br>bash<br>shell1))
-         host1>hostname: original]
-         proc2((PID 5831<br>bash<br>shell2))
+    subgraph Root UTS Namespace
+         proc1((PID 8241<br>shell1<br>bash))
+         host1>hostname: this-is-root-uts]
+         proc2((PID 8498<br>shell2<br>bash))
     end
-    subgraph new-linux-uts-namespace
-         proc3((PID 48558<br>bash))
-         host2>hostname: new]
-         proc4((PID 48559<br>bash))
+    subgraph Custom UTS Namespace
+         proc3((PID 32609<br>shell1<br>bash))
+         host2>hostname: this-is-new-uts]
+         proc4((PID 11587<br>shell2<br>bash))
     end
 proc1 -->|unshare --uts| proc3
 proc2 -->|nsenter --uts| proc4
@@ -194,78 +370,189 @@ class proc1,proc2 blue;
 class proc3,proc4 green;
 {{< /mermaid >}}
 
+{{< step >}}To ensure a smooth transition to the next section, close **both** terminal windows at this point.{{< /step >}}
 
-### The Linux PID namespace (optional)
+### PID namespaces
 
 As noted previously, there are different types of namespaces that can be combined to deliver varying characteristics of process "isolation" which can help improve security.
-For example, process "A" can only observe process "B" if it inhabits the same [PID namespaces](https://en.wikipedia.org/wiki/Linux_namespaces#Process_ID_.28pid.29) or another one located further down the process tree.
+As with UTS namespaces, a VM begins life with a **root** [PID namespaces](https://en.wikipedia.org/wiki/Linux_namespaces#Process_ID_.28pid.29) which has visibility over **all** running processes.
+As with UTS namespaces, you may spawn child processes into new PID namespaces which can, for example, restrict which subset of processes the inhabitants can see.
 
-{{< step >}}Try out PID namespaces for yourself by creating a pair of terminal windows (**shell one** and **shell two**) inside Cloud9.{{< /step >}}
+{{< step >}}Try out PID namespaces for yourself by creating a pair of terminal windows (**shell one** and **shell two**) inside Cloud9. Then, execute the following from **both** shells to verify that a long list of processes running on the VM can be viewed.{{< /step >}}
 
-{{< step >}}Execute the following from **both** shells to verify that a long list of processes running on the VM can be viewed.{{< /step >}}
+{{< columns >}}
+{{% column %}}
 ```bash
+# shell one
 sudo ps -e
 ```
+{{% /column %}}
+{{% column %}}
+```bash
+# shell two
+sudo ps -e
+```
+{{% /column %}}
+{{< /columns >}}
+
+Example output:
+{{< columns >}}
+{{< column >}}
+{{< output >}}
+  PID TTY          TIME CMD
+    1 ?        00:00:05 systemd
+    2 ?        00:00:00 kthreadd
+    4 ?        00:00:00 kworker/0:0H
+...
+25489 pts/3    00:00:00 sudo
+25490 pts/3    00:00:00 bash
+32728 ?        00:00:00 kworker/u4:1
+{{< /output >}}
+{{< /column >}}
+{{< column >}}
+{{< output >}}
+  PID TTY          TIME CMD
+    1 ?        00:00:05 systemd
+    2 ?        00:00:00 kthreadd
+    4 ?        00:00:00 kworker/0:0H
+...
+25489 pts/3    00:00:00 sudo
+25490 pts/3    00:00:00 bash
+32728 ?        00:00:00 kworker/u4:1
+{{< /output >}}
+{{< /column >}}
+{{< /columns >}}
 
 {{< step >}}Execute the following in **both** shells to build new PID namespaces, **one in each shell**.{{< /step >}}
+
+{{< columns >}}
+{{% column %}}
 ```bash
-ls -l /proc/$$/ns/pid                  # original namespace
-sudo unshare --pid --mount --fork bash # a little more unshare complexity this time
-mount -t proc name /proc               # the mountpoint for /proc does not auto-update so re-pin it
-ls -l /proc/$$/ns/pid                  # new child shell has a different pid:[XXXXXXXXXX] identifier
+# shell one
+ls -l /proc/$$/ns/pid
+sudo unshare --pid --mount --fork bash
+mount -t proc name /proc
+ls -l /proc/$$/ns/pid
 ```
+{{% /column %}}
+{{% column %}}
+```bash
+# shell two
+ls -l /proc/$$/ns/pid
+sudo unshare --pid --mount --fork bash
+mount -t proc name /proc
+ls -l /proc/$$/ns/pid
+```
+{{% /column %}}
+{{< /columns >}}
+
+Example output:
+{{< columns >}}
+{{< column >}}
+{{< output >}}
+lrwxrwxrwx ... /proc/22803/ns/pid -> pid:[4026531836]
+lrwxrwxrwx ... /proc/1/ns/pid -> pid:[4026532179]
+{{< /output >}}
+{{< /column >}}
+{{< column >}}
+{{< output >}}
+lrwxrwxrwx ... /proc/22804/ns/pid -> pid:[4026531836]
+lrwxrwxrwx ... /proc/1/ns/pid -> pid:[4026532181]
+{{< /output >}}
+{{< /column >}}
+{{< /columns >}}
+
+So both shells inhabit the same PID namespace, until after we call `unshare` and `mount`.
+Curiously, you may also observe evidence to suggest that the `PID`s have been "reset" to begin at 1 inside the new namespaces.
 
 {{% notice note %}}
-In order to reach a viable state to host containers, as you have just seen, some Linux namespaces require a little more coaxing than others.
-This is a key reason why this technology required some [democratization](https://en.wikipedia.org/wiki/Democratization_of_technology).
+In the above code we call `unshare` followed by `mount`.
+This is because the mountpoint at `/proc` is **copied** from the parent but does not auto-update to correspond with its new context so we need to re-pin it
+This quirk serves to illustrate how some namespaces require a little more coaxing than others.
+It is a key reason why container technology required some [democratization](https://en.wikipedia.org/wiki/Democratization_of_technology).
 {{% /notice %}}
 
 
-{{< step >}}Execute the following from **shell one** to start a long running process in the background.{{< /step >}}
+{{< step >}}Execute the following from your shells to start identifiable long running processes in the background.{{< /step >}}
+
+{{< columns >}}
+{{% column %}}
 ```bash
+# shell one
 sleep 1001 &
 ```
-
-{{< step >}}Do something similar from **shell two**.{{< /step >}}
+{{% /column %}}
+{{% column %}}
 ```bash
+# shell two
 sleep 1002 &
 ```
+{{% /column %}}
+{{< /columns >}}
 
 {{< step >}}Now execute the `ps` from **both** shells.{{< /step >}}
-```bash
-echo $$
-sudo ps -ef
-```
 
-Example output from **shell one** as follows.
+{{< columns >}}
+{{% column %}}
+```bash
+# shell one
+echo "PID=$$" && sudo ps -ef
+```
+{{% /column %}}
+{{% column %}}
+```bash
+# shell two
+echo "PID=$$" && sudo ps -ef
+```
+{{% /column %}}
+{{< /columns >}}
+
+Example output:
+{{< columns >}}
+{{< column >}}
 {{< output >}}
-1
-UID          PID    PPID  C STIME TTY          TIME CMD
-root           1       0  0 18:18 pts/2    00:00:00 bash
-root          15       1  0 18:18 pts/2    00:00:00 sleep 1001
-root          16       1  0 18:18 pts/2    00:00:00 ps -ef
+PID=1
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         1     0  0 14:27 pts/6    00:00:00 bash
+root        20     1  0 14:40 pts/6    00:00:00 sleep 1001
+root        21     1  0 14:40 pts/6    00:00:00 sudo ps -ef
+root        22    21  0 14:40 pts/6    00:00:00 ps -ef
 {{< /output >}}
+{{< /column >}}
+{{< column >}}
+{{< output >}}
+PID=1
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         1     0  0 14:28 pts/7    00:00:00 bash
+root        18     1  0 14:40 pts/7    00:00:00 sleep 1002
+root        19     1  0 14:40 pts/7    00:00:00 sudo ps -ef
+root        20    19  0 14:40 pts/7    00:00:00 ps -ef
+{{< /output >}}
+{{< /column >}}
+{{< /columns >}}
 
 Noteworthy points from the response are as follows.
-- Inside your new Linux PID namespaces, the current PID `$$` is always initialized to 1.
+- Inside your new PID namespaces, the current PID `$$` is always initialized to 1.
 - The list of member processes is reassuringly short.
 - All processes appear to have been run as the `root` user.
+
+The following diagram illustrates the steps you just performed.
 
 {{< mermaid >}}
 graph TB
     subgraph pid-namespace-zero
-         proc1((PID 5830<br>bash<br>shell1))
-         proc2((PID 5831<br>bash<br>shell2))
-    end
-    subgraph pid-namespace-one
-         proc3((PID 1<br>bash))
-         proc4((PID 15<br>sleep 1001))
-         proc5((PID 16<br>ps -ef))
+         proc1((PID 22803<br>shell1<br>bash))
+         proc2((PID 22804<br>shell2<br>bash))
     end
     subgraph pid-namespace-two
          proc6((PID 1<br>bash))
-         proc7((PID 15<br>sleep 1002))
-         proc8((PID 16<br>ps -ef))
+         proc7((PID 18<br>sleep 1002))
+         proc8((PID 20<br>ps -ef))
+    end
+    subgraph pid-namespace-one
+         proc3((PID 1<br>bash))
+         proc4((PID 20<br>sleep 1001))
+         proc5((PID 22<br>ps -ef))
     end
 proc1 -->|unshare --pid| proc3
 proc2 -->|unshare --pid| proc6
@@ -279,6 +566,11 @@ class proc1,proc2 blue;
 class proc3,proc4,proc5 green;
 class proc6,proc7,proc8 orange;
 {{< /mermaid >}}
+
+Even though processes from within different custom namespaces (e.g. `sleep 1001` and `sleep 1002`) cannot see each other, **all** processes remain visible from the root namespace.
+How you might go about testing that the previous statement is true?
+
+{{< step >}}To ensure a smooth transition to the next section, close **both** terminal windows at this point.{{< /step >}}
 
 ## Summary of namespace types
 

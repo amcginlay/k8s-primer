@@ -56,7 +56,7 @@ end
 {{< /columns >}}
 
 {{% notice note %}}
-The following steps assume that you have a Kubernetes cluster running on `kind` and have `kubectl` installed to manage that cluster. If you have not yet done so, please visit the [Install Kubernetes]({{< ref "/017_install_kubernetes/" >}}) and [Install `kubectl`]({{< ref "018_install_kubectl" >}}) sections.
+The following steps assume that you have a Kubernetes cluster running on `kind` and have `kubectl` installed to manage that cluster. If you have not yet done so, please visit the [Install Kubernetes]({{< ref "017_meet_kubernetes" >}}) section.
 {{% /notice %}}
 
 {{< step >}}Check how many pods you have running in your cluster.{{< /step >}}

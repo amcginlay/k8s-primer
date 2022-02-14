@@ -1,5 +1,5 @@
 ---
-title: "The Anatomy Of A Web Server"
+title: "Anatomy Of A Web Server"
 chapter: false
 weight: 12
 draft: false
@@ -128,7 +128,7 @@ In the world of Linux, **no news is usually good news!**
 {{% /notice %}}
 
 
-Do that again, this time putting the server into a loop so it can handle subsequent requests.
+Do that again, this time putting the `SERVER` into a loop so it can handle subsequent requests.
 {{< columns >}}
 {{% column %}}
 ```bash
@@ -162,7 +162,6 @@ request 4
 {{< /output >}}
 {{< /column >}}
 {{< /columns >}}
-
 
 {{% notice note %}}
 Observe how `nc`, which is used as the request `--listen`ing process in the `SERVER` session, was repurposed as the request **transmitting** process in the `CLIENT` session.
