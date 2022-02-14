@@ -13,6 +13,6 @@ weight: 1
 * [Build Containers](015_build_containers/)
 * [Run Containers](016_run_containers/)
 * [Meet Kubernetes](017_meet_kubernetes/)
-* [Test Your App In Kubernetes](019_test_in_kubernetes/)
+* [Orchestrate Containers](019_orchestrate_containers/)
 * [Move Configuration out of Pod](020_config_as_code/)
 * [Deploy a Fleet of Pods](021_deploy_pod_fleet/)
