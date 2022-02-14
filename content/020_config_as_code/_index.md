@@ -44,7 +44,7 @@ For example, you can change your `Pod` spec to [pull the value of a container's 
 
 {{< step >}}Create this new version of your pod manifest with the `configMapKeyRef` section as follows.{{< /step >}}
 ```bash
-cat << EOF >~/environment/005-demo-pod.yaml 
+cat <<EOF >~/environment/005-demo-pod.yaml 
 apiVersion: v1
 kind: Pod                    # the object schema Kubernetes uses to validate this manifest
 metadata:
@@ -204,7 +204,7 @@ kubectl apply -f ~/environment/007-greeting-configmap.yaml
 {{< step >}}Now change the way your container refers to that `ConfigMap`. Select the value `messages.greeting` this time.{{< /step >}}
 
 ```bash
-cat << EOF >~/environment/008-demo-pod.yaml 
+cat <<EOF >~/environment/008-demo-pod.yaml 
 apiVersion: v1
 kind: Pod                    # the object schema Kubernetes uses to validate this manifest
 metadata:
@@ -360,7 +360,7 @@ Now for the ***fun*** part. You can create `volumes` in your pods which refer to
 
 {{< step >}}Create yet another version of your pod manifest, this one with both the `env` reference, and now adding a `volumeMounts` to the newer configmap.{{< /step >}}
 ```bash
-cat << EOF >~/environment/010-demo-pod.yaml 
+cat <<EOF >~/environment/010-demo-pod.yaml 
 apiVersion: v1
 kind: Pod                    # the object schema Kubernetes uses to validate this manifest
 metadata:

@@ -131,7 +131,7 @@ With judicious use of some [piped commands](https://en.wikipedia.org/wiki/Pipeli
 
 {{< step >}}Create a `Pod` manifest, then use `kubectl apply` to provision the pod in your Kubernetes cluster.{{< /step >}}
 ```bash
-cat << EOF | tee ~/environment/002-demo-pod.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/002-demo-pod.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: Pod                    # the object schema Kubernetes uses to validate this manifest
 metadata:
@@ -216,7 +216,7 @@ kubectl -n dev delete pod demo
 
 {{< step >}}Then deploy its replacement with the override in place.{{< /step >}}
 ```bash
-cat << EOF | tee ~/environment/003-demo-pod.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/003-demo-pod.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: Pod                    # the object schema Kubernetes uses to validate this manifest
 metadata:

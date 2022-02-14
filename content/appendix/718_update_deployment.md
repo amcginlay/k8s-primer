@@ -44,7 +44,7 @@ this version also includes the pod IP address with the container hosting PHP (`S
 
 {{< step >}}Create another PHP file which includes web pod IP address and client IP address. Call this `index2.php` on the development system.{{< /step >}}
 ```bash
-cat >~/environment/index2.php <<EOF
+cat <<EOF >~/environment/index2.php
 <?php
   echo getenv("GREETING") . " " . gethostname() . " at " . $_SERVER['SERVER_ADDR'] . " back to " . $_SERVER['REMOTE_ADDR'] . "\n";
 ?>
@@ -54,7 +54,7 @@ EOF
 {{< step >}}Write a new `Dockerfile` that uses this `index2.php` and copies it to `index.php` in the container image.{{< /step >}}
 
 ```bash
-cat >~/environment/Dockerfile-with-ip <<EOF
+cat <<EOF >~/environment/Dockerfile-with-ip
 FROM php:8.0.1-apache
 COPY index2.php /var/www/html/index.php
 ENV GREETING="Hello from"

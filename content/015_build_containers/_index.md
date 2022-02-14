@@ -27,7 +27,7 @@ In this exercise you will do the following:
 Get started by building the simplest of simple [PHP](https://www.php.net/) apps.
 This one just returns the value of the `GREETING` environment variable (if present) and the hostname of the server.
 ```bash
-cat > ~/environment/index.php << EOF
+cat <<EOF >~/environment/index.php 
 <?php
   echo getenv("GREETING") . " " . gethostname() . "\n";
 ?>
@@ -89,7 +89,7 @@ It consists of scripted commands used by the Docker build tool to assemble a con
 
 The Dockerfile for your app is very simple and is created as follows. Run this in your Cloud9 terminal.
 ```bash
-cat > ~/environment/Dockerfile << EOF
+cat <<EOF >~/environment/Dockerfile 
 FROM php:8.0.1-apache
 COPY index.php /var/www/html/
 ENV GREETING="Hello from"

@@ -585,7 +585,7 @@ Now that you know what goes in a `Deployment` manifest, it is time to create one
 {{< step >}}Create this deployment manifest and apply it.{{< /step >}}
 
 ```bash
-cat << EOF | tee ~/environment/101-demo-deployment.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/101-demo-deployment.yaml | kubectl -n dev apply -f -
 apiVersion: apps/v1          # remember to use apps/v1 instead of merely v1
 kind: Deployment             # the object schema Kubernetes uses to validate this manifest
 metadata:
