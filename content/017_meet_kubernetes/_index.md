@@ -54,6 +54,9 @@ Most Kubernetes clusters are composed of multiple compute resources.
 These are referred to as **nodes** and they come in a couple of varieties, as follows.
 - **control plane** nodes -- a set of servers that provide container ***orchestration*** support features (like a queen bee of a hive or the government of a town/city)
 - **data plane** nodes -- a set of servers that run the container workloads; these servers are container hosts, sometimes called **workers**, like the worker bees in a colony, or the populace of a town/city.
+Each data plane node hosts an OCI compliant container runtime.
+This could be the Docker runtime or any alternative (e.g. [containerd](https://containerd.io/)) capable of running OCI compliant containers.
+From the abstracted perspective of a Kubernetes user, the choice of underlying container runtime is of no great significance.
 
 The `kind` documentation provides a [suggested configuration manifest for multi-node clusters](https://kind.sigs.k8s.io/docs/user/quick-start/#multinode-clusters). You can use such a file to create your multi-node Kubernetes cluster based on `kind`. Your cluster can have multiple worker nodes that are separate from the control plane node(s).
 
