@@ -15,6 +15,7 @@ hrefTargetBlank = true
 editURL = "https://github.com/amcginlay/k8s-primer/edit/main/content/"
 themeVariant = "mine"
 showVisitedLinks = false
+hideSidebar = false  # initially a site parameter, not at page level
 author = "Alan McGinlay"
 description = "Domain Starter: Kubernetes"  # was Kubernetes Primer
 disableSearch = false
