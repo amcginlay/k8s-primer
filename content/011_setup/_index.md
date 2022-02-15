@@ -20,8 +20,11 @@ You may choose to delete one environment whenever you are done learning or set u
 
 ## Configure CloudShell
 
-Once signed into your AWS account, begin by navigating to https://us-west-2.console.aws.amazon.com/cloudshell. The CloudShell environment includes the AWS CLI but it regularly tracks behind the latest version.
-To ensure you are running the latest version, from **within your CloudShell environment**, update the CLI as follows.
+{{< step >}}Once signed into your AWS account, begin by navigating to https://us-west-2.console.aws.amazon.com/cloudshell.{{< /step >}} 
+
+The CloudShell environment includes the AWS CLI but it regularly tracks behind the latest version.
+
+{{< step >}}To ensure you are running the latest version, from **within your CloudShell environment**, update the CLI as follows.{{< /step >}}
 ```bash
 rm -rf /usr/local/bin/aws 2> /dev/null
 rm -rf /usr/local/aws-cli 2> /dev/null
@@ -33,7 +36,7 @@ sudo ./aws/install --update
 
 ## Build a Cloud9 environment
 
-From **within your CloudShell environment**, run the following snippet to create a Cloud9 instance.
+{{< step >}}From **within your CloudShell environment**, run the following snippet to create a Cloud9 instance.{{< /step >}}
 ```bash
 subnet_id=$( \
   aws ec2 describe-subnets \
@@ -63,7 +66,7 @@ If this is not the case, either:
 
 ## Configure your Cloud9 environment
 
-From **within your CloudShell environment**, execute the following command then navigate your browser to the Cloud9 URL it prints out.
+{{< step >}}From **within your CloudShell environment**, execute the following command then navigate your browser to the Cloud9 URL it prints out.{{< /step >}}
 ```bash
 echo "https://${AWS_DEFAULT_REGION}.console.aws.amazon.com/cloud9/ide/${env_id}"
 ```
@@ -77,7 +80,7 @@ You may initiate new command line sessions inside **Cloud9** at any time using `
 
 ## Extend your root volume
 
-From **within your Cloud9 environment**, to ensure we don't exhaust disk space, extend the root volume storage to 30gb.
+{{< step >}}From **within your Cloud9 environment**, to ensure we don't exhaust disk space, extend the root volume storage to 30gb.{{< /step >}}
 ```bash
 df -T # check disk use percentage before (typically ~80%) ...
 
@@ -116,7 +119,8 @@ df -T # ... check disk use percentage has been reduced
 
 Each Cloud9 instance has the [Docker](https://www.docker.com/) build/runtime tooling.
 Docker provides a local cache feature so it can make efficient re-use of downloaded container images.
-Cloud9 pre-loads the cache with images we will not need in this tutorial so flush out the cache as follows.
+Cloud9 pre-loads the cache with images we will not need in this tutorial.
+{{< step >}}Flush out the container image cache as follows.{{< /step >}}
 ```bash
 docker system prune --all --force
 ```
@@ -125,6 +129,7 @@ docker system prune --all --force
 
 The Cloud9 terminal prompt is configured to do some pretty smart things but it can also misbehave, so dumb it down now.
 
+{{< step >}}Append a shorter prompt to the shell configuration and apply it.{{< /step >}}
 ```
 echo "export PS1='$ '" >> ~/.bashrc
 source ~/.bashrc
