@@ -36,7 +36,7 @@ The answer is "yes" and Linux refers to this device as the **standard input (/de
 
 Constructs of this type are collectively known as [Device Files](https://en.wikipedia.org/wiki/Device_file).
 
-Starting from basic principals, you likely know that the [cat](https://en.wikipedia.org/wiki/Cat_(Unix)) command is commonly used to dump the lines of a text file to the terminal screen.
+Starting from basic principles, you likely know that the [cat](https://en.wikipedia.org/wiki/Cat_(Unix)) command is commonly used to dump the lines of a text file to the terminal screen.
 Using [output redirection](https://en.wikipedia.org/wiki/Redirection_(computing)) we can show that the following two commands behave identically.
 
 {{% notice note %}}
@@ -169,7 +169,7 @@ The `CLIENT` sent **four identical requests** each using a different syntax.
 In the final request, `nc` was able to resolve the IP address for the hostname `localhost`.
 {{% /notice %}}
 
-Hit `Ctrl+C` in the `SERVER` session to break the loop and regain your prompt.
+Hit [`Ctrl+C`](https://en.wikipedia.org/wiki/End-of-Text_character) in the `SERVER` session to break the loop and regain your prompt.
 
 You have just seen how the `CLIENT` can perform write operations against the `SERVER`.
 Now observe how, with a small adjustment, the `SERVER` can be configured to write back a response. 
@@ -242,7 +242,7 @@ The `SERVER` side dumped the plain-text lines transmitted to it by the `curl` co
 On the `CLIENT` side, the `curl` command was expecting the `SERVER` to abide by the rules of the HTTP protocol and respond accordingly.
 As this was not the case `curl` **errored** but, since the protocol is text-based, we can fabricate a compatible response and try again.
 
-Hit `Ctrl+C` in the `SERVER` session to break the loop and try the following.
+Hit [`Ctrl+C`](https://en.wikipedia.org/wiki/End-of-Text_character) in the `SERVER` session to break the loop and try the following.
 {{< columns >}}
 {{% column %}}
 ```bash
@@ -275,7 +275,7 @@ Accept: */*
 {{< /columns >}}
 
 It may not be all that exciting but this is our minimum viable web server.
-There is no longer a failure in `curl` command (remember, no news is good news!) but there is also no tangible response **beyond** the successful receipt of a `200` [status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_success) in the [HTTP header](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields).
+There is no longer a failure in the `curl` command (remember, no news is good news!) but there is also no tangible response **beyond** the successful receipt of a `200` [status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_success) in the [HTTP header](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields).
 
 {{% notice note %}}
 Pass the `--verbose` switch to `curl` if you wish to see proof that the 200 status code was consumed by the `CLIENT`.
