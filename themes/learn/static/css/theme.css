@@ -1037,7 +1037,7 @@ td {
     }
     */
     .sidebar-hidden {
-        overflow: hidden;
+        overflow: auto;
     }
     .sidebar-hidden #sidebar {
         left: 0;
@@ -1046,7 +1046,7 @@ td {
     }
     .sidebar-hidden #body {
         margin-left: 0px;
-        overflow: hidden;
+        overflow: auto;
     }
 /*
     .sidebar-hidden #overlay {
