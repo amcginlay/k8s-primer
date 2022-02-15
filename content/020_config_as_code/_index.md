@@ -338,8 +338,9 @@ This will be significant not only for your Kubernetes manifests you write from s
 Before we move on, reflect upon why this separation of code from config is desirable.
 
 Your namespaces could be used to represent different environments (e.g. `dev` or `test`) and the apps which run there would perhaps connect to environment-specific database instances.
-When we ask a pod to bind to a configmap it has no option but to bind to a named object (e.g. `connection-strings`) located in its own namespace as it has no further visibility.
-This means that the pod definition in both namespaces could be identical whilst the associated configmaps, which share the same name, could be quite different.
+When you bind to a configmap to a pod its container has no option but to seek a named object (e.g. `connection-strings`) located in its **own** namespace.
+Remember it has no further visibility.
+This means **identical** pod definitions, deployed to separate namespaces, could bind to configmaps whose contents are quite **different** despite being named the same.
 
 ## Success
 
