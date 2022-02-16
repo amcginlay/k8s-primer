@@ -89,7 +89,9 @@ The Docker build tool uses [Dockerfiles](https://docs.docker.com/engine/referenc
 A `Dockerfile` is a text document stored alongside your app code.
 It consists of scripted commands used by the Docker build tool to assemble a container image which packages your app and its dependencies. In this sense, your `Dockerfile` is like a recipe for cooking a **container image** and `index.php` is the main ingredient.
 
-The Dockerfile for your app is very simple and is created as follows. Run this in your Cloud9 terminal.
+The Dockerfile for your app is very simple and is created as follows. 
+
+{{< step >}}Run this in your Cloud9 terminal.{{< /step >}}
 ```bash
 cat <<EOF >~/environment/Dockerfile 
 FROM php:8.0.1-apache
@@ -123,7 +125,8 @@ Each layer is used to extend or override the preceding layers.
 
 ## Build the container image
 
-With the app ready and the Dockerfile composed you can now build a container image for your app. Run this:
+With the app ready and the Dockerfile composed you can now build a container image for your app. 
+{{< step >}}Run this:{{< /step >}}
 ```bash
 docker build --tag demo:1.0.0 ~/environment/
 ```
@@ -158,7 +161,7 @@ If you do not tag your images they will get auto-tagged as `latest`, over and ov
 Explicitly tagging your images (i.e. `demo:1.0.0`) is considered good practice and ultimately aids your deployments.
 {{% /notice %}}
 
-Once complete, list the images in the local cache.
+{{< step >}}Once your build is complete, list the images in the local cache.{{< /step >}}
 ```bash
 docker images
 ```
