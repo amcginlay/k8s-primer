@@ -23,7 +23,7 @@ Processes treated to a sprinkle of this kernel wizardry become elevated to the s
 With the passage of time the use of containers, somewhat inevitably, became [democratized](https://en.wikipedia.org/wiki/Democratization_of_technology) and the air of mystique that previously surrounded them faded.
 
 You would rarely build a container by hand these days because you tend to have more productive things to do with your time.
-That said, if we want to gain a deeper appreciation of the technology that underpins Kubernetes pausing for a moment to do exactly that can provide a powerful accelerant to your learning.
+That said, if we want to gain a deeper appreciation of the technology that underpins Kubernetes, pausing for a moment to do exactly that can provide a powerful accelerant to your learning.
 
 Building and running rudimentary containers by hand is perhaps not for the faint of heart but neither is it magic.
 
@@ -150,6 +150,10 @@ echo "PID=$$" && ls -ld /proc/$$/ns/*
 {{% /column %}}
 {{< /columns >}}
 
+{{% expand "extra tip" %}}
+NOTE: You could use `echo "PID=$$" && ls -ld /proc/$$/ns/* | sed -e 's@^.*proc@/proc@'` instead to filter the output.
+{{% /expand %}}
+
 Example output:
 {{< columns >}}
 {{< column >}}
@@ -191,6 +195,21 @@ It appears as if child processes, in many respects, begin their lives as clones 
 The process with `PID` 1 is unusual in that it has a `PPID` of 0, yet no such process exists, therefore it has no parent.
 {{% /notice %}}
 
+{{< mermaid >}}
+graph TB
+    subgraph root-uts[Root UTS Namespace]
+         proc1((PID 8241<br>shell1<br>bash))
+         host1>hostname: this-is-root-uts]
+         proc2((PID 8498<br>shell2<br>bash))
+    end
+
+classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+classDef blue fill:#0cf,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+class proc1,proc2 blue;
+class root-uts yellow;
+{{< /mermaid >}}
+
 You are ready now to introduce a **new** instance of the UTS namespace.
 To experiment with namespaces in the shell you will use a pair of commands which are just thin wrappers around a small collection of kernel syscalls.
 - [unshare](https://man7.org/linux/man-pages/man1/unshare.1.html) spawns a child process as a member of a **new** namespace.
@@ -214,6 +233,10 @@ hostname
 ```
 {{% /column %}}
 {{< /columns >}}
+
+{{% expand "extra tip" %}}
+NOTE: Instead of `ls -l /proc/$$/ns/uts`, you could use the list-namespaces command--`lsns`. You could filter the output of that using `lsns | awk ' {print $1,$2,$3,$4}'` or `lsns | cut -c 1-30`.
+{{% /expand %}}
 
 Example output:
 {{< columns >}}
@@ -351,12 +374,12 @@ The following diagram illustrates the steps you just performed.
 
 {{< mermaid >}}
 graph TB
-    subgraph Root UTS Namespace
+    subgraph root-uts[Root UTS Namespace]
          proc1((PID 8241<br>shell1<br>bash))
          host1>hostname: this-is-root-uts]
          proc2((PID 8498<br>shell2<br>bash))
     end
-    subgraph Custom UTS Namespace
+    subgraph custom-uts[Custom UTS Namespace]
          proc3((PID 32609<br>shell1<br>bash))
          host2>hostname: this-is-new-uts]
          proc4((PID 11587<br>shell2<br>bash))
@@ -366,8 +389,10 @@ proc2 -->|nsenter --uts| proc4
 
 classDef green fill:#9f6,stroke:#333,stroke-width:4px;
 classDef blue fill:#0cf,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
 class proc1,proc2 blue;
 class proc3,proc4 green;
+class root-uts,custom-uts yellow;
 {{< /mermaid >}}
 
 {{< step >}}To ensure a smooth transition to the next section, close **both** terminal windows at this point.{{< /step >}}
@@ -540,16 +565,16 @@ The following diagram illustrates the steps you just performed.
 
 {{< mermaid >}}
 graph TB
-    subgraph pid-namespace-zero
+    subgraph pid-namespace-zero[Root PID Namespace]
          proc1((PID 22803<br>shell1<br>bash))
          proc2((PID 22804<br>shell2<br>bash))
     end
-    subgraph pid-namespace-two
+    subgraph pid-namespace-two[New PID Namespace TWO]
          proc6((PID 1<br>bash))
          proc7((PID 18<br>sleep 1002))
          proc8((PID 20<br>ps -ef))
     end
-    subgraph pid-namespace-one
+    subgraph pid-namespace-one[New PID Namespace ONE]
          proc3((PID 1<br>bash))
          proc4((PID 20<br>sleep 1001))
          proc5((PID 22<br>ps -ef))
@@ -562,13 +587,23 @@ proc6 --> proc7 & proc8
 classDef green fill:#9f6,stroke:#333,stroke-width:4px;
 classDef blue fill:#0cf,stroke:#333,stroke-width:4px;
 classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
 class proc1,proc2 blue;
 class proc3,proc4,proc5 green;
 class proc6,proc7,proc8 orange;
+class pid-namespace-zero,pid-namespace-one,pid-namespace-two yellow;
 {{< /mermaid >}}
 
 Even though processes from within different custom namespaces (e.g. `sleep 1001` and `sleep 1002`) cannot see each other, **all** processes remain visible from the root namespace.
 How you might go about testing that the previous statement is true?
+
+{{% expand "show hint" %}}
+Try this: launch a *third* shell window without closing the other two. Then in each of the three windows, do the following sequence of commands. Do `ps -e` to see all the processes in that PID namespace. Then do `ps -h` to see the processes for the current user without a *heading* line. Run `ps -h | wc -l` to show how many processes there are (yes, the `ps` and the `wc` will both be in that count). Then run `lsns | cut -c 1-30` in each of those windows. How many processes are in each of the three PID namespaces? Are there more in the ***root PID namespace***? 
+{{% /expand %}}
+
+{{% notice note %}}
+For a little more detail on the nature of the PID namespace hierarchy, see this [PID Namespace Hierarchy Appendix]({{< ref "appendix/710_pid_namespace_hierarchy" >}}).
+{{% /notice %}}
 
 {{< step >}}To ensure a smooth transition to the next section, close **both** terminal windows at this point.{{< /step >}}
 
