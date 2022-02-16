@@ -12,7 +12,7 @@ This chapter guides you through the process of provisioning an isolated environm
 The rest of this workshop assumes you have created a **Cloud9** environment in which you can perform the tasks and learn at your own pace.
 You may choose to delete one environment whenever you are done learning or set up a new one when you wish to start over.
 
-## Prerequisutes
+## Prerequisites
 
 - These instructions build a [Cloud9](https://aws.amazon.com/cloud9/) environment and assume you have access to a sufficiently privileged [AWS](https://aws.amazon.com/) account in order to do so.
 - To ensure reproducibility we will create all our infrastructure in the `us-west-2` region. 
