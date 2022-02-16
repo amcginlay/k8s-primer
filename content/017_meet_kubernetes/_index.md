@@ -193,6 +193,15 @@ Take a quick look at that file and see if you can identify which port the Kubern
 Try **carefully** renaming that file and see if `kubectl get nodes` still works.
 This file is commonly referred to as `kubeconfig` and, as you can see, it is a requirement for `kubectl` to function correctly.
 
+{{% expand "Show example" %}}
+```
+cat ~/.kube/config | cut -c 1-40
+mv ~/.kube/config moved-config
+kubectl get nodes
+mv moved-config ~/.kube/config
+```
+{{% /expand %}}
+
 {{% notice note %}}
 Make sure you replace your original `~/.kube/config` before moving on.
 {{% /notice %}}
@@ -214,6 +223,7 @@ A [Pod](https://kubernetes.io/docs/concepts/workloads/pods/) in Kubernetes is a 
 
 If you just created your Kubernetes cluster with `kind`, but have not yet deployed any apps to run in it, the cluster will have no pods in the **default** namespace, like a ship with no passengers. But… there is still a crew!
 
+{{< step >}}Get a list of the pods running in *all* namespaces in your cluster.{{< /step >}}
 ```bash
 kubectl get pods -A
 ```
@@ -252,7 +262,7 @@ If we did not enquire as to their surnames it would be impossible, on paper, to 
 The purpose of namespaces in Kubernetes is to allow two resources with the same name to coexist, so long as they occupy a different namespace.
 When you use a single cluster, a textbook use-case for namespaces is to separate your **Dev** environment from, say, your **Test** environment.
 
-To see a list of the current namespaces
+{{< step >}}To see a list of the current namespaces.{{< /step >}}
 
 ```bash
 kubectl get namespaces
