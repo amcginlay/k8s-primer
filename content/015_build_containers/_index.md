@@ -26,6 +26,7 @@ In this exercise you will do the following:
 
 Get started by building the simplest of simple [PHP](https://www.php.net/) apps.
 This one just returns the value of the `GREETING` environment variable (if present) and the hostname of the server.
+{{< step >}}Create your `index.php` microapp by typing or copying-and-pasting this into your Cloud9 terminal.{{< /step >}}
 ```bash
 cat <<EOF >~/environment/index.php 
 <?php
@@ -35,7 +36,7 @@ EOF
 ```
 
 Before we tackle containers, keep it simple.
-Set the `hostname` to something appropriate and run this app as a webserver from your Cloud9 environment.
+{{< step >}}Set the `hostname` to something appropriate and run this app as a webserver from your Cloud9 environment.{{< /step >}}
 ```bash
 sudo hostname Cloud9
 GREETING="Hello from" php -S localhost:8080
@@ -60,9 +61,9 @@ Port 8080 is neither reserved or firewalled so this is a popular development alt
 {{% /notice %}}
 
 This webserver will tie up this first Cloud9 terminal session until its process is stopped.
-Leave the webserver running and select `Window -> New Terminal` to make a second terminal session available.
+{{< step >}}Leave the webserver running and select `Window -> New Terminal` to make a second terminal session available.{{< /step >}}
 
-In the second terminal session, use the `curl` command to send an HTTP GET request to the webserver as follows.
+{{< step >}}In the second terminal session, use the `curl` command to send an HTTP GET request to the webserver as follows.{{< /step >}}
 ```bash
 curl http://localhost:8080
 ```
@@ -74,7 +75,8 @@ Hello from Cloud9
 
 Your output from `curl` will display the value of the `GREETING` environment variable alongside the hostname which you set earlier.
 
-Now you have tested the app works, head back the first terminal session and hit `Ctrl+C` to stop the PHP webserver.
+Now you have tested the app works, you can stop the PHP webserver.
+{{< step >}}head back the first terminal session and hit `Ctrl+C` to stop the PHP webserver.{{< /step >}}
 
 Containers exploit the use of [namespaces](https://en.wikipedia.org/wiki/Linux_namespaces) so once the app is packaged as a containerized process its hostname will appear to become independent of the underlying host.
 It is this behavior which gives rise to containers often being described as lightweight virtual machines.
