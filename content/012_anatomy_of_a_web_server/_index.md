@@ -372,6 +372,69 @@ Accept: */*
 {{< /column >}}
 {{< /columns >}}
 
+## Web Server Quiz
+
+Please take the following quiz to review your knowledge of web servers.
+
+{{< quizdown >}}
+
+---
+primary_color: orange
+secondary_color: lightgray
+text_color: black
+shuffle_questions: false
+---
+
+## Why Web Servers?
+
+---
+shuffle_answers: false
+---
+
+How are web servers relevant to containers and Kubernetes?
+
+> Choose as many as you think apply.
+
+- [x] some containers host web sites with content based on html, png, css, javascript, etc.
+- [x] microservices are most often accessed via a web API based on XML, JSON, or other encoding
+- [x] health checks of containers are usually based on web queries
+- [x] metrics are often scraped from a container using a web endpoint
+
+## Web Client
+
+Which tool did you use in this lesson for submitting web requests?
+
+> What is the role (client/server) of this tool, and what is a web locator called?
+
+- [ ] `Invoke-WebRequest`
+- [ ] `Chrome`
+- [x] `curl`
+- [ ] `wget`
+
+## Web Server
+
+What software did you use in this lesson to provide a fundamental web server role?
+
+> Even more fundamental than what you were thinking.
+
+- [ ] `tomcat`
+- [ ] `apache`
+- [x] `nc`
+- [ ] `nginx`
+
+## Magic?
+
+Are web servers magical?
+
+> What did you just do in this lesson?
+
+- [ ] Yes, web servers are magical
+- [ ] No, but web servers must be extremely complicated
+- [x] No, web servers could be either simple or complex
+- [ ] I don't know
+
+{{< /quizdown >}}
+
 ## Success
 
 In this exercise you did the following:

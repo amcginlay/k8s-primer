@@ -135,6 +135,57 @@ echo "export PS1='$ '" >> ~/.bashrc
 source ~/.bashrc
 ```
 
+## Setup Quiz
+
+Please take the following quiz to review your knowledge of your environment setup.
+
+{{< quizdown >}}
+
+---
+primary_color: orange
+secondary_color: lightgray
+text_color: black
+shuffle_questions: false
+---
+
+## Workshop Environment
+
+---
+shuffle_answers: false
+---
+
+What environment will you be using to work with containers and Kubernetes?
+
+> Scroll up or switch to your other tab.
+
+- [ ] AWS CloudShell
+- [x] AWS Cloud9
+- [ ] AWS CodePipeline
+- [ ] Amazon SageMaker Studio
+- [ ] Microsoft VSCode
+
+## Setup time
+
+How long did it take to set up this environment?
+
+> What time was it when you started the setup?
+
+- [ ] Instantaneous. No time at all.
+- [x] Less than 5 minutes.
+- [ ] 10 minutes.
+- [ ] 15 minutes.
+
+## Redoing this
+
+If you delete this practice environment, can you set it up again any time?
+
+> What if you want to repeat this next week? Next month?
+
+- [x] Yes, I can do this again any time.
+- [ ] No, I can only do this today.
+
+{{< /quizdown >}}
+
 ## Success
 
 You have now completed the prerequisite of creating a **Cloud9** environment in which you can explore *containers* and *Kubernetes*.
