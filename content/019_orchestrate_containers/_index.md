@@ -13,7 +13,7 @@ The running state of a Kubernetes cluster is defined by objects such as [namespa
 Familiarizing oneself with the structure of these manifests can be a significant barrier for beginners.
 `kubectl` supports a number of convenient factory-style commands, known as [generators](https://kubernetes.io/docs/reference/kubectl/conventions/#generators), which can build Kubernetes objects without you needing to code their underlying manifests by hand.
 
-Generators also supports a **dry run** facility, enabling them to serve as crude but effective manifest builders.
+Generators also supports a **dry run** facility, which only writes the manifest but does not actually create the object, enabling them to serve as crude but effective manifest builders.
 This behaviour can be observed when executing the following command.
 
 {{< step >}}Generate a Kubernetes `Pod` manifest.{{< /step >}}
@@ -27,7 +27,7 @@ They will never alter the running state of your cluster.
 {{% /notice %}}
 
 Generators are incredibly useful for when you are getting started and need reminding of what goes where but they quickly become an inadequate crutch that holds you back as your requirements expand beyond the simplest use cases.
-For this reason you will not be using them today.
+For this reason you will *not* be using them today.
 Whenever you require an object you will, with the help of this tutorial, build a YAML manifest.
 
 ## Namespace creation
@@ -39,6 +39,15 @@ For example, if you have two pods named **demo** that need to run concurently, y
 Most Kubernetes objects expect to be placed into a namespace.
 If you fail to explicitly place any such object it will be sent to the **default** namespace.
 You will almost always want to place objects into an explicit namespace, so you need to know how to create one.
+While you're at it, create two, one for development and one for testing.
+{{% expand "Bonus: Which kinds of objects are \"namespaced\"?" %}}
+Each `kind` of Kubernetes object is either put in a namespace, i.e. **namespaced**, or *not* put in a namespace which means that such objects have global scope across the cluster, i.e. **non-namespaced**.
+The `kubectl` command `api-resources` shows the `NAME`, `SHORTNAME`, `APIVERSION`, `NAMESPACED`, and `KIND` of each of the kinds of Kubernetes objects known in your cluster. You can use the classic UNIX `awk` command to collate the namespaced and non-namespaced kinds of objects.
+```bash
+kubectl api-resources | awk 'BEGIN{ns="";nonns=""};/true/{ns=ns FS $1};/false/{nonns=nonns FS $1};END{print "namespaced: " ns; print ""; print "non-namespaced:" nonns}'
+```
+In which list do pods appear?
+{{% /expand %}}
 
 {{< step >}}Create your namespaces manifest then instruct Kubernetes to ingest it using `kubectl apply` which will cause Kubernetes to translate your manifests into objects.
 This manifest defines two namespaces, `dev` and `test`.{{< /step >}}
@@ -87,6 +96,7 @@ test                 Active   8m
 
 The list returned will include, among others, the newly created namespaces.
 For the time being you only care about your new **dev** namespace so forget the others you see.
+You'll use the **test** namespace later; **dev** is enough for this lesson.
 You now have a custom namespace which will provide a home for your app.
 
 {{% notice note %}}
@@ -99,6 +109,10 @@ Once a container image has been successfully built and tagged (e.g. `docker buil
 The most well known registry is [Docker Hub](https://hub.docker.com/) but others such as [Amazon Elastic Container Registry](https://aws.amazon.com/ecr/) exist.
 Registries are to your container images what GitHub is to your source code - a place where a wider range of consumers can fetch (**pull**) your wares.
 You will ultimately need to know how image registries work.
+{{% expand "Bonus: Some CNCF-listed container registries" %}}
+For future reference, you can visit the [Cloud Native Computing Foundation (CNCF) *landscape* container registry category](https://landscape.cncf.io/card-mode?category=container-registry&grouping=category) to find descriptions and links to other container registry offerings. Some popular ones are: [Harbor](https://goharbor.io), [Quay](https://quay.io), and [JFrog Artifactory](https://jfrog.com/artifactory/).
+{{% /expand %}}
+
 Today, to keep your TODO list manageable, you will inject your container image **directly** from your Cloud9 Docker image cache into your Kubernetes cluster.
 This allows you to develop your images locally and completely bypass the **push** and **pull** mechanisms.
 
@@ -131,7 +145,7 @@ You would **never** normally attempt to bypass your image registry like this.
 The daemon component of Docker is an example of a [container runtime](https://kubernetes.io/docs/setup/production-environment/container-runtimes/).
 Kubernetes extends the functionailty of container runtimes and is more appropriately referred to as a [container orchestrator](https://docs.docker.com/get-started/orchestration/).
 You will start by proving that Kubernetes can replicate the functionality of Docker (i.e. run a single container).
-Pods are the smallest deployable units of compute resource you can create and manage in Kubernetes.
+***Pods*** are the smallest deployable units of compute resource you can create and manage in Kubernetes.
 Pods can be comprised of multiple containers but since we are starting with just one you can, **for now**, think about the terms container and pod as being broadly interchangeable.
 
 To run a pod you need a YAML manifest which represents the pod.
@@ -162,6 +176,10 @@ Recognize how the above invocation includes `kubectl -n dev` which ensures the p
 It is advantageous to build some muscle-memory around the consistent and explicit use of namespaces.
 {{% /notice %}}
 
+{{% expand "Why not specify the namespace in the manifest instead of the pipeline?" %}}
+You could have specified the `namespace` of your pod in the manifest in the `metadata` section. That is certainly a viable option. In fact, in some cases it may be preferred, because the manifest is more self-contained and complete. In far fancier scenarios than this introduction, you may use a package manager such as `helm` to inject variables into your manifests, and the namespace is one of many such possibilities there. However, without such a package manager, think about modularity and reusability. By *not* specifying the namespace within this pod manifest, you could easily reuse it and deploy many pods with that same manifest to different namespaces just by changing the command line. That's the tradeoff: change the imperative command line, or change the declarative manifest. Which approach is more manageable for your devops pipelines and methodologies? The answer may vary from customer to customer and project to project.
+{{% /expand %}}
+
 Compared to Docker, Kubernetes is more conservative when it comes to exposure of your apps at the host (VM) level.
 How Kubernetes handles pod networking is deferred until a later section on [services](https://kubernetes.io/docs/concepts/services-networking/service/).
 {{< step >}}In the meantime, as you did with the Docker CLI, you can `kubectl exec` into your running pod to test it from inside as follows.{{< /step >}}
@@ -173,6 +191,29 @@ Example output:
 {{< output >}}
 Hello from demo
 {{< /output >}}
+
+We could depict what you have just done like this:
+
+{{< mermaid >}}
+graph LR
+cloud9[Cloud 9<br>dev instance<br>in VPC]
+subgraph pod[demo Pod]
+  subgraph container[demo Container]
+    demo((php in<br>demo<br>container))
+    curl((curl in<br>demo<br>container))
+  end
+end
+cloud9 -->|docker exec| curl
+curl -->|curl :80| demo
+classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+classDef blue2 fill:#0af,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+classDef yelloworange fill:#fd3,stroke:#333,stroke-width:2px;
+class cloud9 orange;
+class pod yellow;
+class container yelloworange;
+class demo,curl blue2;
+{{< /mermaid >}}
 
 Congratulations.
 You have now reproduced the standard behavior of Docker but there is an important difference we need to discuss.
@@ -198,6 +239,29 @@ It is unlikely that your pod will have been restarted yet.
 kubectl -n dev exec demo -it -- kill 1
 ```
 
+{{< mermaid >}}
+graph LR
+cloud9[Cloud 9<br>dev instance<br>in VPC]
+subgraph pod[demo Pod]
+  subgraph container[demo Container]
+    apache((PID 1<br>apache2<br>root))
+    demo((PID 23<br>php<br>www-data))
+    kill((PID 35<br>kill 1<br>root))
+  end
+end
+cloud9 -->|docker exec| kill
+kill -->|kill 1| apache
+apache -.-|child| demo
+classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+classDef blue2 fill:#0af,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+classDef yelloworange fill:#fd3,stroke:#333,stroke-width:2px;
+class cloud9 orange;
+class pod yellow;
+class container yelloworange;
+class apache,demo,kill blue2;
+{{< /mermaid >}}
+
 {{< step >}}Then recheck the `RESTARTS`{{< /step >}}
 ```bash
 kubectl -n dev get pods
@@ -208,6 +272,10 @@ Example output:
 NAME   READY   STATUS    RESTARTS   AGE
 demo   1/1     Running   1          16m
 {{< /output >}}
+
+{{% expand "Bonus: How can you check what processes are in your container in your pod?" %}}
+You could use `ps` within a `kubectl exec` to see what is running in the container in your pod. While this assumes that you have `ps` installed in your container image, that is the case with your `demo` image. Try this: `kubectl -n dev exec demo -it -- ps -eo pid,ppid,cmd` to focus on the process id, parent process id, and command properties.
+{{% /expand %}}
 
 This reveals evidence that Kubernetes automatically restarted your pod.
 You have witnessed something simple but very important about Kubernetes.
@@ -263,6 +331,20 @@ Example output:
 pod/demo created
 {{< /output >}}
 
+{{% expand "Bonus: What is different between this pod spec and your previous one?" %}}
+If you were using source control with one pod manifest file you could simply compare using `git diff` or similar. You can use the more classic UNIX `diff` command as follows: 
+```bash
+diff 002-demo-pod.yaml 003-demo-pod.yaml
+```
+Which should yield differences such as:
+```
+8a9,11
+>     env:
+>     - name: GREETING         # the overridden environment variable
+>       value: Hi from
+```
+{{% /expand %}}
+
 {{< step >}}`exec` into your new pod to test it from inside as follows.{{< /step >}}
 ```bash
 kubectl -n dev exec demo -it -- curl http://localhost:80
@@ -272,6 +354,8 @@ Example output:
 {{< output >}}
 Hi from demo
 {{< /output >}}
+
+You have assigned a value for your `GREETING` environment variable at the pod specification level, which overrides the value for that variable in your `demo` container image you built with a `Dockerfile` earlier. This is immensely powerful. You have not changed or overwritten you immutable version `1.0.0` container image, but you have transcended it. Your Kubernetes manifest for your pod overrode what was baked into the image. You are in control of your configuration to extend how you use the container images you have.
 
 ## Success
 
