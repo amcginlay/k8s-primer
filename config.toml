@@ -1,7 +1,7 @@
 languageCode = "en-us"
 ignoreFiles = [ "\\.files/README.md$",  "content/intermediate/260_weave_flux/app.files/"]
 defaultContentLanguage = "en"
-title = "Domain Starter: Kubernetes"  # was Kubernetes Primer
+title = "Kubernetes: Domain Starter"  # was Kubernetes Primer, then Domain Starter: Kubernetes
 theme = "learn"
 uglyurls = false
 # googleAnalytics = "UA-44634850-4"
@@ -17,7 +17,7 @@ themeVariant = "mine"
 showVisitedLinks = false
 hideSidebar = false  # initially a site parameter, not at page level
 author = "Alan McGinlay"
-description = "Domain Starter: Kubernetes"  # was Kubernetes Primer
+description = "Kubernetes: Domain Starter"  # was Kubernetes Primer, then Domain Starter: Kubernetes
 disableSearch = false
 disableAssetsBusting = false
 disableLanguageSwitchingButton = true

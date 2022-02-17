@@ -1,10 +1,10 @@
 ---
-title: "Domain Starter: Kubernetes"
+title: "Kubernetes: Domain Starter"
 chapter: true
 weight: 1
 ---
 
-# Domain Starter: Kubernetes
+# Kubernetes: Domain Starter
 
 * [Setup](011_setup/)
 * [Anatomy of a Web Server](012_anatomy_of_a_web_server/)
