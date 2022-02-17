@@ -14,7 +14,7 @@ Familiarizing oneself with the structure of these manifests can be a significant
 `kubectl` supports a number of convenient factory-style commands, known as [generators](https://kubernetes.io/docs/reference/kubectl/conventions/#generators), which can build Kubernetes objects without you needing to code their underlying manifests by hand.
 
 Generators also supports a **dry run** facility, which only writes the manifest but does not actually create the object, enabling them to serve as crude but effective manifest builders.
-This behaviour can be observed when executing the following command.
+This behavior can be observed when executing the following command.
 
 {{< step >}}Generate a Kubernetes `Pod` manifest.{{< /step >}}
 ```bash
@@ -286,12 +286,20 @@ Pod restarts are evidence of this strategy at work and an indicator that Kuberne
 Obviously there is more to being a container orchestrator than just automatic restarts but this will suffice for now.
 You will learn more as you progress.
 
-## Overriding environment variables
-When you deployed your containerized app into Docker you observed how it was possible to provide overrides for environment variables which meant you were able to separate your code from its config.
-You can also provide [environment variable overrides in Kubernetes](https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/).
-Your Kubernetes manifests are a form of [infrastructure as code](https://en.wikipedia.org/wiki/Infrastructure_as_code).
-As such you would normally be storing versioned YAML files under source control.
-Today, we will create the reconfigured manifest under a **new** file name so you can observe the difference.
+## Wave goodbye to PodSpecs
+
+Really?
+So soon?
+So what was all the fuss about?
+
+Whilst it is important to understand the elemental role PodSpecs play, the truth is we rarely see PodSpecs in the wild, 
+The DNA of the PodSpec lives on in the `template` section of a more functional and forgiving object type called a **Deployment**.
+If it helps, recall when you first started using EC2 [Auto Scaling groups (ASG)](https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html).
+You needed to define a [Launch Template](https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchTemplates.html) which is like your declaration of intent - it says, "when I want an instance, *this* is what I want it to look like".
+If you imagine the `template` section of a Deployment as being similar your EC2 Launch Template then the `replicas` attribute is like the **desired** size of your ASG.
+If you set the `replicas` attribute to "1", you have a ready-made replacement for your PodSpec.
+
+You will learn more about the capabilities of Deployments as we progress but, for now, let's just do the switch.
 
 {{< step >}}First, dispose of your existing pod.{{< /step >}}
 ```bash
@@ -303,59 +311,104 @@ Example output:
 pod/demo deleted
 {{< /output >}}
 
-{{% notice note %}}
-When reconfiguring running Kubernetes objects, such as your `demo` pod, there are some field mutations which can be handled in-place and some which cannot.
-Your change falls into the latter variety, hence the `delete` operation.
-Deletion implies downtime, and much of your future endeavors with Kubernetes will be in the pursuit of zero downtime.
-{{% /notice %}}
-
-{{< step >}}Then deploy its replacement with the override in place.{{< /step >}}
+{{< step >}}Now replace it with the equivalent Deployment object.{{< /step >}}
 ```yaml
-cat <<EOF | tee ~/environment/003-demo-pod.yaml | kubectl -n dev apply -f -
-apiVersion: v1
-kind: Pod                    # the object schema Kubernetes uses to validate this manifest
+cat <<EOF | tee ~/environment/003-demo-deployment.yaml | kubectl -n dev apply -f -
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: demo                 # a name for your POD
+  labels:
+    app: demo
+  name: demo
 spec:
-  containers:                # a pod CAN consist of multiple containers, but this one has only one
-  - name: demo               # a name for your CONTAINER
-    image: demo:1.0.0        # the tagged image we previously injected using "kind load"
-    env:
-    - name: GREETING         # the overridden environment variable
-      value: Hi from
+  replicas: 1             # think ASG "Desired" size
+  selector:
+    matchLabels:
+      app: demo
+  template:               # think ASG "launch template" setting
+    metadata:             #
+      labels:             #
+        app: demo         #
+    spec:                 #
+      containers:         #
+      - name: demo        #
+        image: demo:1.0.0 #
 EOF
 ```
 
 Example output:
 {{< output >}}
-pod/demo created
+deployment.apps/demo created
 {{< /output >}}
 
-{{% expand "Bonus: What is different between this pod spec and your previous one?" %}}
-If you were using source control with one pod manifest file you could simply compare using `git diff` or similar. You can use the more classic UNIX `diff` command as follows: 
+{{< step >}}Now check you can `kubectl exec` into your singleton pod via its deployment.{{< /step >}}
 ```bash
-diff 002-demo-pod.yaml 003-demo-pod.yaml
-```
-Which should yield differences such as:
-```
-8a9,11
->     env:
->     - name: GREETING         # the overridden environment variable
->       value: Hi from
-```
-{{% /expand %}}
-
-{{< step >}}`exec` into your new pod to test it from inside as follows.{{< /step >}}
-```bash
-kubectl -n dev exec demo -it -- curl http://localhost:80
+kubectl -n dev exec deployment/demo -it -- curl http://localhost:80
 ```
 
 Example output:
 {{< output >}}
-Hi from demo
+Hello from demo-7c9cd496db-zsx5l
 {{< /output >}}
 
-You have assigned a value for your `GREETING` environment variable at the pod specification level, which overrides the value for that variable in your `demo` container image you built with a `Dockerfile` earlier. This is immensely powerful. You have not changed or overwritten you immutable version `1.0.0` container image, but you have transcended it. Your Kubernetes manifest for your pod overrode what was baked into the image. You are in control of your configuration to extend how you use the container images you have.
+We will be typically using **Deployment** objects from this point on.
+Time to get back to the plot.
+
+## Overriding environment variables
+When you deployed your containerized app into Docker you observed how it was possible to provide overrides for environment variables which meant you were able to separate your code from its config.
+You can also provide [environment variable overrides in Kubernetes](https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/).
+Your Kubernetes manifests are a form of [infrastructure as code](https://en.wikipedia.org/wiki/Infrastructure_as_code).
+As such you would normally be storing versioned YAML files under source control.
+Today, we will create the reconfigured manifest under a **new** file name so you can observe the difference.
+
+{{< step >}}re-deploy the manifest with the environment variable override in place.{{< /step >}}
+```yaml
+cat <<EOF | tee ~/environment/004-demo-deployment.yaml | kubectl -n dev apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: demo
+  name: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+      - name: demo
+        image: demo:1.0.0
+        env:
+        - name: GREETING         # the overridden environment variable
+          value: Hi from
+EOF
+```
+
+Example output:
+{{< output >}}
+deployment.apps/demo configured
+{{< /output >}}
+
+{{< step >}}`exec` into your new pod to test it from inside as follows.{{< /step >}}
+```bash
+kubectl -n dev exec deployment/demo -it -- curl http://localhost:80
+```
+
+Example output:
+{{< output >}}
+Hi from demo-658bfb548-ts7px
+{{< /output >}}
+
+You have assigned a value for your `GREETING` environment variable at the pod specification level, which overrides the value for that variable in your `demo` container image you built with a `Dockerfile` earlier.
+This is immensely powerful.
+You have not changed or overwritten you immutable version `1.0.0` container image, but you have transcended it.
+Your Kubernetes manifest for your pod overrode what was baked into the image.
+You are in control of your configuration to extend how you use the container images you have.
 
 ## Success
 
@@ -363,7 +416,8 @@ In this exercise you did the following.
 
 - Became acquainted with Kubernetes generators and image registries ... and why you will not use them today.
 - Created your first namespace manifest in YAML and deployed it with `kubectl apply`.
-- Built your first pod manifest and used it to deploy a single instance of your app into Kubernetes.
+- Built your first pod manifest and used it to roll out a single instance of your app into Kubernetes.
 - Used `kubectl exec` to shell into your running app and tested it from within that session.
 - Witnessed Kubernetes restarting a pod.
+- Traded in PodSpecs for Deployments ... because you're a professional.
 - Saw how manifests permit overrides for environment variables.
