@@ -221,6 +221,58 @@ We have just observed the same behavior in a different operating system.
 To be clear, the "copied state" behavior that exists for variables between parent and child processes is observable at **any** depth in the tree and it transpires that this **pattern** is not merely confined to variables.
 This allows you to do some pretty amazing things, as you will discover in the next chapter.
 
+## Process Quiz
+
+Please take the following quiz to review your knowledge of processes.
+
+{{< quizdown >}}
+
+---
+primary_color: orange
+secondary_color: lightgray
+text_color: black
+shuffle_questions: false
+---
+
+## Process Hierarchy
+
+---
+shuffle_answers: false
+---
+
+What property of a process represents the direct ancestor in the process hierarchy?
+
+> This value was a column in the `ps -f` output.
+
+- [ ] process ID (PID)
+- [ ] ancestor process ID (APID)
+- [x] parent process ID (PPID)
+- [ ] job index (JIDX)
+
+## Environment Variables
+
+Which best describes the nature of Linux environment variables?
+
+> What behavior did you see with the `K8S_PRIMER` environment variable values?
+
+- [ ] environment variables are always global--shared across all processes in the OS instance
+- [ ] environment variables are shared to all processes in a process subtree under a shell or daemon
+- [x] environment variable only inherit downward from the process they were assigned to its children
+- [ ] environment variables are strictly per-process and must be explictly assigned to child processes
+
+## Why Processes?
+
+Why are we reviewing processes before talking about containers and Kubernetes?
+
+> Although we haven't discussed this yet, what is your best guess?
+
+- [ ] a container is just a child process underneath the container runtime process, like `dockerd` or `kubelet`
+- [ ] processes are always made into containers by `fork`-ing the process and then building walls around it
+- [x] a container is made of a process subtree whose root process is launched by `clone` instead of `fork`
+- [ ] this is only background for analogy, containers are not made from processes
+
+{{< /quizdown >}}
+
 ## Success
 
 In this exercise you did the following:
