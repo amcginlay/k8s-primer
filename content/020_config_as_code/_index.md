@@ -20,7 +20,7 @@ Let's start simple.
 {{< step >}}Make a `ConfigMap` which encapsulates an intended value for your `GREETING` environment variable.{{< /step >}}
 
 ```yaml
-cat <<EOF | tee ~/environment/004-greeting-configmap.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/005-greeting-configmap.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -41,45 +41,45 @@ You can refer to `ConfigMap` resources within other Kubernetes resources.
 For example, you can change your `Pod` spec to [pull the value of a container's environment variables from a `ConfigMap`](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#define-container-environment-variables-using-configmap-data).
 Do that now.  
 
-{{< step >}}First, dispose of your existing pod.{{< /step >}}
-```bash
-kubectl -n dev delete pod demo
-```
-
-Example output:
-{{< output >}}
-pod/demo deleted
-{{< /output >}}
-
-
-{{< step >}}Create this new version of your pod manifest with the `configMapKeyRef` section as follows.{{< /step >}}
+{{< step >}}Create this new version of your deployment manifest with the `configMapKeyRef` section as follows.{{< /step >}}
 ```yaml
-cat <<EOF | tee ~/environment/005-demo-pod.yaml | kubectl -n dev apply -f -
-apiVersion: v1
-kind: Pod                    # the object schema Kubernetes uses to validate this manifest
+cat <<EOF | tee ~/environment/006-demo-deployment.yaml | kubectl -n dev apply -f -
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: demo                 # a name for your POD
+  labels:
+    app: demo
+  name: demo
 spec:
-  containers:                # a pod CAN consist of multiple containers, but this one has only one
-  - name: demo               # a name for your CONTAINER
-    image: demo:1.0.0        # the tagged image we previously injected using "kind load"
-    env:
-    - name: GREETING         # the overridden environment variable
-      valueFrom:             # not just value: directly here but valueFrom: as a reference
-        configMapKeyRef:     # a ConfigMap is the source of the data
-          name: greeting     # the name of the ConfigMap
-          key: greeting      # the key within the data section of that ConfigMap
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+      - name: demo
+        image: demo:1.0.0
+        env:
+        - name: GREETING         # the overridden environment variable
+          valueFrom:             # not just value: directly here but valueFrom: as a reference
+            configMapKeyRef:     # a ConfigMap is the source of the data
+              name: greeting     # the name of the ConfigMap
+              key: greeting      # the key within the data section of that ConfigMap
 EOF
 ```
 
 Example output:
 {{< output >}}
-pod/demo created
+deployment.apps/demo configured
 {{< /output >}}
 
 {{< step >}}`exec` into your new pod to test it from inside as follows.{{< /step >}}
 ```bash
-kubectl -n dev exec demo -it -- curl http://localhost:80
+kubectl -n dev exec deployment/demo -it -- curl http://localhost:80
 ```
 
 Example output:
@@ -94,7 +94,7 @@ If you change a value in a `ConfigMap`, does the container in your pod automatic
 {{< step >}}To find out, change the value in the configmap:{{< /step >}}
 
 ```yaml
-cat <<EOF | tee ~/environment/006-greeting-configmap.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/007-greeting-configmap.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -104,8 +104,7 @@ data:
 EOF
 ```
 
-which is confirmed as follows:
-
+Example output:
 {{< output >}}
 configmap/greeting configured
 {{< /output >}}
@@ -133,9 +132,10 @@ Hallo aus
 {{< step >}}Run the web query to see the current value in the running container:{{< /step >}}
 
 ```bash
-kubectl -n dev exec demo -it -- curl http://localhost:80
+kubectl -n dev exec deployment/demo -it -- curl http://localhost:80
 ```
 
+Example output:
 {{< output >}}
 Bonjour de demo
 {{< /output >}}
@@ -149,16 +149,28 @@ Because the pod's container was not restarted it is still running with the old v
 
 As shown previously, it is possible to force a restart by killing PID 1 from inside the pod.
 
-{{< step >}}Kill the current instance of the container by killing the process at the root of its process hierarchy.{{< /step >}}
+{{< step >}}Restart your pod.{{< /step >}}
 
 ```bash
-kubectl -n dev exec demo -it -- kill 1
+kubectl -n dev rollout restart deployment demo
 ```
+
+Example output:
+{{< output >}}
+deployment.apps/demo restarted
+{{< /output >}}
+
+{{% notice note %}}
+It was mentioned in the previous chapter that **deployments** were more "functional and forgiving" than podspecs.
+Right here is a good example.
+You may recall previously using `kubectl -n dev exec demo -it -- kill 1` to **force** a restart.
+Sure it works, but it was a little heavy handed compared to what we have just done.
+{{% /notice %}}
 
 {{< step >}}Now that the container has restarted, check if it picked up the new value from the `ConfigMap`.{{< /step >}}
 
 ```bash
-kubectl -n dev exec demo -it -- curl http://localhost:80
+kubectl -n dev exec deployment/demo -it -- curl http://localhost:80
 ```
 
 {{< output >}}
@@ -175,14 +187,10 @@ Restart pods to force them to consume revised environment variable values, inclu
 Environment variables are just one of the ways you can use `ConfigMap` values.
 Another way that values from a `ConfigMap` can be accessed from a pod is by referencing the `ConfigMap` as a `volume`.
 
-{{% notice note %}}
-While the "greeting" config map could be mounted in a volume, let's look at another style of `ConfigMap`.
-{{% /notice %}}
-
-{{< step >}}Create a "quotes" `ConfigMap` as follows:{{< /step >}}
+{{< step >}}Create "quotes" as follows, which give us an opportunity to try a different flavor of `ConfigMap`:{{< /step >}}
 
 ```yaml
-cat <<EOF | tee ~/environment/009-quotes-configmap.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/008-quotes-configmap.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -269,13 +277,13 @@ The choice of which notation you use depends largely on the needs of the softwar
 
 Now for the ***fun*** part.
 You can create `volumes` in your pods which refer to ConfigMaps.
-Then you can mount any of those volumes from within any of the pod's containers where it will present itself as a file.
+You can then mount any of those volumes from within any of the pod's containers where it will present itself as a file.
 The power of this should not be underestimated.
 Not only can you map *arguments* and *environment variables* into your running containers, but you can map `ConfigMap` data as files into your containers.
 Think about that for a moment.
 You do not have to build new container *images* when you simply want containers to use different files.
 These files could be data files, configuration files, localization resources, et cetera.
-Let's note in passing that a `ConfigMap` can not only have a `data` section, but a `binaryData` section as well.
+Let's note in passing that a `ConfigMap` can support a `binaryData` section as well as the regular `data` section you have seen.
 How do you want to get those beautiful `png` graphic images into your pods? More on that later.
 For now, let's simply mount a volume with some simple text files.
 
@@ -287,44 +295,60 @@ kubectl -n dev delete pod demo
 
 {{< step >}}Create yet another version of your pod manifest, this one with both the `env` reference, and now adding a `volumeMounts` to the newer configmap.{{< /step >}}
 ```yaml
-cat <<EOF | tee ~/environment/010-demo-pod.yaml | kubectl -n dev apply -f -
-apiVersion: v1
-kind: Pod                    # the object schema Kubernetes uses to validate this manifest
+cat <<EOF | tee ~/environment/009-demo-deployment.yaml | kubectl -n dev apply -f -
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: demo                 # a name for your POD
+  labels:
+    app: demo
+  name: demo
 spec:
-  volumes:                   # a pod CAN contain multiple volumes, but this on has only one
-  - name: quotes-volume      # this name of the volume is used to refer to it--e.g. in a "mount"
-    configMap:               # specify the type of volume this is--we're referring to a ConfigMap
-      name: quotes           # the name of the ConfigMap this volume refers to
-  containers:                # a pod CAN consist of multiple containers, but this one has only one
-  - name: demo               # a name for your CONTAINER
-    image: demo:1.0.0        # the tagged image we previously injected using "kind load"
-    env:
-    - name: GREETING         # the overridden environment variable
-      valueFrom:             # not just value: directly here but valueFrom: as a reference
-        configMapKeyRef:     # a ConfigMap is the source of the data
-          name: greeting     # the name of the ConfigMap
-          key: greeting      # the qualified key within the (apparently) "hierarchical" data section 
-    volumeMounts:            # the "volumeMounts" in a given container are declared parallel to "env"
-    - name: quotes-volume    # the name of the volume you want to mount, from the pod's "volumes" section
-      mountPath: /var/quotes # the container filesystem namespace path - refer to this *inside* the container
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      volumes:                   # a pod CAN contain multiple volumes, but this on has only one
+      - name: quotes-volume      # the name of this volume is used to refer to it - e.g. in a "mount"
+        configMap:               # specify the type of volume this is - we're referring to a ConfigMap
+          name: quotes           # the name of the ConfigMap this volume refers to
+      containers:
+      - name: demo
+        image: demo:1.0.0
+        env:                     # "env" section as before
+        - name: GREETING
+          valueFrom:
+            configMapKeyRef:
+              name: greeting
+              key: greeting
+        volumeMounts:            # the "volumeMounts" in a given container are declared parallel to "env"
+        - name: quotes-volume    # the name of the volume you want to mount, from the pod's "volumes" section
+          mountPath: /var/quotes # the container filesystem namespace path - refer to this *inside* the container
 EOF
 ```
 
+Example output:
+{{< output >}}
+deployment.apps/demo configured
+{{< /output >}}
+
 {{< step >}}`exec` into your new pod and list the files in `/var/quotes`.{{< /step >}}
 ```bash
-kubectl -n dev exec demo -it -- ls /var/quotes
+kubectl -n dev exec deployment/demo -it -- ls /var/quotes
 ```
 
 {{< step >}}Now see what that `daisy-bell.txt` file looks like inside the container.{{< /step >}}
 ```bash
-kubectl -n dev exec demo -it -- cat /var/quotes/daisy-bell.txt
+kubectl -n dev exec deployment/demo -it -- cat /var/quotes/daisy-bell.txt
 ```
 
 {{< step >}}Remember that you used `>` to told the lines of the Hamlet quote. Take a look at the result.{{< /step >}}
 ```bash
-kubectl -n dev exec demo -it -- cat /var/quotes/hamlet-nutshell.txt
+kubectl -n dev exec deployment/demo -it -- cat /var/quotes/hamlet-nutshell.txt
 ```
 
 {{% notice note %}}
@@ -333,14 +357,13 @@ While the `|` and `>` **retain** and **fold** the newlines in the content respec
 This will be significant not only for your Kubernetes manifests you write from scratch, but any you automatically generate, and any Kubernetes manifests you author via tools such as the package management tool `helm`.
 {{% /notice %}}
 
-## ConfigMaps are namespaced
+## ConfigMaps are namespace scoped
 
 Before we move on, reflect upon why this separation of code from config is desirable.
 
-Your namespaces could be used to represent different environments (e.g. `dev` or `test`) and the apps which run there would perhaps connect to environment-specific database instances.
-When you bind to a configmap to a pod its container has no option but to seek a named object (e.g. `connection-strings`) located in its **own** namespace.
-Remember it has no further visibility.
-This means **identical** pod definitions, deployed to separate namespaces, could bind to configmaps whose contents are quite **different** despite being named the same.
+Your namespaces could be used to represent different environments (e.g. `dev` or `test`) and the apps which run there would, for example, connect to environment-specific database instances.
+When you bind to a configmap to a pod's container it will seek a named object (e.g. `connection-strings`) located in its **own** namespace since it has no further visibility.
+This means **identical** pod definitions, deployed to separate namespaces, could bind to configmaps of the same name but with environment specific contents.
 
 ## Success
 
@@ -352,3 +375,4 @@ In this lesson, you:
 - Made changes to the `ConfigMap` and showed that they do not appear in the pod.
 - Restarted the pod to get the new value to be used.
 - Observed how it is possible to use `volumes` to consume `ConfigMaps` as files.
+- Considered the use of like-named `ConfigMaps` across differing namespaces.
