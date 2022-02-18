@@ -1,5 +1,5 @@
 ---
-title: "Set Up a Service"
+title: "Services"
 chapter: false
 weight: 23
 draft: false
