@@ -1,7 +1,7 @@
 ---
 title: "Deploy a DaemonSet"
 chapter: false
-weight: 22
+weight: 27
 draft: false
 ---
 

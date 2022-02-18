@@ -14,5 +14,7 @@ weight: 1
 * [Run Containers](016_run_containers/)
 * [Meet Kubernetes](017_meet_kubernetes/)
 * [Orchestrate Containers](019_orchestrate_containers/)
-* [Move Configuration out of Pod](020_config_as_code/)
 * [Deploy a Fleet of Pods](021_deploy_pod_fleet/)
+* [Set Up a Service](023_set_up_a_service/)
+* [Configuration as Code](025_config_as_code/)
+* [DaemonSets](027_daemonsets/)

@@ -1,7 +1,7 @@
 ---
 title: "Configuration As Code"
 chapter: false
-weight: 20
+weight: 25
 draft: false
 ---
 
