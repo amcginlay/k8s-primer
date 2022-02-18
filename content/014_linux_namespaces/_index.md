@@ -619,6 +619,69 @@ Here's the summary of the main namespace types and word or two on their use.
 Namespaces are key enabler for building containers on Linux.
 However, we must not forget that containers can be further resource-constrained with the use of [control groups](https://en.wikipedia.org/wiki/Cgroups) ... but you have covered enough to move on for now.
 
+## Linux Namespaces Quiz
+
+Please take the following quiz to review your knowledge of Linux namespaces.
+
+{{< quizdown >}}
+
+---
+primary_color: orange
+secondary_color: lightgray
+text_color: black
+shuffle_questions: false
+---
+
+## Process Isolation
+
+Which namespace type provides isolation of a process subtree from other processes a different namespace of the same type?
+
+> You used the `ps` command to confirm the namespaces were distinct.
+
+- [ ] Network
+- [ ] Mount (MNT)
+- [x] PID
+- [ ] UTS
+
+## Hostname Isolation
+
+Which namespace type provides separate `hostname` context?
+
+> You used the `hostname` command to confirm the namespaces were distinct.
+
+- [ ] Network
+- [ ] Mount (MNT)
+- [ ] PID
+- [x] UTS
+
+## Namespace Management
+
+---
+shuffle_answers: false
+---
+
+Which of the following is the command you used to *clone* one or more Linux namespaces, effectively creating one or more new namespaces?
+
+> You used this command to create a `UTS` namespace, then a `PID`+`MNT` namespace.
+
+- [ ] fork
+- [ ] nsenter
+- [x] unshare
+- [ ] nsupdate
+
+## Namespace Management
+
+Which of the following is the command you used to *join* a process to another pre-existing namespace?
+
+> You used this command to join a process to an existing namespace.
+
+- [ ] fork
+- [x] nsenter
+- [ ] unshare
+- [ ] nsupdate
+
+{{< /quizdown >}}
+
 ## Success
 
 In this exercise you did the following:

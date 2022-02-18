@@ -279,6 +279,90 @@ When your app instances are stopped, the `docker` command will respond with thei
 9ae74dae710ca0f75a72bb50ad318d23dfae847bf733692d46591425b5888cfa
 {{< /output >}}
 
+## Running Containers Quiz
+
+Please take the following quiz to review your knowledge of running containers on Docker.
+
+{{< quizdown >}}
+
+---
+primary_color: orange
+secondary_color: lightgray
+text_color: black
+shuffle_questions: false
+---
+
+## Port Binding
+
+What was the purpose of the port binding you created using the `--publish 8081:80` option to `docker run`?
+
+> Which ports go where?
+
+- [x] This translates port 8081 on the Cloud9 host to port 80 inside your container
+- [ ] This translates port 80 on the Cloud9 host to port 8081 inside your container
+- [ ] This maps both port 8081 and port 80 straight through from Cloud9 to your container
+- [ ] This binds port 8081 to manage docker and port 80 to access your container from Cloud9
+
+## Container Access Techniques
+
+Which ***two*** techniques did you use to access the web service in your container?
+
+> Which ports are mapping and open into your container?
+
+- [ ] Use port 8081 with the container name, such as `curl http://demo:8081` from Cloud9
+- [x] Use port 8081 with the name localhost on Cloud9, such as `curl http://localhost:8081` from Cloud9
+- [ ] Use `docker exec` into your container, then `curl demo:80` from inside the container
+- [x] Use `docker exec` into your container, then `curl localhost:80` from inside the container
+
+## Container Access Addressing
+
+If you had used IP addresses instead of names, which ***one*** URL could you use from Cloud9 (i.e. no `docker exec`) to access the web service in your container?
+
+> Which ports are mapping and open into your container?
+
+- [ ] Use port 80 with the container IP, such as `curl http://192.168.0.1:80` from Cloud9
+- [ ] Use port 80 with the loopback IP on Cloud9, such as `curl http://127.0.0.1:80` from Cloud9
+- [ ] Use port 8081 with the container IP, such as `curl http://192.168.0.1:8081` from Cloud9
+- [x] Use port 8081 with the loopback IP on Cloud9, such as `curl http://127.0.0.1:8081` from Cloud9
+
+## Persistent or Ephemeral
+
+Which best describes the relationship between the container host (e.g. Cloud9) and the container?
+
+> What happened when you attempted to use `kill` on a process in your container?
+
+- [ ] Containers provide isolation protection. You cannot kill processes in the container. You must use `docker stop`.
+- [ ] The Docker daemon, `dockerd` on the host by default always restarts failed containers
+- [x] The Docker daemon, `dockerd` marks the container as stopped when its root process dies
+- [ ] Containers are just background processes on the host; using `docker run demo` is the same as using `demo &` in the host shell
+
+## File System Access
+
+---
+shuffle_answers: false
+---
+
+What is the relationship between files in the host and the containers it is hosting?
+
+> Could you see a file created in one container in the other container? Was it an ordinary file on the host?
+
+- [ ] Containers share the host file system, thus files in all containers are the same. Containers only provide process isolation
+- [ ] Files created in each container are private from other containers, but appear as regular files in the host
+- [x] Files created in each container are private from other containers, but appear as special file mappings in the host
+- [ ] Containers and their host all have isolated file systems, so one host with two containers use three separate virtual hard disks
+
+## File System Relativity
+
+What is the type of file system mapping that was used for your containers?
+
+> What path from the host was under `/var/lib/docker`? What option could you use with the `mount -t` command to see the container mapping?
+
+- [ ] vmdk
+- [ ] vhdx
+- [x] overlay
+- [ ] zfs
+
+{{< /quizdown >}}
 
 ## Success
 

@@ -178,6 +178,69 @@ You will observe two images.
 - **`php:8.0.1-apache`** is the versioned base layer you referenced in the Dockerfile `FROM` instruction
 - **`demo:1.0.0`** is the newly built and tagged container image for your app which sits down upon the `php` base layer
 
+## Container Image and Build Quiz
+
+Please take the following quiz to review your knowledge of building and maintaining container images.
+
+{{< quizdown >}}
+
+---
+primary_color: orange
+secondary_color: lightgray
+text_color: black
+shuffle_questions: false
+---
+
+## Container image recipe
+
+Which type of file did you use as the recipe to build a container image?
+
+> What was the name of the tool you used to follow this recipe?
+
+- [ ] `Makefile`
+- [x] `Dockerfile`
+- [ ] CloudFormation template (JSON or YAML)
+- [ ] CodeBuild `buildspec.yml`
+
+## Container image relationship
+
+Which is the most accurate relationship between the `demo` container image you built and other images?
+
+> How many images were listed after you build your container image?
+
+- [ ] My container image was built from scratch, not based on another image
+- [x] My container image was built with a dependency on another existing image
+- [ ] Container images are always built relative to the operating system of the host
+- [ ] Container images are always built without dependencies on other images
+
+## Image identity
+
+---
+shuffle_answers: false
+---
+
+What part of the container image is `demo` or `php`?
+
+> What was the output of the `docker images` command?
+
+- [x] repository
+- [ ] tag
+- [ ] image ID
+- [ ] size
+
+## Namespace Management
+
+What part of the container image is `1.0.0` or `8.0.1-apache`?
+
+> What was the output of the `docker images` command?
+
+- [ ] repository
+- [x] tag
+- [ ] image ID
+- [ ] size
+
+{{< /quizdown >}}
+
 ## Success
 
 In this exercise you did the following:
