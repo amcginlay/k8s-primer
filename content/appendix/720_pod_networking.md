@@ -12,8 +12,8 @@ In order to investigate pod networking, it can be helpful to have a web app in y
 ## Prerequisites
 
 Before you dive deeper with pod networking, you have to be in the deep end of the pool. You should have already:
-- [Deploy a Fleet of Pods]({{< ref "021_deploy_pod_fleet" >}}) first. There you create a `demo` deployment running pods with the container image `demo:1.0.0`. 
-- [Set up a Service]({{< ref "023_set_up_a_service" >}}) to provision a `jumpbox` pod for testing, and of course a `Service` (of `ClusterIP` type) to provide access to the pods in your deployment.
+- [Deploy a Fleet of Pods]({{< ref "021_running_at_scale" >}}) first. There you create a `demo` deployment running pods with the container image `demo:1.0.0`. 
+- [Set up a Service]({{< ref "023_services" >}}) to provision a `jumpbox` pod for testing, and of course a `Service` (of `ClusterIP` type) to provide access to the pods in your deployment.
 - [Update Your Deployment]({{< ref "appendix/718_update_deployment" >}}) to change your deployment to use a new version of your container image `demo:1.1.0`.
 
 ## Use Your Service to Get to Your Pods

@@ -34,7 +34,7 @@ replicaSetB-->|creates|podZ[Pod Z]
 
 ## Prerequisites
 
-Prior to updating your deployment, you should have one. If you don't already have a `demo` deployment running pods with the container image `demo:1.0.0`, please [Deploy a Fleet of Pods]({{< ref "021_deploy_pod_fleet" >}}) first.
+Prior to updating your deployment, you should have one. If you don't already have a `demo` deployment running pods with the container image `demo:1.0.0`, please [Deploy a Fleet of Pods]({{< ref "021_running_at_scale" >}}) first.
 
 ## Update Your Deployment
 

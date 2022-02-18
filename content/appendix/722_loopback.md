@@ -9,7 +9,7 @@ draft: false
 
 Container networking, and therefore Kubernetes networking, can be confusing or daunting. It can be helpful to review some fundamentals of networking to better appreciate many ways in which containerized network is the same as uncontainerized communications. Then we can better discuss the differences.
 
-In the lesson to [Set Up a Service]({{< ref "023_set_up_a_service" >}}), we had included a simple example of a pod talking to itself using a loopback interface. However, as the focus then was `Service` objects, we did not dwell on the loopback scenario. `kubectl exec -it jumpbox -- curl http://localhost:80` was merely used to test the jumpbox pod.
+In the lesson to [Set Up a Service]({{< ref "023_services" >}}), we had included a simple example of a pod talking to itself using a loopback interface. However, as the focus then was `Service` objects, we did not dwell on the loopback scenario. `kubectl exec -it jumpbox -- curl http://localhost:80` was merely used to test the jumpbox pod.
 
 {{< mermaid >}}
 graph LR
