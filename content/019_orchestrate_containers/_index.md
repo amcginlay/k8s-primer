@@ -203,7 +203,7 @@ subgraph pod[demo Pod]
     curl((curl in<br>demo<br>container))
   end
 end
-cloud9 -->|docker exec| curl
+cloud9 -->|kubectl exec| curl
 curl -->|curl :80| demo
 classDef orange fill:#f96,stroke:#333,stroke-width:4px;
 classDef blue2 fill:#0af,stroke:#333,stroke-width:4px;
@@ -249,7 +249,7 @@ subgraph pod[demo Pod]
     kill((PID 35<br>kill 1<br>root))
   end
 end
-cloud9 -->|docker exec| kill
+cloud9 -->|kubectl exec| kill
 kill -->|kill 1| apache
 apache -.-|child| demo
 classDef orange fill:#f96,stroke:#333,stroke-width:4px;
@@ -409,6 +409,88 @@ This is immensely powerful.
 You have not changed or overwritten you immutable version `1.0.0` container image, but you have transcended it.
 Your Kubernetes manifest for your pod overrode what was baked into the image.
 You are in control of your configuration to extend how you use the container images you have.
+
+## Orchestrate Containers Quiz
+
+Please take the following quiz to review your knowledge of running containers in Kubernetes.
+
+{{< quizdown >}}
+
+---
+primary_color: orange
+secondary_color: lightgray
+text_color: black
+shuffle_questions: false
+---
+
+## Logical Subdivisions
+
+What are the two logical subdivisions--`dev` and `test`--you created in your Kubernetes cluster before deploying containers?
+
+> You wrote a YAML manifest with two object declarations at the beginning of the lesson. What `kind` did you use?
+
+- [ ] `Service`
+- [ ] `Deployment`
+- [x] `Namespace`
+- [ ] `ConfigMap`
+
+## Kubernetes smallest deployable compute
+
+What is the smallest deployable unit of compute power in Kubernetes?
+
+> What was the `kind` you used to deploy your `demo` app?
+
+- [ ] Thread
+- [ ] Process
+- [ ] Container
+- [x] Pod
+
+## Pod access
+
+How did you test access to your `demo` container?
+
+> Which command gave you the results "Hello from demo"?
+
+- [ ] `kubectl -n dev exec demo -it 80:8081 curl http://localhost:8081`
+- [ ] `kubectl -n dev exec demo -p 8081:80 -- curl http://localhost:80`
+- [ ] `kubectl -n dev exec demo -it -- curl http://localhost:8081`
+- [x] `kubectl -n dev exec demo -it -- curl http://localhost:80`
+
+
+## Ephemerality
+
+What did Kubernetes do when you killed the root process `kill 1` in your pod?
+
+> What did `get pods` show in after you had killed the process?
+
+- [ ] Kubernetes marked the container as stopped and changed pod status to failed
+- [x] Kubernetes restarted the container in the pod and kept pod status as running
+- [ ] Kubernetes ignored the failure and did not change the container or pod status
+- [ ] Kubernetes deleted and redeployed the whole pod, setting its age back to zero
+
+## Wave Goodbye to Bare Pods
+
+With which Kubernetes workload did you replace your pod?
+
+> When you moved you pod spec into a `template`, what was the `kind` of object you wrapped that in?
+
+- [ ] Task
+- [x] Deployment
+- [ ] DaemonSet
+- [ ] ReplicaSet
+
+## Environment Variables
+
+When you added an `env` section to your container definition in your `Deployment` spec, what was the result?
+
+> What is the behavior of environment variables between container image and Kubernetes pod?
+
+- [x] the `env` of the deployment's pod(s) overrides the container image value from `ENV` in the Dockerfile
+- [ ] the container image value from `ENV` in the Dockerfile overrides the `env` of the deployment's pod(s)
+- [ ] both values get applied from the `env` of the deployment's pod(s) and the container image value from `ENV` in the Dockerfile
+- [ ] an error occurs and neither value is assigned to an environment variable; you must delete the `ENV` value from the image to avoid conflict
+
+{{< /quizdown >}}
 
 ## Success
 

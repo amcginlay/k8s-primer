@@ -284,6 +284,65 @@ Your `kind` cluster may have namespaces such as those shown above.
 The term Namespaces can be abbreviated "ns" as in `kubectl get ns`. 
 {{% /notice %}}
 
+## Meet Kubernetes Quiz
+
+Please take the following quiz to review your knowledge of setting up Kubernetes.
+
+{{< quizdown >}}
+
+---
+primary_color: orange
+secondary_color: lightgray
+text_color: black
+shuffle_questions: false
+---
+
+## Easy Kubernetes
+
+What is the name of the way you deployed Kubernetes in this lesson?
+
+> What software did you install on Cloud9 to run Kubernetes in Docker?
+
+- [ ] `k3s`
+- [ ] `minikube`
+- [x] `kind`
+- [ ] `kubeadm`
+
+## Kubernetes installation
+
+What do you call the **collection** of container hosts in Kubernetes?
+
+> When you ran `kind create ...`, what was the word after *create*?
+
+- [ ] mesh
+- [ ] farm
+- [x] cluster
+- [ ] autoscaling group
+
+## Kubernetes administration
+
+What is the name of the command you used to list the pods, nodes, and namespaces in your Kubernetes cluster?
+
+> Which command did you run with the `get` option? It can be used to control your cluster.
+
+- [ ] `eksctl`
+- [ ] `kubeadm`
+- [ ] `crictl`
+- [x] `kubectl`
+
+## Kubernetes namespaces
+
+Which of these is the best description of a Kubernetes namespace?
+
+> How do you distinguish two people named Elizabeth in a class?
+
+- [ ] A Kubernetes namespace is the same as a Linux namespace; they are synonyms
+- [x] A Kubernetes namespace is a *logical* administrative subdivision of your cluster
+- [ ] A Kubernetes namespace is a folder on your host server where you save YAML manfiest files
+- [ ] A Kubernetes namespace is a subnet within your cluster where you assign pods to run
+
+{{< /quizdown >}}
+
 ## Success
 
 In this chapter you have successfully:
