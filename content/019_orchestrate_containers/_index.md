@@ -171,9 +171,12 @@ pod/demo created
 {{< /output >}}
 
 {{% notice note %}}
-Many Kubernetes objects, including pods, are destined for a namespace.
-Recognize how the above invocation includes `kubectl -n dev` which ensures the pod is created in the `dev` namespace.
-It is advantageous to build some muscle-memory around the consistent and explicit use of namespaces.
+A large majority of the operations you perform with `kubectl` are **"namespaced"**.
+That is to say they only make sense in the context of a namespace.
+In such cases, failure to explicitly provide the `-n` (or `--namespace`) switch will cause `kubectl` to implicitly engage with the `default` namespace.
+It is possible to [override this behavior](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/#setting-the-namespace-preference) but think carefully before doing so.
+You may become more productive but you will also be creating an environment in which painful mistakes becomes harder to avoid.
+It is advantageous to build some muscle-memory around the consistent and explicit use of non-default namespaces.
 {{% /notice %}}
 
 {{% expand "Why not specify the namespace in the manifest instead of the pipeline?" %}}
@@ -342,6 +345,11 @@ Example output:
 deployment.apps/demo created
 {{< /output >}}
 
+{{% notice note %}}
+Recall our earlier discussion about manifest generation.
+If you are struggling to recall the many attributes of a deployment manifest, this may help fill in the gaps for you: `kubectl create deployment dummy --image dummy:1.0 --dry-run=client -o yaml`
+{{% /notice %}}
+
 {{< step >}}Now check you can `kubectl exec` into your singleton pod via its deployment.{{< /step >}}
 ```bash
 kubectl -n dev exec deployment/demo -it -- curl http://localhost:80
@@ -407,7 +415,8 @@ Hi from demo-658bfb548-ts7px
 
 {{% notice note %}}
 You will observe that when using **deployments** the names of pods are partially system generated and therefore subject to change during restarts.
-Later, when you begin to scale your deployment, you will see this as an example of the [Pets vs Cattle](http://cloudscaling.com/blog/cloud-computing/the-history-of-pets-vs-cattle/) analogy.
+You can view this behavior as an example of the [Pets vs Cattle](http://cloudscaling.com/blog/cloud-computing/the-history-of-pets-vs-cattle/) analogy.
+The reasoning for this will become more evident later on when you scale-out your deployment.
 {{% /notice %}}
 
 You have assigned a value for your `GREETING` environment variable at the pod specification level, which overrides the value for that variable in your `demo` container image you built with a `Dockerfile` earlier.
