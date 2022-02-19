@@ -232,7 +232,7 @@ pod/demo-658bfb548-nrhjv   1/1     Running   0          3m58s
 pod/demo-658bfb548-rw7x6   1/1     Running   0          3m58s
 {{< /output >}}
 
-You have now successfully created a Kubernetes `Deployment` with three replicas.
+You have now successfully updated your `Deployment` to publish three replica pods.
 
 {{< step >}}Now check you can still `kubectl exec` into one of the pods via its deployment.{{< /step >}}
 ```bash
