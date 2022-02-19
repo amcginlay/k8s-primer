@@ -1,5 +1,5 @@
 ---
-title: "Deploy a DaemonSet"
+title: "DaemonSets"
 chapter: false
 weight: 27
 draft: false
