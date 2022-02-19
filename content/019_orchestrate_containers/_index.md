@@ -294,6 +294,7 @@ So what was all the fuss about?
 
 Whilst it is important to understand the elemental role PodSpecs play, the truth is we rarely see PodSpecs in the wild, 
 The DNA of the PodSpec lives on in the `template` section of a more functional and forgiving object type called a **Deployment**.
+
 If it helps, recall when you first started using EC2 [Auto Scaling groups (ASG)](https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html).
 You needed to define a [Launch Template](https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchTemplates.html) which is like your declaration of intent - it says, "when I want an instance, *this* is what I want it to look like".
 If you imagine the `template` section of a Deployment as being similar your EC2 Launch Template then the `replicas` attribute is like the **desired** size of your ASG.
@@ -321,11 +322,11 @@ metadata:
     app: demo
   name: demo
 spec:
-  replicas: 1             # think ASG "Desired" size
+  replicas: 1             # think, ASG "Desired" size
   selector:
     matchLabels:
       app: demo
-  template:               # think ASG "launch template" setting
+  template:               # think, ASG "launch template" setting
     metadata:             #
       labels:             #
         app: demo         #
@@ -403,6 +404,11 @@ Example output:
 {{< output >}}
 Hi from demo-658bfb548-ts7px
 {{< /output >}}
+
+{{% notice note %}}
+You will observe that when using **deployments** the names of pods are partially system generated and therefore subject to change during restarts.
+Later, when you begin to scale your deployment, you will see this as an example of the [Pets vs Cattle](http://cloudscaling.com/blog/cloud-computing/the-history-of-pets-vs-cattle/) analogy.
+{{% /notice %}}
 
 You have assigned a value for your `GREETING` environment variable at the pod specification level, which overrides the value for that variable in your `demo` container image you built with a `Dockerfile` earlier.
 This is immensely powerful.

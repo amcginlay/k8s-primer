@@ -115,7 +115,7 @@ In this example `php` is the name of an image and `8.0.1-apache` is the immutabl
 - **`COPY index.php /var/www/html/`** - The default virtual directory for our webserver is at `/var/www/html/`.
 The `COPY` instruction takes your app (`index.php`) from the local file system (on your Cloud9 instance in this case) and lays it down as the homepage for your webserver inside the container image.
 - **`RUN chmod a+rx index.php`** - A Linux command that will be familiar to you, `chmod` sets the access permissions of our app to ensure it is executable from any context within the container.
-- **`CMD`(or `ENTRYPOINT`)** - this Dockerfile is slightly unusual in that these instructions, which are commonplace, **do not** appear.
+- **`CMD`** - this Dockerfile is slightly unusual in that the commonly seen `CMD` (or `ENTRYPOINT`) instruction **does not** appear.
 In your case the base layer initiates the webserver so once your (interpreted) PHP app is deposited and configured correctly everything is just ready to go.
 
 You could now, if you wish, keep your app (`index.php`) and its dependencies (`Dockerfile`) in lockstep under source control.
