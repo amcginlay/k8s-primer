@@ -82,6 +82,25 @@ Each `kind` of workload manages a set of pods in a paricular way.  Kubernetes wo
     </ul>
 {{< /expand >}}
 
+You will spend most of your time working with `Deployments` which are structured as depicted below:
+
+{{< mermaid >}}
+graph TB
+deployment(Deployment)-->|manages|replicaSetA(ReplicaSet)
+replicaSetA-->|manages|podA[Pod A]
+replicaSetA-->|manages|podB[...]
+replicaSetA-->|manages|podM[Pod M]
+
+  classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+  classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+  classDef blue fill:#69f,stroke:#333,stroke-width:4px;
+  classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+  class deployment orange;
+  class replicaSetA blue;
+  class replicaSetB green;
+  class podA,podB,podM,podN,podO,podZ yellow;
+{{< /mermaid >}}
+
 ## Built-In Workloads
 
 All Kubernetes clusters possess a `kube-system` namespace.
@@ -156,23 +175,6 @@ Repeat the previous command, adding the `-o wide` (or `--output wide`) switch to
 Take a close look at the output.
 Can you see how the naming convention indicates that these objects are closely related?
 These objects were **all** spawned from a single deployment manifest.
-
-{{< mermaid >}}
-graph TB
-deployment(Deployment)-->|manages|replicaSetA(ReplicaSet)
-replicaSetA-->|manages|podA[Pod A]
-replicaSetA-->|manages|podB[...]
-replicaSetA-->|manages|podM[Pod M]
-
-  classDef green fill:#9f6,stroke:#333,stroke-width:4px;
-  classDef orange fill:#f96,stroke:#333,stroke-width:4px;
-  classDef blue fill:#69f,stroke:#333,stroke-width:4px;
-  classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
-  class deployment orange;
-  class replicaSetA blue;
-  class replicaSetB green;
-  class podA,podB,podM,podN,podO,podZ yellow;
-{{< /mermaid >}}
 
 ## Scaling Your Own Deployment
 
@@ -267,9 +269,9 @@ replicaSetA-->|manages|podC
   classDef orange fill:#f96,stroke:#333,stroke-width:4px;
   classDef blue fill:#69f,stroke:#333,stroke-width:4px;
   classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
-  class deployment green;
-  class replicaSetA orange;
-  class podA,podB,podC blue;
+  class deployment orange;
+  class replicaSetA blue;
+  class podA,podB,podC yellow;
   %% class containerA,containerB yellow;
 {{< /mermaid >}}
 
