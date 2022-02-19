@@ -63,7 +63,7 @@ The `kind` documentation provides a [suggested configuration manifest for multi-
 {{< step >}}Create a Kubernetes cluster manifest file.{{< /step >}}
 
 ```bash
-cat <<EOF >~/environment/103-four-node-cluster.yaml 
+cat <<EOF >~/environment/000-four-node-cluster.yaml
 # four node (three workers) cluster config
 kind: Cluster            # this file describes the Kubernetes infrastructure -- a "cluster" 
 apiVersion: kind.x-k8s.io/v1alpha4
@@ -76,10 +76,10 @@ nodes:                   # the nodes are the host servers that implement your Ku
 EOF
 ```
 
-{{< step >}}Create your four node cluster{{< /step >}}
+{{< step >}}Create your four node cluster.{{< /step >}}
 
 ```bash
-kind create cluster --config ~/environment/103-four-node-cluster.yaml
+kind create cluster --config ~/environment/000-four-node-cluster.yaml
 ```
 
 This should result in a Kubernetes cluster (of the `kind` flavor) running in your Cloud9 environment.
