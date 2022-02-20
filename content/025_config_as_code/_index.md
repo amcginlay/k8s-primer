@@ -86,7 +86,7 @@ kubectl -n dev exec deployment/demo -it -- curl http://localhost:80
 
 Example output:
 {{< output >}}
-Bonjour de demo
+Bonjour de demo-7d747c9f5c-2qnbt
 {{< /output >}}
 
 ## Check when a container picks up changes
@@ -139,7 +139,7 @@ kubectl -n dev exec deployment/demo -it -- curl http://localhost:80
 
 Example output:
 {{< output >}}
-Bonjour de demo
+Bonjour de demo-7d747c9f5c-2qnbt
 {{< /output >}}
 
 This is the *old* value you had assigned previously. Why? 
@@ -176,13 +176,12 @@ kubectl -n dev exec deployment/demo -it -- curl http://localhost:80
 ```
 
 {{< output >}}
-Hallo aus demo
+Hallo aus demo-574c779fb8-t7rmq
 {{< /output >}}
 
-{{% notice note %}}
-A process does not pick up new environment variable values until it is restarted.
+So a process does not pick up new environment variable values until it is restarted.
+Restarted deployments will cause running pods to be replaced with new pods with newly generated names.
 Restart pods to force them to consume revised environment variable values, including those sourced from a `ConfigMap`.
-{{% /notice %}}
 
 ## Consuming ConfigMaps as volumes
 
