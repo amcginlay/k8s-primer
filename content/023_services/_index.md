@@ -102,7 +102,7 @@ pod/coredns-558bd4d5db-pr28z   1/1     Running   0          3h4m   10.244.0.4   
 {{< /output >}}
 
 The above command reveals two active pod instances belonging to the `coredns`/`kube-dns` deployment and a **ClusterIP** service which can be used to discover them.
-Note the `SELECTOR` attribute which governs which targets shall be included.
+Note the `SELECTOR` attribute which governs which targets will be considered for request forwarding.
 See [labels and selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) for more details.
 
 {{% notice note %}}
