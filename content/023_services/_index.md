@@ -195,6 +195,17 @@ You *could* assign it a value in your manifest, however you would normally leave
 Remember, since your services are registered with a private DNS service, you no longer need to care which IP addresses are used.
 {{% /notice %}}
 
+{{< step >}}Check to see that the DNS entry for the service has been created.{{< /step >}}
+
+```bash
+kubectl exec deployment/jumpbox -it -- getent hosts demo.dev.svc.cluster.local
+```
+
+Example output:
+{{< output >}}
+10.96.201.228   demo.dev.svc.cluster.local
+{{< /output >}}
+
 {{< step >}}Check to see you get a response from one of the pods.{{< /step >}}
 
 ```bash
