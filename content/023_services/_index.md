@@ -18,9 +18,10 @@ The moment the target pod goes offline that IP address is of no further use.
 Worse still, that target IP address *could* be recycled by a new, unknown pod ... and who knows where that story ends.
 
 If only there were some way in Kubernetes to specify a means of accessing the **current** collection of pods. There is! It is a *separate* Kubernetes kind of object known as a [`Service`](https://kubernetes.io/docs/concepts/services-networking/service/).
-As with a pod, a service is usually allocated IP addresses.
+As with a pod, a service is usually allocated an IP addresses.
 However, unlike pods, service IPs are discoverable via a private DNS server.
-So now, for one pod to communicate to another, it needs only to know the [FQDN](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) of the associated service which will evenly distribute requests to currently active pods.
+So now, for one pod to communicate to another, it only needs to know the [FQDN](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) of the associated service.
+The service will then evenly distribute requests to the currently active pods which match the specified criteria.
 
 {{< mermaid >}}
 graph TB
