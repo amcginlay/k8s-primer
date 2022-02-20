@@ -117,6 +117,8 @@ NAME      READY   UP-TO-DATE   AVAILABLE   AGE
 coredns   2/2     2            2           9d
 {{< /output >}}
 
+This reveals that the `kube-system` namespace comes pre-installed with a [CoreDNS](https://coredns.io/) deployment.
+
 {{< step >}}Use the `describe` command to take a closer look{{< /step >}}
 
 ```bash
