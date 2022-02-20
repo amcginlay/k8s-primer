@@ -7,8 +7,10 @@ draft: false
 
 You can implement configuration values for your apps and microservices in environment variables, mounted volumes, or behind other services.
 Configuration as Code (CaC) is the philosophy which starts with moving configuration values out of the container images.
-As a best practice, you should consider going further. You can pull your configuration values out of the pod specification itself.
-Where should your configuration values go? There's a kind of Kubernetes object for that!
+As a best practice, you should consider going further.
+You can pull your configuration values out of the pod specification itself.
+Where should your configuration values go?
+There's a kind of Kubernetes object for that!
 
 ## ConfigMap objects
 
@@ -20,7 +22,7 @@ Let's start simple.
 {{< step >}}Make a `ConfigMap` which encapsulates an intended value for your `GREETING` environment variable.{{< /step >}}
 
 ```yaml
-cat <<EOF | tee ~/environment/005-greeting-configmap.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/007-greeting-configmap.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -43,7 +45,7 @@ Do that now.
 
 {{< step >}}Create this new version of your deployment manifest with the `configMapKeyRef` section as follows.{{< /step >}}
 ```yaml
-cat <<EOF | tee ~/environment/006-demo-deployment.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/008-demo-deployment.yaml | kubectl -n dev apply -f -
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -51,7 +53,7 @@ metadata:
     app: demo
   name: demo
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: demo
@@ -94,7 +96,7 @@ If you change a value in a `ConfigMap`, does the container in your pod automatic
 {{< step >}}To find out, change the value in the configmap:{{< /step >}}
 
 ```yaml
-cat <<EOF | tee ~/environment/007-greeting-configmap.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/009-greeting-configmap.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -190,7 +192,7 @@ Another way that values from a `ConfigMap` can be accessed from a pod is by refe
 {{< step >}}Create "quotes" as follows, which give us an opportunity to try a different flavor of `ConfigMap`:{{< /step >}}
 
 ```yaml
-cat <<EOF | tee ~/environment/008-quotes-configmap.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/010-quotes-configmap.yaml | kubectl -n dev apply -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -230,7 +232,7 @@ We'll refer back this source YAML later and look at the effects of the `|` used 
 
 {{< step >}}Get a list of the current `ConfigMap` objects in the `dev` Kubernetes namespace:{{< /step >}}
 ```bash
-kubectl get configmaps -n dev
+kubectl -n dev get configmaps
 ```
 
 Example output:
@@ -244,7 +246,7 @@ quotes             2      2m8s
 {{< step >}}Witness how Kubernetes has formatted and stored those two quotes:{{< /step >}}
 
 ```bash
-kubectl get cm -n dev quotes -o yaml
+kubectl -n dev get configmaps quotes -o yaml
 ```
 
 Example output:
@@ -287,15 +289,9 @@ Let's note in passing that a `ConfigMap` can support a `binaryData` section as w
 How do you want to get those beautiful `png` graphic images into your pods? More on that later.
 For now, let's simply mount a volume with some simple text files.
 
-{{< step >}}First, dispose of your existing pod.{{< /step >}}
-
-```bash
-kubectl -n dev delete pod demo
-```
-
-{{< step >}}Create yet another version of your pod manifest, this one with both the `env` reference, and now adding a `volumeMounts` to the newer configmap.{{< /step >}}
+{{< step >}}Create yet another version of your deployment manifest, this one with both the `env` reference, and now adding a `volumeMounts` to the newer configmap.{{< /step >}}
 ```yaml
-cat <<EOF | tee ~/environment/009-demo-deployment.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/011-demo-deployment.yaml | kubectl -n dev apply -f -
 apiVersion: apps/v1
 kind: Deployment
 metadata:
