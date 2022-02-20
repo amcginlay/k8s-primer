@@ -121,7 +121,8 @@ Example output:
 nameserver 10.96.0.10
 {{< /output >}}
 
-You will observe that the `CLUSTER-IP` of the `kube-dns` service matches the `nameserver` setting in `/etc/resolv.conf`.
+You will observe that the `CLUSTER-IP` of the `kube-dns` service matches the `nameserver` setting from `/etc/resolv.conf` located on your `jumpbox`.
+It would be the same result if tried from **any** pod in your cluster.
 This tells you that `coredns`/`kube-dns` pods will be acting as the primary DNS server for workloads in your cluster.
 
 {{< step >}}The FQDNs for almost all Kubernetes services will be of the form `<service>.<namespace>.svc.cluster.local`.
