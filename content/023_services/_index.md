@@ -305,21 +305,24 @@ Just as a `ReplicaSet` manages your pods, a `Service` manages your `Endpoints`.
 
 ## Service type summary
 
-You may hear about other types of services that build on `ClusterIP`. These are beyond the scope of this workshop, however deserve a brief mention. These can be a distraction. They do serve their purposes. However, as you come to better understand `ClusterIP`, you may likely come to believe that it is sufficient for many of your pod-to-pod communications needs.
+You may hear about other types of services that build on `ClusterIP`--`NodePort` and `LoadBalancer`. There is another service type called `ExternalName`. These are beyond the scope of this workshop, however deserve a brief mention. These can be a distraction. They do serve their purposes. However, as you come to better understand `ClusterIP`, you may likely come to believe that it is sufficient for many of your pod-to-pod communications needs.
 - `NodePort` builds on `ClusterIP` by mapping any of the node IP addresses along with a specific port number into the underlying `ClusterIP`. This enables inbound communications from outside the cluster.
 - `LoadBalancer` builds on `NodePort`--and thus `ClusterIP`--by allocating a load balancer service or mechanism that operates outside the cluster--that maps to the list of node port addresses. This allows external mechanisms to be involved as well in inbound communications from outside the cluster.
-- `ExternalName` merely maps a `ClusterIP` to another DNS name, which could resolve to a "service" (in the general non-Kubernetes sense of the word) outside the cluster.
-When you are ready to go beyond the capabilities of `ClusterIP` services, you may want to consider service meshes, which are quite beyond the scope of this workshop.
+- `ExternalName` merely maps a DNS name of a service in the cluster to another DNS name, which could resolve to a "service" (in the general non-Kubernetes sense of the word) outside the cluster.
+
+When you are ready to go beyond the capabilities of Kubernetes services, you may want to consider service meshes, which are quite beyond the scope of this workshop.
 
 Here is a Venn Diagram depiction of these Kubernetes `Service` types.
 
 {{< mermaid >}}
 graph TB
-subgraph ClusterIP
-  subgraph NodePort
-    subgraph LoadBalancer
+subgraph Service
+  subgraph ClusterIP
+    subgraph NodePort
+      subgraph LoadBalancer
+      end
     end
-  end
+  end 
   subgraph ExternalName
   end
 end 
@@ -328,25 +331,30 @@ classDef green fill:#9f6,stroke:#333,stroke-width:4px;
 classDef orange fill:#f96,stroke:#333,stroke-width:4px;
 classDef blue fill:#69f,stroke:#333,stroke-width:4px;
 classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+classDef cyan fill:#0ff,stroke:#333,stroke-width:4px;
 class ClusterIP yellow;
 class NodePort green;
 class LoadBalancer blue;
 class ExternalName orange;
+class Service cyan;
 {{< /mermaid >}}
 
 Another way of thinking of it is in terms of class inheritance, with an analogy to Linnaeus taxonomy.
 
 {{< mermaid >}}
 graph BT
-bird & ClusterIP
-penguin & ostrich & NodePort & ExternalName
-rockHopperPenguin
-rockHopperPenguin -->|is a type of| penguin
-penguin -->|is a type of| bird
-ostrich -->|is a type of| bird
+bird & Service
+sparrow & flamingo & ClusterIP & ExternalName
+swallow & NodePort 
+barnSwallow[barn swallow] & LoadBalancer
+barnSwallow -->|is a type of| swallow
+swallow -->|is a type of| sparrow
+sparrow -->|is a type of| bird
+flamingo -->|is a type of| bird
 LoadBalancer -->|is a specialized| NodePort
 NodePort -->|is a specialized| ClusterIP
-ExternalName -->|is a specialized| ClusterIP
+ClusterIP -->|is a type of| Service
+ExternalName -->|is a type of| Service
 {{< /mermaid >}}
 
 ## Service Quiz
