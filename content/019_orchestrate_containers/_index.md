@@ -50,25 +50,19 @@ In which list do pods appear?
 {{% /expand %}}
 
 {{< step >}}Create your namespaces manifest then instruct Kubernetes to ingest it using `kubectl apply` which will cause Kubernetes to translate your manifests into objects.
-This manifest defines two namespaces, `dev` and `test`.{{< /step >}}
+This manifest defines a single namespaces, `dev`.{{< /step >}}
 ```yaml
-cat <<EOF | tee ~/environment/001-dev-test-namespaces.yaml | kubectl apply -f -
+cat <<EOF | tee ~/environment/001-dev-namespaces.yaml | kubectl apply -f -
 apiVersion: v1
 kind: Namespace
 metadata:
   name: dev
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: test
 EOF
 ```
 
 Example output:
 {{< output >}}
 namespace/dev created
-namespace/test created
 {{< /output >}}
 
 
