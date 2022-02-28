@@ -135,7 +135,7 @@ spec:
     spec:
       containers:
       - name: demo
-        image: demo:1.0.0
+        image: demo:1.0.0    # re-using your demo container image, because you can ...
 EOF
 ```
 
