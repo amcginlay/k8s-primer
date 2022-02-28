@@ -312,18 +312,18 @@ pod/demo deleted
 {{< step >}}Now replace it with the equivalent Deployment object.{{< /step >}}
 ```yaml
 cat <<EOF | tee ~/environment/003-demo-deployment.yaml | kubectl -n dev apply -f -
-apiVersion: apps/v1
+apiVersion: apps/v1       # remember to use apps/v1 instead of merely v1
 kind: Deployment
 metadata:
-  labels:
+  labels:                 # labels allow you to tag your object with a set of key/value pairs
     app: demo
-  name: demo
-spec:
-  replicas: 1             # think, ASG "Desired" size
-  selector:
-    matchLabels:
+  name: demo              # it is customary to have an "app" key with a value to identify your object
+spec:                     # the object specification begins here, note no indentation!
+  replicas: 1             # for "spec.replicas", think ASG "Desired" size
+  selector:               # you can enable the deployment to acquire/own pods which match your "selector"
+    matchLabels:          # the most common selector clause is to match labels on existing Pods
       app: demo
-  template:               # think, ASG "launch template" setting
+  template:               # for "spec.template", think ASG "launch template" setting
     metadata:             #
       labels:             #
         app: demo         #
