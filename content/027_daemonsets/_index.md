@@ -9,7 +9,17 @@ draft: false
 
 You have deployed a set of pods using a `Deployment`. The other commonly used kind of Kubernetes workload is a `DaemonSet`. In this section, you will inspect some built in examples before deploying your own `DaemonSet` and investigating its behavior on a multi-node Kubernetes cluster.
 
-## Built in daemonsets
+## Why DaemonSets?
+
+DaemonSets can improve cluster performance by deploying pods that perform maintenance tasks and support services to every node.
+DaemonSets are particularly well suited for long-running services which can include:
+- Log collection
+- Metrics generation
+- Distributed tracing
+- Networking
+- Troubleshooting
+
+## Built in DaemonSets
 
 Kubernetes normally has some deployments and daemonsets running by default.
 It can be useful to understand the differences and similarities between those and the daemonset you will create.
@@ -76,7 +86,7 @@ That's the standard purpose of daemonsets, although you will see later how you c
 
 In the next section you will create your own daemonset and see how it compares to the built in daemonsets.
 
-## Create a Separate Namespace for Your DaemonSet
+## System Namespaces
 
 Namespaces such as `kube-system` and `istio-system` are commonly used to identify components that are running behind the scenes like a cast of supporting characters or the crew of a show.
 Daemonsets are often used to accommodate those types of non-functional or hidden system requirements so, whilst putting them in a dedicated namespace is not a hard requirement, it is also not an unreasonable thing to do.
@@ -84,7 +94,7 @@ Daemonsets are often used to accommodate those types of non-functional or hidden
 {{< step >}}Write a Kubernetes manifest for a `dev-system` namespace.{{< /step >}}
 
 ```yaml
-cat <<EOF | tee ~/environment/012-dev-system-namespace.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/012-dev-system-namespace.yaml | kubectl -f -
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -97,7 +107,7 @@ Example output:
 namespace/dev-system created
 {{< /output >}}
 
-## Write and deploy your DaemonSet
+## Deploy Your DaemonSet
 
 A `DaemonSet` manifest shares **almost** all its DNA with the `Deployment` manifest.
 The most notable absentee is the `replicas` attribute, and you can perhaps already understand why.
@@ -125,7 +135,7 @@ spec:
     spec:
       containers:
       - name: demo
-        image: demo:1.0.0
+        image: demo:1.0.0    # re-using your demo container image, because you can ...
 EOF
 ```
 
