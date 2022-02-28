@@ -9,6 +9,16 @@ draft: false
 
 You have deployed a set of pods using a `Deployment`. The other commonly used kind of Kubernetes workload is a `DaemonSet`. In this section, you will inspect some built in examples before deploying your own `DaemonSet` and investigating its behavior on a multi-node Kubernetes cluster.
 
+## Why DaemonSets?
+
+DaemonSets can improve cluster performance by deploying pods that perform maintenance tasks and support services to every node.
+DaemonSets are particularly well suited for long-running services which can include:
+- Log collection
+- Metrics generation
+- Distributed tracing
+- Networking
+- Troubleshooting
+
 ## Built in daemonsets
 
 Kubernetes normally has some deployments and daemonsets running by default.
@@ -76,7 +86,7 @@ That's the standard purpose of daemonsets, although you will see later how you c
 
 In the next section you will create your own daemonset and see how it compares to the built in daemonsets.
 
-## Create a Separate Namespace for Your DaemonSet
+## Daemon Namespaces
 
 Namespaces such as `kube-system` and `istio-system` are commonly used to identify components that are running behind the scenes like a cast of supporting characters or the crew of a show.
 Daemonsets are often used to accommodate those types of non-functional or hidden system requirements so, whilst putting them in a dedicated namespace is not a hard requirement, it is also not an unreasonable thing to do.
