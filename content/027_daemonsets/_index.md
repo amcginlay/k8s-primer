@@ -94,7 +94,7 @@ Daemonsets are often used to accommodate those types of non-functional or hidden
 {{< step >}}Write a Kubernetes manifest for a `dev-system` namespace.{{< /step >}}
 
 ```yaml
-cat <<EOF | tee ~/environment/012-dev-system-namespace.yaml | kubectl -n dev apply -f -
+cat <<EOF | tee ~/environment/012-dev-system-namespace.yaml | kubectl -f -
 apiVersion: v1
 kind: Namespace
 metadata:
