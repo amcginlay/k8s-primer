@@ -179,5 +179,5 @@ In your pod spec, you can provide the following for each of your containers:
 If you don't include these in your manifests, Kubernetes uses the default values from your image--which you had specified in the `Dockerfile`.
 
 {{% notice note %}}
-Kubernetes sends the container the combination of the command and arguments, whether those values come from the image of your manifest.
+Kubernetes sends the container the combination of the command and arguments, whether those values come from the image or your manifest.
 {{% /notice %}}
