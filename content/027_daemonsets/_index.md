@@ -19,7 +19,7 @@ DaemonSets are particularly well suited for long-running services which can incl
 - Networking
 - Troubleshooting
 
-## Built in daemonsets
+## Built in DaemonSets
 
 Kubernetes normally has some deployments and daemonsets running by default.
 It can be useful to understand the differences and similarities between those and the daemonset you will create.
@@ -86,7 +86,7 @@ That's the standard purpose of daemonsets, although you will see later how you c
 
 In the next section you will create your own daemonset and see how it compares to the built in daemonsets.
 
-## Daemon Namespaces
+## System Namespaces
 
 Namespaces such as `kube-system` and `istio-system` are commonly used to identify components that are running behind the scenes like a cast of supporting characters or the crew of a show.
 Daemonsets are often used to accommodate those types of non-functional or hidden system requirements so, whilst putting them in a dedicated namespace is not a hard requirement, it is also not an unreasonable thing to do.
@@ -107,7 +107,7 @@ Example output:
 namespace/dev-system created
 {{< /output >}}
 
-## Write and deploy your DaemonSet
+## Deploy Your DaemonSet
 
 A `DaemonSet` manifest shares **almost** all its DNA with the `Deployment` manifest.
 The most notable absentee is the `replicas` attribute, and you can perhaps already understand why.
