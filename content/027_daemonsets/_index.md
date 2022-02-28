@@ -167,7 +167,7 @@ demo-daemon-x77qp   1/1     Running   0          15m   10.244.1.3   kind-worker2
 You will see `kind-worker[n]` appearing under `NODE` which tells us that, unlike the built in daemonsets such as `kube-proxy`, your pods are running everywhere **except** the control-plane.
 This is `taints` and `tolerations` at work and this behavior is by design.
 
-## Skewing Fairness -- Taints and Tolerations
+## Skewing Fairness
 
 By default, you deploy pods to a Kubernetes cluster and are not concerned with where and how the pods are scheduled and restarted.
 However, if you have reasons to control which pods run on which nodes, Kubernetes provides you with some mechanisms to facilitate bias such as the following.
@@ -179,6 +179,8 @@ There are three flavors/degrees of effects for taints and tolerations. unless, t
 - **NoExecute** -- this effect will *evict* currently running pods, and will not *schedule* new pods on the node.
 - **NoSchedule** -- this effect will leave pre-existing pods running, but will not *schedule* new pods on the node.
 - **PreferNoSchedule** -- this effect will leave pre-existing pods running, the scheduler will attempt to find other nodes on which to run new pods, but ultimately the node could accept newly scheduled pods despite the taint.
+
+## Using Taints
 
 {{< step >}}Let's create a **taint** on `kind-worker3` to see if we can dissuade our daemonset from targeting all the worker nodes as it currently does.{{< /step >}}
 
@@ -237,6 +239,8 @@ It may take a few seconds before pods settle into a `Running` state.
 {{% notice tip %}}
 For future reference, **untainting** is achieved by appending a single hyphen symbol to the previous `taint` command, i.e. `kubectl taint nodes kind-worker3 VIPOnly=true:NoExecute-`.
 {{% /notice %}}
+
+## Using Tolerations
 
 {{< step >}}Now let's add a matching toleration to the daemonset and see if its pods can override the taint.{{< /step >}}
 
