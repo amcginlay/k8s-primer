@@ -42,7 +42,7 @@ kind-worker3         Ready    <none>                 118s    v1.21.1   172.18.0.
 {{% notice tip %}}
 Observe from this output that, much like pods, nodes are also assigned IP addresses.
 This is standard Kubernetes behavior for all nodes and pods.
-If you look very closely you may also notice that, in your cluster, these IP addresses appear to be from alternate range as those assigned to your pods (`172.18.x.x` vs. `10.244.x.x`).
+If you look very closely you may also notice that, in your cluster, these IP addresses appear to be from an alternate range as those assigned to your pods (`172.18.x.x` vs. `10.244.x.x`).
 This behavior can differ between Kubernetes distributions.
 It depends upon the chosen implementation of the [CNI Plugin](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#cni).
 The default CNI for KinD is named `kindnet`.
@@ -63,7 +63,7 @@ kindnet      4         4         4       4            4           <none>        
 kube-proxy   4         4         4       4            4           kubernetes.io/os=linux   ... k8s-app=kube-proxy
 {{< /output >}}
 
-There are four pods a piece, running in both the `kindnet` and `kube-proxy` daemonsets.
+There are four pods apiece, running in both the `kindnet` and `kube-proxy` daemonsets.
 Observe the values of `SELECTOR` in the above output and let's keep digging.
 
 {{< step >}}Get a list of the pods that match that `SELECTOR` for `kube-proxy`.{{< /step >}}
@@ -94,7 +94,7 @@ Daemonsets are often used to accommodate those types of non-functional or hidden
 {{< step >}}Write a Kubernetes manifest for a `dev-system` namespace.{{< /step >}}
 
 ```yaml
-cat <<EOF | tee ~/environment/012-dev-system-namespace.yaml | kubectl -f -
+cat <<EOF | tee ~/environment/012-dev-system-namespace.yaml | kubectl apply -f -
 apiVersion: v1
 kind: Namespace
 metadata:
