@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="anonymous" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;was&nbsp;the&nbsp;purpose&nbsp;of&nbsp;the&nbsp;port&nbsp;binding&nbsp;you&nbsp;created&nbsp;using&nbsp;the&nbsp;--publish&nbsp;8081:80&nbsp;option&nbsp;to&nbsp;docker&nbsp;run?">
+<ANSWER ISCORRECT="false">This&nbsp;binds&nbsp;port&nbsp;8081&nbsp;to&nbsp;manage&nbsp;docker&nbsp;and&nbsp;port&nbsp;80&nbsp;to&nbsp;access&nbsp;your&nbsp;container&nbsp;from&nbsp;Cloud9</ANSWER>
+<ANSWER ISCORRECT="false">This&nbsp;maps&nbsp;both&nbsp;port&nbsp;8081&nbsp;and&nbsp;port&nbsp;80&nbsp;straight&nbsp;through&nbsp;from&nbsp;Cloud9&nbsp;to&nbsp;your&nbsp;container</ANSWER>
+<ANSWER ISCORRECT="true">This&nbsp;translates&nbsp;port&nbsp;8081&nbsp;on&nbsp;the&nbsp;Cloud9&nbsp;host&nbsp;to&nbsp;port&nbsp;80&nbsp;inside&nbsp;your&nbsp;container</ANSWER>
+<ANSWER ISCORRECT="false">This&nbsp;translates&nbsp;port&nbsp;80&nbsp;on&nbsp;the&nbsp;Cloud9&nbsp;host&nbsp;to&nbsp;port&nbsp;8081&nbsp;inside&nbsp;your&nbsp;container</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcmany" TITLE="Which&nbsp;two&nbsp;techniques&nbsp;did&nbsp;you&nbsp;use&nbsp;to&nbsp;access&nbsp;the&nbsp;web&nbsp;service&nbsp;in&nbsp;your&nbsp;container?">
+<ANSWER ISCORRECT="false">Use&nbsp;port&nbsp;8081&nbsp;with&nbsp;the&nbsp;container&nbsp;name,&nbsp;such&nbsp;as&nbsp;curl&nbsp;http://demo:8081&nbsp;from&nbsp;Cloud9</ANSWER>
+<ANSWER ISCORRECT="true">Use&nbsp;docker&nbsp;exec&nbsp;into&nbsp;your&nbsp;container,&nbsp;then&nbsp;curl&nbsp;localhost:80&nbsp;from&nbsp;inside&nbsp;the&nbsp;container</ANSWER>
+<ANSWER ISCORRECT="false">Use&nbsp;docker&nbsp;exec&nbsp;into&nbsp;your&nbsp;container,&nbsp;then&nbsp;curl&nbsp;demo:80&nbsp;from&nbsp;inside&nbsp;the&nbsp;container</ANSWER>
+<ANSWER ISCORRECT="true">Use&nbsp;port&nbsp;8081&nbsp;with&nbsp;the&nbsp;name&nbsp;localhost&nbsp;on&nbsp;Cloud9,&nbsp;such&nbsp;as&nbsp;curl&nbsp;http://localhost:8081&nbsp;from&nbsp;Cloud9</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="If&nbsp;you&nbsp;had&nbsp;used&nbsp;IP&nbsp;addresses&nbsp;instead&nbsp;of&nbsp;names,&nbsp;which&nbsp;one&nbsp;URL&nbsp;could&nbsp;you&nbsp;use&nbsp;from&nbsp;Cloud9&nbsp;(i.e.&nbsp;no&nbsp;docker&nbsp;exec)&nbsp;to&nbsp;access&nbsp;the&nbsp;web&nbsp;service&nbsp;in&nbsp;your&nbsp;container?">
+<ANSWER ISCORRECT="true">Use&nbsp;port&nbsp;8081&nbsp;with&nbsp;the&nbsp;loopback&nbsp;IP&nbsp;on&nbsp;Cloud9,&nbsp;such&nbsp;as&nbsp;curl&nbsp;http://127.0.0.1:8081&nbsp;from&nbsp;Cloud9</ANSWER>
+<ANSWER ISCORRECT="false">Use&nbsp;port&nbsp;80&nbsp;with&nbsp;the&nbsp;loopback&nbsp;IP&nbsp;on&nbsp;Cloud9,&nbsp;such&nbsp;as&nbsp;curl&nbsp;http://127.0.0.1:80&nbsp;from&nbsp;Cloud9</ANSWER>
+<ANSWER ISCORRECT="false">Use&nbsp;port&nbsp;80&nbsp;with&nbsp;the&nbsp;container&nbsp;IP,&nbsp;such&nbsp;as&nbsp;curl&nbsp;http://192.168.0.1:80&nbsp;from&nbsp;Cloud9</ANSWER>
+<ANSWER ISCORRECT="false">Use&nbsp;port&nbsp;8081&nbsp;with&nbsp;the&nbsp;container&nbsp;IP,&nbsp;such&nbsp;as&nbsp;curl&nbsp;http://192.168.0.1:8081&nbsp;from&nbsp;Cloud9</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;best&nbsp;describes&nbsp;the&nbsp;relationship&nbsp;between&nbsp;the&nbsp;container&nbsp;host&nbsp;(e.g.&nbsp;Cloud9)&nbsp;and&nbsp;the&nbsp;container?">
+<ANSWER ISCORRECT="false">The&nbsp;Docker&nbsp;daemon,&nbsp;dockerd&nbsp;on&nbsp;the&nbsp;host&nbsp;by&nbsp;default&nbsp;always&nbsp;restarts&nbsp;failed&nbsp;containers</ANSWER>
+<ANSWER ISCORRECT="false">Containers&nbsp;provide&nbsp;isolation&nbsp;protection.&nbsp;You&nbsp;cannot&nbsp;kill&nbsp;processes&nbsp;in&nbsp;the&nbsp;container.&nbsp;You&nbsp;must&nbsp;use&nbsp;docker&nbsp;stop.</ANSWER>
+<ANSWER ISCORRECT="true">The&nbsp;Docker&nbsp;daemon,&nbsp;dockerd&nbsp;marks&nbsp;the&nbsp;container&nbsp;as&nbsp;stopped&nbsp;when&nbsp;its&nbsp;root&nbsp;process&nbsp;dies</ANSWER>
+<ANSWER ISCORRECT="false">Containers&nbsp;are&nbsp;just&nbsp;background&nbsp;processes&nbsp;on&nbsp;the&nbsp;host;&nbsp;using&nbsp;docker&nbsp;run&nbsp;demo&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;using&nbsp;demo&nbsp;&amp;&nbsp;in&nbsp;the&nbsp;host&nbsp;shell</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;is&nbsp;the&nbsp;relationship&nbsp;between&nbsp;files&nbsp;in&nbsp;the&nbsp;host&nbsp;and&nbsp;the&nbsp;containers&nbsp;it&nbsp;is&nbsp;hosting?">
+<ANSWER ISCORRECT="false">Containers&nbsp;share&nbsp;the&nbsp;host&nbsp;file&nbsp;system,&nbsp;thus&nbsp;files&nbsp;in&nbsp;all&nbsp;containers&nbsp;are&nbsp;the&nbsp;same.&nbsp;Containers&nbsp;only&nbsp;provide&nbsp;process&nbsp;isolation</ANSWER>
+<ANSWER ISCORRECT="false">Containers&nbsp;and&nbsp;their&nbsp;host&nbsp;all&nbsp;have&nbsp;isolated&nbsp;file&nbsp;systems,&nbsp;so&nbsp;one&nbsp;host&nbsp;with&nbsp;two&nbsp;containers&nbsp;use&nbsp;three&nbsp;separate&nbsp;virtual&nbsp;hard&nbsp;disks</ANSWER>
+<ANSWER ISCORRECT="true">Files&nbsp;created&nbsp;in&nbsp;each&nbsp;container&nbsp;are&nbsp;private&nbsp;from&nbsp;other&nbsp;containers,&nbsp;but&nbsp;appear&nbsp;as&nbsp;special&nbsp;file&nbsp;mappings&nbsp;in&nbsp;the&nbsp;host</ANSWER>
+<ANSWER ISCORRECT="false">Files&nbsp;created&nbsp;in&nbsp;each&nbsp;container&nbsp;are&nbsp;private&nbsp;from&nbsp;other&nbsp;containers,&nbsp;but&nbsp;appear&nbsp;as&nbsp;regular&nbsp;files&nbsp;in&nbsp;the&nbsp;host</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;is&nbsp;the&nbsp;type&nbsp;of&nbsp;file&nbsp;system&nbsp;mapping&nbsp;that&nbsp;was&nbsp;used&nbsp;for&nbsp;your&nbsp;containers?">
+<ANSWER ISCORRECT="false">vhdx</ANSWER>
+<ANSWER ISCORRECT="true">overlay</ANSWER>
+<ANSWER ISCORRECT="false">zfs</ANSWER>
+<ANSWER ISCORRECT="false">vmdk</ANSWER>
+</QUESTION>
+
+</POLL>

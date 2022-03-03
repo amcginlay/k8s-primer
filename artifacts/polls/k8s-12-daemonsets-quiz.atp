@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="anonymous" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;nodes&nbsp;does&nbsp;a&nbsp;DaemonSet&nbsp;deploy&nbsp;pods&nbsp;to?">
+<ANSWER ISCORRECT="false">a&nbsp;specific&nbsp;list&nbsp;of&nbsp;nodes&nbsp;in&nbsp;your&nbsp;DaemonSet&nbsp;spec</ANSWER>
+<ANSWER ISCORRECT="true">all&nbsp;nodes,&nbsp;except&nbsp;for&nbsp;nodes&nbsp;that&nbsp;repel&nbsp;the&nbsp;pods</ANSWER>
+<ANSWER ISCORRECT="false">randomly&nbsp;scheduled&nbsp;to&nbsp;the&nbsp;number&nbsp;of&nbsp;replicas&nbsp;you&nbsp;specify</ANSWER>
+<ANSWER ISCORRECT="false">all&nbsp;nodes,&nbsp;always,&nbsp;no&nbsp;exceptions</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;Kubernetes&nbsp;attribute&nbsp;repels&nbsp;certain&nbsp;pods?">
+<ANSWER ISCORRECT="false">Schedule</ANSWER>
+<ANSWER ISCORRECT="true">Taint</ANSWER>
+<ANSWER ISCORRECT="false">MatchLabels</ANSWER>
+<ANSWER ISCORRECT="false">Toleration</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;is&nbsp;the&nbsp;typical&nbsp;order&nbsp;we&nbsp;have&nbsp;used&nbsp;to&nbsp;write&nbsp;Kubernetes&nbsp;manifests?">
+<ANSWER ISCORRECT="false">kind,spec,apiVersion,metadata</ANSWER>
+<ANSWER ISCORRECT="false">spec,metadata,apiVersion,kind</ANSWER>
+<ANSWER ISCORRECT="true">apiVersion,&nbsp;kind,&nbsp;metadata,&nbsp;spec</ANSWER>
+<ANSWER ISCORRECT="false">apiVersion,&nbsp;spec,&nbsp;metadata,&nbsp;kind</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Where&nbsp;do&nbsp;you&nbsp;put&nbsp;tolerations&nbsp;in&nbsp;a&nbsp;DaemonSet&nbsp;manifest?">
+<ANSWER ISCORRECT="true">spec.template.spec.tolerations</ANSWER>
+<ANSWER ISCORRECT="false">spec.template.tolerations</ANSWER>
+<ANSWER ISCORRECT="false">metadata.tolerations</ANSWER>
+<ANSWER ISCORRECT="false">spec.tolerations</ANSWER>
+</QUESTION>
+
+</POLL>

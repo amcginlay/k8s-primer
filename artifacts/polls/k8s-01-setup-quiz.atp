@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="anonymous" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;environment&nbsp;will&nbsp;you&nbsp;be&nbsp;using&nbsp;to&nbsp;work&nbsp;with&nbsp;containers&nbsp;and&nbsp;Kubernetes?">
+<ANSWER ISCORRECT="true">AWS&nbsp;Cloud9</ANSWER>
+<ANSWER ISCORRECT="false">Amazon&nbsp;SageMaker&nbsp;Studio</ANSWER>
+<ANSWER ISCORRECT="false">AWS&nbsp;CodePipeline</ANSWER>
+<ANSWER ISCORRECT="false">AWS&nbsp;CloudShell</ANSWER>
+<ANSWER ISCORRECT="false">Microsoft&nbsp;VSCode</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="How&nbsp;long&nbsp;did&nbsp;it&nbsp;take&nbsp;to&nbsp;set&nbsp;up&nbsp;this&nbsp;environment?">
+<ANSWER ISCORRECT="false">15&nbsp;minutes.</ANSWER>
+<ANSWER ISCORRECT="false">Instantaneous.&nbsp;No&nbsp;time&nbsp;at&nbsp;all.</ANSWER>
+<ANSWER ISCORRECT="false">10&nbsp;minutes.</ANSWER>
+<ANSWER ISCORRECT="false">Less&nbsp;than&nbsp;5&nbsp;minutes.</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="If&nbsp;you&nbsp;delete&nbsp;this&nbsp;practice&nbsp;environment,&nbsp;can&nbsp;you&nbsp;set&nbsp;it&nbsp;up&nbsp;again&nbsp;any&nbsp;time?">
+<ANSWER ISCORRECT="true">Yes,&nbsp;I&nbsp;can&nbsp;do&nbsp;this&nbsp;again&nbsp;any&nbsp;time.</ANSWER>
+<ANSWER ISCORRECT="false">No,&nbsp;I&nbsp;can&nbsp;only&nbsp;do&nbsp;this&nbsp;today.</ANSWER>
+</QUESTION>
+
+</POLL>

@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="anonymous" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;are&nbsp;the&nbsp;two&nbsp;logical&nbsp;subdivisions--dev&nbsp;and&nbsp;test--you&nbsp;created&nbsp;in&nbsp;your&nbsp;Kubernetes&nbsp;cluster&nbsp;before&nbsp;deploying&nbsp;containers?">
+<ANSWER ISCORRECT="false">Service</ANSWER>
+<ANSWER ISCORRECT="false">ConfigMap</ANSWER>
+<ANSWER ISCORRECT="true">Namespace</ANSWER>
+<ANSWER ISCORRECT="false">Deployment</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;is&nbsp;the&nbsp;smallest&nbsp;deployable&nbsp;unit&nbsp;of&nbsp;compute&nbsp;power&nbsp;in&nbsp;Kubernetes?">
+<ANSWER ISCORRECT="false">Process</ANSWER>
+<ANSWER ISCORRECT="false">Thread</ANSWER>
+<ANSWER ISCORRECT="false">Container</ANSWER>
+<ANSWER ISCORRECT="true">Pod</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="How&nbsp;did&nbsp;you&nbsp;test&nbsp;access&nbsp;to&nbsp;your&nbsp;demo&nbsp;container?">
+<ANSWER ISCORRECT="false">kubectl&nbsp;-n&nbsp;dev&nbsp;exec&nbsp;demo&nbsp;-it&nbsp;--&nbsp;curl&nbsp;http://localhost:8081</ANSWER>
+<ANSWER ISCORRECT="false">kubectl&nbsp;-n&nbsp;dev&nbsp;exec&nbsp;demo&nbsp;-it&nbsp;80:8081&nbsp;curl&nbsp;http://localhost:8081</ANSWER>
+<ANSWER ISCORRECT="true">kubectl&nbsp;-n&nbsp;dev&nbsp;exec&nbsp;demo&nbsp;-it&nbsp;--&nbsp;curl&nbsp;http://localhost:80</ANSWER>
+<ANSWER ISCORRECT="false">kubectl&nbsp;-n&nbsp;dev&nbsp;exec&nbsp;demo&nbsp;-p&nbsp;8081:80&nbsp;--&nbsp;curl&nbsp;http://localhost:80</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;did&nbsp;Kubernetes&nbsp;do&nbsp;when&nbsp;you&nbsp;killed&nbsp;the&nbsp;root&nbsp;process&nbsp;kill&nbsp;1&nbsp;in&nbsp;your&nbsp;pod?">
+<ANSWER ISCORRECT="false">Kubernetes&nbsp;ignored&nbsp;the&nbsp;failure&nbsp;and&nbsp;did&nbsp;not&nbsp;change&nbsp;the&nbsp;container&nbsp;or&nbsp;pod&nbsp;status</ANSWER>
+<ANSWER ISCORRECT="false">Kubernetes&nbsp;marked&nbsp;the&nbsp;container&nbsp;as&nbsp;stopped&nbsp;and&nbsp;changed&nbsp;pod&nbsp;status&nbsp;to&nbsp;failed</ANSWER>
+<ANSWER ISCORRECT="false">Kubernetes&nbsp;deleted&nbsp;and&nbsp;redeployed&nbsp;the&nbsp;whole&nbsp;pod,&nbsp;setting&nbsp;its&nbsp;age&nbsp;back&nbsp;to&nbsp;zero</ANSWER>
+<ANSWER ISCORRECT="true">Kubernetes&nbsp;restarted&nbsp;the&nbsp;container&nbsp;in&nbsp;the&nbsp;pod&nbsp;and&nbsp;kept&nbsp;pod&nbsp;status&nbsp;as&nbsp;running</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="With&nbsp;which&nbsp;Kubernetes&nbsp;workload&nbsp;did&nbsp;you&nbsp;replace&nbsp;your&nbsp;pod?">
+<ANSWER ISCORRECT="false">Task</ANSWER>
+<ANSWER ISCORRECT="true">Deployment</ANSWER>
+<ANSWER ISCORRECT="false">DaemonSet</ANSWER>
+<ANSWER ISCORRECT="false">ReplicaSet</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="When&nbsp;you&nbsp;added&nbsp;an&nbsp;env&nbsp;section&nbsp;to&nbsp;your&nbsp;container&nbsp;definition&nbsp;in&nbsp;your&nbsp;Deployment&nbsp;spec,&nbsp;what&nbsp;was&nbsp;the&nbsp;result?">
+<ANSWER ISCORRECT="false">both&nbsp;values&nbsp;get&nbsp;applied&nbsp;from&nbsp;the&nbsp;env&nbsp;of&nbsp;the&nbsp;deployment's&nbsp;pod(s)&nbsp;and&nbsp;the&nbsp;container&nbsp;image&nbsp;value&nbsp;from&nbsp;ENV&nbsp;in&nbsp;the&nbsp;Dockerfile</ANSWER>
+<ANSWER ISCORRECT="true">the&nbsp;env&nbsp;of&nbsp;the&nbsp;deployment's&nbsp;pod(s)&nbsp;overrides&nbsp;the&nbsp;container&nbsp;image&nbsp;value&nbsp;from&nbsp;ENV&nbsp;in&nbsp;the&nbsp;Dockerfile</ANSWER>
+<ANSWER ISCORRECT="false">the&nbsp;container&nbsp;image&nbsp;value&nbsp;from&nbsp;ENV&nbsp;in&nbsp;the&nbsp;Dockerfile&nbsp;overrides&nbsp;the&nbsp;env&nbsp;of&nbsp;the&nbsp;deployment's&nbsp;pod(s)</ANSWER>
+<ANSWER ISCORRECT="false">an&nbsp;error&nbsp;occurs&nbsp;and&nbsp;neither&nbsp;value&nbsp;is&nbsp;assigned&nbsp;to&nbsp;an&nbsp;environment&nbsp;variable;&nbsp;you&nbsp;must&nbsp;delete&nbsp;the&nbsp;ENV&nbsp;value&nbsp;from&nbsp;the&nbsp;image&nbsp;to&nbsp;avoid&nbsp;conflict</ANSWER>
+</QUESTION>
+
+</POLL>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="anonymous" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;namespace&nbsp;type&nbsp;provides&nbsp;isolation&nbsp;of&nbsp;a&nbsp;process&nbsp;subtree&nbsp;from&nbsp;other&nbsp;processes&nbsp;in&nbsp;a&nbsp;different&nbsp;namespace&nbsp;of&nbsp;the&nbsp;same&nbsp;type?">
+<ANSWER ISCORRECT="false">Mount&nbsp;(MNT)</ANSWER>
+<ANSWER ISCORRECT="false">UTS</ANSWER>
+<ANSWER ISCORRECT="true">PID</ANSWER>
+<ANSWER ISCORRECT="false">Network</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;namespace&nbsp;type&nbsp;provides&nbsp;separate&nbsp;hostname&nbsp;context?">
+<ANSWER ISCORRECT="false">PID</ANSWER>
+<ANSWER ISCORRECT="true">UTS</ANSWER>
+<ANSWER ISCORRECT="false">Mount&nbsp;(MNT)</ANSWER>
+<ANSWER ISCORRECT="false">Network</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;of&nbsp;the&nbsp;following&nbsp;is&nbsp;the&nbsp;command&nbsp;you&nbsp;used&nbsp;to&nbsp;clone&nbsp;one&nbsp;or&nbsp;more&nbsp;Linux&nbsp;namespaces,&nbsp;effectively&nbsp;creating&nbsp;one&nbsp;or&nbsp;more&nbsp;new&nbsp;namespaces?">
+<ANSWER ISCORRECT="false">fork</ANSWER>
+<ANSWER ISCORRECT="false">nsenter</ANSWER>
+<ANSWER ISCORRECT="false">nsupdate</ANSWER>
+<ANSWER ISCORRECT="true">unshare</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;of&nbsp;the&nbsp;following&nbsp;is&nbsp;the&nbsp;command&nbsp;you&nbsp;used&nbsp;to&nbsp;join&nbsp;a&nbsp;process&nbsp;to&nbsp;another&nbsp;pre-existing&nbsp;namespace?">
+<ANSWER ISCORRECT="false">nsupdate</ANSWER>
+<ANSWER ISCORRECT="false">unshare</ANSWER>
+<ANSWER ISCORRECT="false">fork</ANSWER>
+<ANSWER ISCORRECT="true">nsenter</ANSWER>
+</QUESTION>
+
+</POLL>

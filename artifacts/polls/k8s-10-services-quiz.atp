@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="anonymous" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;is&nbsp;the&nbsp;best&nbsp;definition&nbsp;of&nbsp;a&nbsp;Service?">
+<ANSWER ISCORRECT="true">a&nbsp;means&nbsp;of&nbsp;communicating&nbsp;to&nbsp;a&nbsp;set&nbsp;of&nbsp;pods</ANSWER>
+<ANSWER ISCORRECT="false">a&nbsp;means&nbsp;of&nbsp;scaling&nbsp;nodes&nbsp;within&nbsp;the&nbsp;cluster</ANSWER>
+<ANSWER ISCORRECT="false">a&nbsp;means&nbsp;of&nbsp;maintaining&nbsp;a&nbsp;stable&nbsp;set&nbsp;of&nbsp;pod&nbsp;replicas</ANSWER>
+<ANSWER ISCORRECT="false">a&nbsp;means&nbsp;of&nbsp;upgrading&nbsp;pods&nbsp;from&nbsp;one&nbsp;version&nbsp;to&nbsp;the&nbsp;next</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="How&nbsp;do&nbsp;you&nbsp;select&nbsp;the&nbsp;pods&nbsp;behind&nbsp;a&nbsp;Service?">
+<ANSWER ISCORRECT="false">either&nbsp;matchLabels&nbsp;or&nbsp;matchExpressions</ANSWER>
+<ANSWER ISCORRECT="true">single&nbsp;label&nbsp;key-value&nbsp;match&nbsp;only</ANSWER>
+<ANSWER ISCORRECT="false">port&nbsp;number&nbsp;matches</ANSWER>
+<ANSWER ISCORRECT="false">provide&nbsp;a&nbsp;list&nbsp;of&nbsp;IP&nbsp;addresses</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;is&nbsp;the&nbsp;default&nbsp;type&nbsp;of&nbsp;Service?">
+<ANSWER ISCORRECT="false">PodMap</ANSWER>
+<ANSWER ISCORRECT="false">NodePort</ANSWER>
+<ANSWER ISCORRECT="false">LoadBalancer</ANSWER>
+<ANSWER ISCORRECT="true">ClusterIP</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="How&nbsp;is&nbsp;the&nbsp;networking&nbsp;for&nbsp;services&nbsp;plumbed&nbsp;out?">
+<ANSWER ISCORRECT="false">kubelet</ANSWER>
+<ANSWER ISCORRECT="false">coredns</ANSWER>
+<ANSWER ISCORRECT="false">containerd</ANSWER>
+<ANSWER ISCORRECT="true">kube-proxy</ANSWER>
+</QUESTION>
+
+</POLL>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="anonymous" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcmany" TITLE="How&nbsp;are&nbsp;web&nbsp;servers&nbsp;relevant&nbsp;to&nbsp;containers&nbsp;and&nbsp;Kubernetes?">
+<ANSWER ISCORRECT="true">health&nbsp;checks&nbsp;of&nbsp;containers&nbsp;are&nbsp;usually&nbsp;based&nbsp;on&nbsp;web&nbsp;queries</ANSWER>
+<ANSWER ISCORRECT="true">metrics&nbsp;are&nbsp;often&nbsp;scraped&nbsp;from&nbsp;a&nbsp;container&nbsp;using&nbsp;a&nbsp;web&nbsp;endpoint</ANSWER>
+<ANSWER ISCORRECT="true">microservices&nbsp;are&nbsp;most&nbsp;often&nbsp;accessed&nbsp;via&nbsp;a&nbsp;web&nbsp;API&nbsp;based&nbsp;on&nbsp;XML,&nbsp;JSON,&nbsp;or&nbsp;other&nbsp;encoding</ANSWER>
+<ANSWER ISCORRECT="true">some&nbsp;containers&nbsp;host&nbsp;web&nbsp;sites&nbsp;with&nbsp;content&nbsp;based&nbsp;on&nbsp;html,&nbsp;png,&nbsp;css,&nbsp;javascript,&nbsp;etc.</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;tool&nbsp;did&nbsp;you&nbsp;use&nbsp;in&nbsp;this&nbsp;lesson&nbsp;for&nbsp;submitting&nbsp;web&nbsp;requests?">
+<ANSWER ISCORRECT="true">curl</ANSWER>
+<ANSWER ISCORRECT="false">wget</ANSWER>
+<ANSWER ISCORRECT="false">Chrome</ANSWER>
+<ANSWER ISCORRECT="false">Invoke-WebRequest</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;software&nbsp;did&nbsp;you&nbsp;use&nbsp;in&nbsp;this&nbsp;lesson&nbsp;to&nbsp;provide&nbsp;a&nbsp;fundamental&nbsp;web&nbsp;server&nbsp;role?">
+<ANSWER ISCORRECT="false">tomcat</ANSWER>
+<ANSWER ISCORRECT="false">apache</ANSWER>
+<ANSWER ISCORRECT="true">nc</ANSWER>
+<ANSWER ISCORRECT="false">nginx</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Are&nbsp;web&nbsp;servers&nbsp;magical?">
+<ANSWER ISCORRECT="false">Yes,&nbsp;web&nbsp;servers&nbsp;are&nbsp;magical</ANSWER>
+<ANSWER ISCORRECT="false">No,&nbsp;but&nbsp;web&nbsp;servers&nbsp;must&nbsp;be&nbsp;extremely&nbsp;complicated</ANSWER>
+<ANSWER ISCORRECT="false">I&nbsp;don't&nbsp;know</ANSWER>
+<ANSWER ISCORRECT="true">No,&nbsp;web&nbsp;servers&nbsp;could&nbsp;be&nbsp;either&nbsp;simple&nbsp;or&nbsp;complex</ANSWER>
+</QUESTION>
+
+</POLL>

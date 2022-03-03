@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="anonymous" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;property&nbsp;of&nbsp;a&nbsp;process&nbsp;represents&nbsp;the&nbsp;direct&nbsp;ancestor&nbsp;in&nbsp;the&nbsp;process&nbsp;hierarchy?">
+<ANSWER ISCORRECT="true">parent&nbsp;process&nbsp;ID&nbsp;(PPID)</ANSWER>
+<ANSWER ISCORRECT="false">job&nbsp;index&nbsp;(JIDX)</ANSWER>
+<ANSWER ISCORRECT="false">process&nbsp;ID&nbsp;(PID)</ANSWER>
+<ANSWER ISCORRECT="false">ancestor&nbsp;process&nbsp;ID&nbsp;(APID)</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;best&nbsp;describes&nbsp;the&nbsp;nature&nbsp;of&nbsp;Linux&nbsp;environment&nbsp;variables?">
+<ANSWER ISCORRECT="false">environment&nbsp;variables&nbsp;are&nbsp;shared&nbsp;to&nbsp;all&nbsp;processes&nbsp;in&nbsp;a&nbsp;process&nbsp;subtree&nbsp;under&nbsp;a&nbsp;shell&nbsp;or&nbsp;daemon</ANSWER>
+<ANSWER ISCORRECT="false">environment&nbsp;variables&nbsp;are&nbsp;strictly&nbsp;per-process&nbsp;and&nbsp;must&nbsp;be&nbsp;explictly&nbsp;assigned&nbsp;to&nbsp;child&nbsp;processes</ANSWER>
+<ANSWER ISCORRECT="false">environment&nbsp;variables&nbsp;are&nbsp;always&nbsp;global--shared&nbsp;across&nbsp;all&nbsp;processes&nbsp;in&nbsp;the&nbsp;OS&nbsp;instance</ANSWER>
+<ANSWER ISCORRECT="true">environment&nbsp;variable&nbsp;only&nbsp;inherit&nbsp;downward&nbsp;from&nbsp;the&nbsp;process&nbsp;they&nbsp;were&nbsp;assigned&nbsp;to&nbsp;its&nbsp;children</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Why&nbsp;are&nbsp;we&nbsp;reviewing&nbsp;processes&nbsp;before&nbsp;talking&nbsp;about&nbsp;containers&nbsp;and&nbsp;Kubernetes?">
+<ANSWER ISCORRECT="true">a&nbsp;container&nbsp;is&nbsp;made&nbsp;of&nbsp;a&nbsp;process&nbsp;subtree&nbsp;whose&nbsp;root&nbsp;process&nbsp;is&nbsp;launched&nbsp;by&nbsp;clone&nbsp;instead&nbsp;of&nbsp;fork</ANSWER>
+<ANSWER ISCORRECT="false">this&nbsp;is&nbsp;only&nbsp;background&nbsp;for&nbsp;analogy,&nbsp;containers&nbsp;are&nbsp;not&nbsp;made&nbsp;from&nbsp;processes</ANSWER>
+<ANSWER ISCORRECT="false">a&nbsp;container&nbsp;is&nbsp;just&nbsp;a&nbsp;child&nbsp;process&nbsp;underneath&nbsp;the&nbsp;container&nbsp;runtime&nbsp;process,&nbsp;like&nbsp;dockerd&nbsp;or&nbsp;kubelet</ANSWER>
+<ANSWER ISCORRECT="false">processes&nbsp;are&nbsp;always&nbsp;made&nbsp;into&nbsp;containers&nbsp;by&nbsp;fork-ing&nbsp;the&nbsp;process&nbsp;and&nbsp;then&nbsp;building&nbsp;walls&nbsp;around&nbsp;it</ANSWER>
+</QUESTION>
+
+</POLL>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="anonymous" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;way&nbsp;you&nbsp;deployed&nbsp;Kubernetes&nbsp;in&nbsp;this&nbsp;lesson?">
+<ANSWER ISCORRECT="false">minikube</ANSWER>
+<ANSWER ISCORRECT="true">kind</ANSWER>
+<ANSWER ISCORRECT="false">k3s</ANSWER>
+<ANSWER ISCORRECT="false">kubeadm</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;do&nbsp;you&nbsp;call&nbsp;the&nbsp;collection&nbsp;of&nbsp;container&nbsp;hosts&nbsp;in&nbsp;Kubernetes?">
+<ANSWER ISCORRECT="false">autoscaling&nbsp;group</ANSWER>
+<ANSWER ISCORRECT="false">mesh</ANSWER>
+<ANSWER ISCORRECT="false">farm</ANSWER>
+<ANSWER ISCORRECT="true">cluster</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;command&nbsp;you&nbsp;used&nbsp;to&nbsp;list&nbsp;the&nbsp;pods,&nbsp;nodes,&nbsp;and&nbsp;namespaces&nbsp;in&nbsp;your&nbsp;Kubernetes&nbsp;cluster?">
+<ANSWER ISCORRECT="true">kubectl</ANSWER>
+<ANSWER ISCORRECT="false">crictl</ANSWER>
+<ANSWER ISCORRECT="false">kubeadm</ANSWER>
+<ANSWER ISCORRECT="false">eksctl</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;of&nbsp;these&nbsp;is&nbsp;the&nbsp;best&nbsp;description&nbsp;of&nbsp;a&nbsp;Kubernetes&nbsp;namespace?">
+<ANSWER ISCORRECT="false">A&nbsp;Kubernetes&nbsp;namespace&nbsp;is&nbsp;a&nbsp;folder&nbsp;on&nbsp;your&nbsp;host&nbsp;server&nbsp;where&nbsp;you&nbsp;save&nbsp;YAML&nbsp;manfiest&nbsp;files</ANSWER>
+<ANSWER ISCORRECT="true">A&nbsp;Kubernetes&nbsp;namespace&nbsp;is&nbsp;a&nbsp;logical&nbsp;administrative&nbsp;subdivision&nbsp;of&nbsp;your&nbsp;cluster</ANSWER>
+<ANSWER ISCORRECT="false">A&nbsp;Kubernetes&nbsp;namespace&nbsp;is&nbsp;a&nbsp;subnet&nbsp;within&nbsp;your&nbsp;cluster&nbsp;where&nbsp;you&nbsp;assign&nbsp;pods&nbsp;to&nbsp;run</ANSWER>
+<ANSWER ISCORRECT="false">A&nbsp;Kubernetes&nbsp;namespace&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;a&nbsp;Linux&nbsp;namespace;&nbsp;they&nbsp;are&nbsp;synonyms</ANSWER>
+</QUESTION>
+
+</POLL>

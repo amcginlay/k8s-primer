@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="anonymous" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;type&nbsp;of&nbsp;file&nbsp;did&nbsp;you&nbsp;use&nbsp;as&nbsp;the&nbsp;recipe&nbsp;to&nbsp;build&nbsp;a&nbsp;container&nbsp;image?">
+<ANSWER ISCORRECT="false">Makefile</ANSWER>
+<ANSWER ISCORRECT="false">CloudFormation&nbsp;template&nbsp;(JSON&nbsp;or&nbsp;YAML)</ANSWER>
+<ANSWER ISCORRECT="false">CodeBuild&nbsp;buildspec.yml</ANSWER>
+<ANSWER ISCORRECT="true">Dockerfile</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Which&nbsp;is&nbsp;the&nbsp;most&nbsp;accurate&nbsp;relationship&nbsp;between&nbsp;the&nbsp;demo&nbsp;container&nbsp;image&nbsp;you&nbsp;built&nbsp;and&nbsp;other&nbsp;images?">
+<ANSWER ISCORRECT="false">Container&nbsp;images&nbsp;are&nbsp;always&nbsp;built&nbsp;without&nbsp;dependencies&nbsp;on&nbsp;other&nbsp;images</ANSWER>
+<ANSWER ISCORRECT="false">My&nbsp;container&nbsp;image&nbsp;was&nbsp;built&nbsp;from&nbsp;scratch,&nbsp;not&nbsp;based&nbsp;on&nbsp;another&nbsp;image</ANSWER>
+<ANSWER ISCORRECT="true">My&nbsp;container&nbsp;image&nbsp;was&nbsp;built&nbsp;with&nbsp;a&nbsp;dependency&nbsp;on&nbsp;another&nbsp;existing&nbsp;image</ANSWER>
+<ANSWER ISCORRECT="false">Container&nbsp;images&nbsp;are&nbsp;always&nbsp;built&nbsp;relative&nbsp;to&nbsp;the&nbsp;operating&nbsp;system&nbsp;of&nbsp;the&nbsp;host</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;part&nbsp;of&nbsp;the&nbsp;container&nbsp;image&nbsp;is&nbsp;demo&nbsp;or&nbsp;php?">
+<ANSWER ISCORRECT="true">repository</ANSWER>
+<ANSWER ISCORRECT="false">image&nbsp;ID</ANSWER>
+<ANSWER ISCORRECT="false">size</ANSWER>
+<ANSWER ISCORRECT="false">tag</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;part&nbsp;of&nbsp;the&nbsp;container&nbsp;image&nbsp;is&nbsp;1.0.0&nbsp;or&nbsp;8.0.1-apache?">
+<ANSWER ISCORRECT="false">repository</ANSWER>
+<ANSWER ISCORRECT="false">size</ANSWER>
+<ANSWER ISCORRECT="true">tag</ANSWER>
+<ANSWER ISCORRECT="false">image&nbsp;ID</ANSWER>
+</QUESTION>
+
+</POLL>
