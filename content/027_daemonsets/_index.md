@@ -246,6 +246,8 @@ demo-daemon-pw67k   1/1     Running   0          23m   10.244.3.3   kind-worker 
 It may take a few seconds before pods settle into a `Running` state.
 {{% /notice %}}
 
+As you can see, the pod which was previously running on `kind-worker3` is gone. It was **evicted** as it was unable to tolerate the new taint.
+
 {{% notice tip %}}
 For future reference, **untainting** is achieved by appending a single hyphen symbol to the previous `taint` command, i.e. `kubectl taint nodes kind-worker3 VIPOnly=true:NoExecute-`.
 {{% /notice %}}

@@ -58,10 +58,7 @@ env_id=$(
 
 {{% notice note %}}
 NOTE: The assignment of `subnet_id` here assumes that you have a *Default VPC* in the default region with a subnet in availability zone `a`.
-If this is not the case, either:
-- use an alternative region which still has a *Default VPC*
-- or use a different account with a *Default VPC* in `us-west-2`
-- or modify the subnet query accordingly to choose an adequate subnet for the Cloud9 instance.
+If this is not the case, either: a) use an alternative region which still has a *Default VPC* or b) use a different account with a *Default VPC* in `us-west-2` or c) modify the subnet query accordingly to choose an adequate subnet for the Cloud9 instance.
 {{% /notice %}}
 
 ## Configure your Cloud9 environment
