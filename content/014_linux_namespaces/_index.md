@@ -634,7 +634,7 @@ shuffle_questions: false
 
 ## Process Isolation
 
-Which namespace type provides isolation of a process subtree from other processes a different namespace of the same type?
+Which namespace type provides isolation of a process subtree from other processes in a different namespace of the same type?
 
 > You used the `ps` command to confirm the namespaces were distinct.
 

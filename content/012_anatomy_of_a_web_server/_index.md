@@ -441,7 +441,7 @@ In this exercise you did the following:
 
 1. Investigated the structure of a regular text file
 1. Witnessed how the operating system can treat physical devices like the keyboard and the terminal screen as device files that can be read from or written to respectively
-1. Delved into how the `cat` command can utilise local device files
+1. Delved into how the `cat` command can utilize local device files
 1. Saw how the TCP protocol allows you to also treat running processes as device files.
 1. Used `netcat` (or `ncat`, or `nc`) to create a running process which blocks on a specified port until a valid TCP request is received
 1. Built a simple web server for serving a static HTML page.
