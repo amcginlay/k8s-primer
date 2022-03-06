@@ -67,6 +67,7 @@ Each shell instance is a process like any other and each possesses a [process id
 echo $$
 ```
 
+Example output:
 {{< output >}}
 5831
 {{< /output >}}
@@ -85,7 +86,7 @@ Upon repeat invocations its response is consistent but will differ between any `
 ps -f
 ```
 
-Which produces something like this.
+Example output:
 {{< output >}}
 UID          PID    PPID  C STIME TTY          TIME CMD
 ec2-user    5830    5829  0 14:26 pts/1    00:00:00 bash -c export ISOUTPUTPANE=0;bash -l
@@ -148,6 +149,7 @@ echo $$
 ps -f
 ```
 
+Example output:
 {{< output >}}
 48558
 UID          PID    PPID  C STIME TTY          TIME CMD
@@ -166,6 +168,7 @@ Observe that the PPID of your current shell matches the PID of its originating s
 echo ${K8S_PRIMER}
 ```
 
+Example output:
 {{< output >}}
 before
 {{< /output >}}
@@ -177,6 +180,7 @@ K8S_PRIMER=after
 echo ${K8S_PRIMER}
 ```
 
+Example output:
 {{< output >}}
 after
 {{< /output >}}
@@ -208,6 +212,7 @@ echo $$                      # back in the original shell
 echo ${K8S_PRIMER}
 ```
 
+Example output:
 {{< output >}}
 5831
 before
