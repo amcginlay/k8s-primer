@@ -274,7 +274,7 @@ NAME   ENDPOINTS                                   AGE
 demo   10.244.1.3:80,10.244.2.3:80,10.244.3.3:80   92m
 {{< /output >}}
 
-{{< step >}}Quickly scale in your `demo` deployment from 3 replicas to 2 pods using a generator.{{< /step >}}
+{{< step >}}Quickly scale in your `demo` deployment from 3 replicas to 2 using a generator.{{< /step >}}
 
 ```bash
 kubectl -n dev scale deployment demo --replicas 2 # look mum, no manifest!

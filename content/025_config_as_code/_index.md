@@ -149,8 +149,6 @@ In *processes*, and therefore the *containers* that contain them, values of envi
 Because the pod's container was not restarted it is still running with the old value.
 {{% /notice %}}
 
-As shown previously, it is possible to force a restart by killing PID 1 from inside the pod.
-
 {{< step >}}Restart your pod.{{< /step >}}
 
 ```bash
@@ -357,7 +355,7 @@ This will be significant not only for your Kubernetes manifests you write from s
 Before we move on, reflect upon why this separation of code from config is desirable.
 
 Your namespaces could be used to represent different environments (e.g. `dev` or `test`) and the apps which run there would, for example, connect to environment-specific database instances.
-When you bind to a configmap to a pod's container it will seek a named object (e.g. `connection-strings`) located in its **own** namespace since it has no further visibility.
+When you bind a configmap to a pod's container it will seek a named object (e.g. `connection-strings`) located in its **own** namespace since it has no further visibility.
 This means **identical** pod definitions, deployed to separate namespaces, could bind to configmaps of the same name but with environment specific contents.
 
 ## Success

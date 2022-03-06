@@ -119,6 +119,7 @@ Docker provides a local cache feature so it can make efficient re-use of downloa
 Cloud9 pre-loads the cache with images we will not need in this tutorial.
 {{< step >}}Flush out the container image cache as follows.{{< /step >}}
 ```bash
+for i in $(docker ps -q); do docker kill $i; done
 docker system prune --all --force
 ```
 

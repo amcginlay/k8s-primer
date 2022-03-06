@@ -225,7 +225,7 @@ If you just created your Kubernetes cluster with `kind`, but have not yet deploy
 
 {{< step >}}Get a list of the pods running in *all* namespaces in your cluster.{{< /step >}}
 ```bash
-kubectl get pods -A
+kubectl get pods --all-namespaces # or -A for short
 ```
 
 {{< output >}}
