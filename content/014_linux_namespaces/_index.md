@@ -1,5 +1,5 @@
 ---
-title: "Linux Namespaces"
+title: "4. Linux Namespaces"
 chapter: false
 weight: 14
 draft: false

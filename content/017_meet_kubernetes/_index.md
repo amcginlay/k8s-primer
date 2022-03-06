@@ -1,5 +1,5 @@
 ---
-title: "Meet Kubernetes"
+title: "7. Meet Kubernetes"
 chapter: false
 weight: 17
 draft: false

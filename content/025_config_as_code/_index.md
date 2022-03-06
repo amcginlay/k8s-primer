@@ -1,5 +1,5 @@
 ---
-title: "Configuration As Code"
+title: "11. Configuration As Code"
 chapter: false
 weight: 25
 draft: false

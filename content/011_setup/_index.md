@@ -1,5 +1,5 @@
 ---
-title: "Setup"
+title: "1. Setup"
 chapter: false
 weight: 11
 draft: false
