@@ -111,6 +111,23 @@ Although we didn't provide many fancy options for `kind create cluster` beyond t
 
 You have successfully installed the `kind` software in your Cloud9 instance and used it to create Kubernetes cluster based on `kind` - running the Kubernetes cluster components within containers on your Cloud9 instance. You can now use this Kubernetes cluster to create and manage other containers which run your app and microservice component workloads.
 
+## The different kind
+
+Kubernetes refers to its compute resources as nodes.
+This terminology is intentionally oblique.
+One might be inclined to think the term node is synonymous with VM, and most of the time it is, but Kubernetes abstracts away these implementation details to the point where it rarely matters.
+This means, for example, an application designed on a `minikube` cluster can be re-deployed on a cluster built upon an entirely different cloud provider or infrastructure type, with little or no modifications.
+
+`kind` is a our tool of choice for building Kubernetes clusters today.
+When compared to production-ready distributions it is something of an outlier in that it fabricates its nodes not from VMs, but from Docker containers.
+This means you can run your entire learning environment in a single, cost-effective (Cloud9) VM.
+Exactly how this feat is achieved is not really relevant.
+What matters is that you see nodes for what they are - a collection of arbitrary compute resources.
+
+If you have encountered a full blooded Kubernetes distribution in the past (e.g. EKS) then the following diagram may help clarify why your cluster, albeit complete, feels a little under-weight.
+
+![kind-vs-eks](/images/meet-kubernetes/kind-vs-eks.png)
+
 ## Install the CLI tool
 
 Among the [tools for Kubernetes](https://kubernetes.io/docs/tasks/tools/) there are some which manage the infrastructure and others which manage the **workloads** *inside*.
