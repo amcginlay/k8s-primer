@@ -1,5 +1,5 @@
 ---
-title: "Running at Scale"
+title: "9. Running at Scale"
 chapter: false
 weight: 21
 draft: false
@@ -235,6 +235,12 @@ pod/demo-658bfb548-8hjkx   1/1     Running   0          3m32s
 pod/demo-658bfb548-nrhjv   1/1     Running   0          3m58s
 pod/demo-658bfb548-rw7x6   1/1     Running   0          3m58s
 {{< /output >}}
+
+{{% notice note %}}
+`kubectl` is full of what are referred to as **shortnames**.
+For example, the previous command could be compressed down to `kubectl -n dev get deploy,rs,po`.
+If you're curious to discover more **shortnames**, try `kubectl api-resources`.
+{{% /notice %}}
 
 You have now successfully updated your `Deployment` to publish three replica pods.
 

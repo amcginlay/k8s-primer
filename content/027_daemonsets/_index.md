@@ -1,5 +1,5 @@
 ---
-title: "DaemonSets"
+title: "12. DaemonSets"
 chapter: false
 weight: 27
 draft: false

@@ -1,5 +1,5 @@
 ---
-title: "Anatomy Of A Web Server"
+title: "2. Anatomy Of A Web Server"
 chapter: false
 weight: 12
 draft: false
@@ -42,6 +42,10 @@ Using [output redirection](https://en.wikipedia.org/wiki/Redirection_(computing)
 {{% notice note %}}
 All commands in snippet boxes, like the one below, should be entered into a Cloud9 terminal session.
 {{% /notice %}}
+
+{{< step >}}
+Enter this command into a terminal session.
+{{< /step >}}
 ```bash
 cat /etc/hosts               # <--- without output redirection, file contents will default to /dev/stdout
 cat /etc/hosts > /dev/stdout # <--- with output redirection, causing the exact same result
@@ -53,7 +57,10 @@ It reveals the mapping between the hostname [`localhost`](https://en.wikipedia.o
 {{% /notice %}}
 
 But what happens when you do not provide an argument to the `cat` command?
+
+{{< step >}}
 Try it out and see for yourself.
+{{< /step >}}
 ```bash
 cat
 ```
@@ -69,6 +76,10 @@ When done, hit `Ctrl+D` to regain your command prompt.
 This keyboard shortcut represents the invisible [end-of-file (EOF)](https://en.wikipedia.org/wiki/End-of-Transmission_character) marker we discussed earlier.
 
 Before moving on you may also like to observe how, with the help of the `<<<` syntax (known as a [here-string](https://en.wikipedia.org/wiki/Here_document#Here_strings)), you can get Linux to treat a string as an anonymous single-line text file.
+
+{{< step >}}
+Try using a **here-string** as follows.
+{{< /step >}}
 ```bash
 cat <<< "test"
 ```
@@ -82,7 +93,11 @@ Using a here-string causes `cat` to mimic the standard behavior of the familiar 
 Until now, you have been limited to using a single `cat` process to interact with strings, local files and device files.
 The [TCP protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) allows you to use pairs of network-enabled processes to communicate with each other as it they were themselves device files.
 
-To see this in action we need a network enabled version of `cat` known as [netcat](https://en.wikipedia.org/wiki/Netcat) (alternatively `ncat`, or simply `nc`) which you can install on your Cloud9 instance as follows.
+To see this in action we need a network enabled version of `cat` known as [netcat](https://en.wikipedia.org/wiki/Netcat) (alternatively `ncat`, or simply `nc`) which you can install on your Cloud9 instance.
+
+{{< step >}}
+Install netcat as follows.
+{{< /step >}}
 ```bash
 sudo yum install -y nc
 ```
@@ -92,7 +107,10 @@ The following steps will utilise a **pair** of concurrent Cloud9 terminal sessio
 ![shell-one-two](/images/process/shell-one-two.png)
 
 TCP-enabled processes are accessible as device files at `/dev/tcp` and utilizing them is no more complex than before.
+
+{{< step >}}
 Observe how `nc` sits down on port 8000 and will, much like a solitary `cat` command, block until a single write operation (i.e. **request**) is received.
+{{< /step >}}
 {{< columns >}}
 {{% column %}}
 ```bash
@@ -108,7 +126,7 @@ cat <<< "request" > /dev/tcp/127.0.0.1/8000
 {{% /column %}}
 {{< /columns >}}
 
-Which produces.
+Example output:
 {{< columns >}}
 {{< column >}}
 {{< output >}}
@@ -127,8 +145,9 @@ It means everything worked and nothing untoward happened.
 In the world of Linux, **no news is usually good news!**
 {{% /notice %}}
 
-
+{{< step >}}
 Do that again, this time putting the `SERVER` into a loop so it can handle subsequent requests.
+{{< /step >}}
 {{< columns >}}
 {{% column %}}
 ```bash
@@ -139,15 +158,15 @@ while true; do nc --listen 8000; done
 {{% column %}}
 ```bash
 # CLIENT
-cat <<< "request 1" > /dev/tcp/127.0.0.1/8000
-echo "request 2" > /dev/tcp/127.0.0.1/8000
-nc 127.0.0.1 8000 <<< "request 3"
+cat <<< "request 1" > /dev/tcp/127.0.0.1/8000 && sleep 1
+echo "request 2" > /dev/tcp/127.0.0.1/8000 && sleep 1
+nc 127.0.0.1 8000 <<< "request 3" && sleep 1
 nc localhost 8000 <<< "request 4"
 ```
 {{% /column %}}
 {{< /columns >}}
 
-Which produces.
+Example output:
 {{< columns >}}
 {{< column >}}
 {{< output >}}
@@ -172,7 +191,9 @@ In the final request, `nc` was able to resolve the IP address for the hostname `
 Hit [`Ctrl+C`](https://en.wikipedia.org/wiki/End-of-Text_character) in the `SERVER` session to break the loop and regain your prompt.
 
 You have just seen how the `CLIENT` can perform write operations against the `SERVER`.
-Now observe how, with a small adjustment, the `SERVER` can be configured to write back a response. 
+{{< step >}}
+Now observe how, with a small adjustment, the `SERVER` can be configured to write back a response.
+{{< /step >}}
 {{< columns >}}
 {{% column %}}
 ```bash
@@ -188,7 +209,7 @@ nc localhost 8000 <<< "request"
 {{% /column %}}
 {{< /columns >}}
 
-Which produces.
+Example output:
 {{< columns >}}
 {{< column >}}
 {{< output >}}
@@ -204,8 +225,10 @@ response
 
 You now have a bi-directional, text-based communications channel between two processes.
 You are halfway towards building a functioning web server, but that requires us to observe the [HTTP protocol](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol).
-The [curl](https://en.wikipedia.org/wiki/CURL) command can be used to transmit HTTP requests so, with the `SERVER` still running, give it a spin in the `CLIENT` and see what happens.
 
+{{< step >}}
+The [curl](https://en.wikipedia.org/wiki/CURL) command can be used to transmit HTTP requests so, with the `SERVER` still running, give it a spin in the `CLIENT` and see what happens.
+{{< /step >}}
 {{< columns >}}
 {{% column %}}
 ```bash
@@ -220,7 +243,7 @@ curl http://localhost:8000
 {{% /column %}}
 {{< /columns >}}
 
-Which produces.
+Example output:
 {{< columns >}}
 {{< column >}}
 {{< output >}}
@@ -242,7 +265,10 @@ The `SERVER` side dumped the plain-text lines transmitted to it by the `curl` co
 On the `CLIENT` side, the `curl` command was expecting the `SERVER` to abide by the rules of the HTTP protocol and respond accordingly.
 As this was not the case `curl` **errored** but, since the protocol is text-based, we can fabricate a compatible response and try again.
 
-Hit [`Ctrl+C`](https://en.wikipedia.org/wiki/End-of-Text_character) in the `SERVER` session to break the loop and try the following.
+Hit [`Ctrl+C`](https://en.wikipedia.org/wiki/End-of-Text_character) in the `SERVER` session to break the loop.
+{{< step >}}
+Now try the following.
+{{< /step >}}
 {{< columns >}}
 {{% column %}}
 ```bash
@@ -258,7 +284,7 @@ curl http://localhost:8000
 {{% /column %}}
 {{< /columns >}}
 
-Which produces.
+Example output:
 {{< columns >}}
 {{< column >}}
 {{< output >}}
@@ -281,7 +307,10 @@ There is no longer a failure in the `curl` command (remember, no news is good ne
 Pass the `--verbose` switch to `curl` if you wish to see proof that the 200 status code was consumed by the `CLIENT`.
 {{% /notice %}}
 
-Your `CLIENT` (i.e. curl) expects web servers to provide a response in the form of an [HTTP body](https://en.wikipedia.org/wiki/HTTP_message_body) so try sending back a multi-line response.
+Your `CLIENT` (i.e. curl) expects web servers to provide a response in the form of an [HTTP body](https://en.wikipedia.org/wiki/HTTP_message_body).
+{{< step >}}
+Try sending back the a multi-line response so the `curl` command on the `CLIENT` will output the full body of the response.
+{{< /step >}}
 {{< columns >}}
 {{% column %}}
 ```bash
@@ -304,12 +333,7 @@ curl http://localhost:8000
 {{% /column %}}
 {{< /columns >}}
 
-{{% notice warning %}}
-Do not remove the empty line between the lines which read `HTTP/1.1 200 OK` and `multi-line`.
-The empty line signifies the separation of header and body, which is a requirement in the HTTP protocol.
-{{% /notice %}}
-
-Now the `curl` command on the `CLIENT` will output the body of the response.
+Example output:
 {{< columns >}}
 {{< column >}}
 {{< output >}}
@@ -327,9 +351,17 @@ response
 {{< /column >}}
 {{< /columns >}}
 
+{{% notice warning %}}
+Do not remove the empty line between the lines which read `HTTP/1.1 200 OK` and `multi-line`.
+The empty line signifies the separation of header and body, which is a requirement in the HTTP protocol.
+{{% /notice %}}
+
 ## Deploy a simple web server
 
-Finally, to show how a a web server would would serve up a single static web page in the wild, try the following.
+Finally, you can see how a a web server would would serve up a single static web page in the wild.
+{{< step >}}
+Try the following.
+{{< /step >}}
 {{< columns >}}
 {{% column %}}
 ```bash
@@ -354,7 +386,7 @@ curl http://localhost:8000/tada.html
 {{% /column %}}
 {{< /columns >}}
 
-Which produces.
+Example output:
 {{< columns >}}
 {{< column >}}
 {{< output >}}
