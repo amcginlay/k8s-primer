@@ -183,6 +183,14 @@ class Control-plane blue;
 class Data-plane green;
 {{< /mermaid >}}
 
+### Further reading
+
+You can move on to [the magic of `kubeconfig`](#the-magic-of-kubeconfig), or take a few moments to read some additional details of:
+- [Kubernetes cluster architecture]({{< ref "appendix/701_k8s_arch" >}})
+- [KinD and Amazon EKS]({{< ref "appendix/702_kind_eks" >}})
+
+## The magic of `kubeconfig`
+
 So you created a local cluster and installed the CLI.
 Then, as if by magic, you successfully established a line of communication between them.
 How did the CLI know where the cluster endpoint (or [Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/)) was located?
