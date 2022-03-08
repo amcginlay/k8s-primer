@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="named" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcone" TITLE="On&nbsp;a&nbsp;scale&nbsp;of&nbsp;1-5&nbsp;(5&nbsp;being&nbsp;comprehensive)&nbsp;-&nbsp;what's&nbsp;your&nbsp;experience&nbsp;level&nbsp;with&nbsp;AWS?">
+<ANSWER ISCORRECT="false">1&nbsp;-&nbsp;Minimal&nbsp;or&nbsp;No&nbsp;Knowledge</ANSWER>
+<ANSWER ISCORRECT="false">2&nbsp;-&nbsp;Some&nbsp;Experience&nbsp;(Weeks&nbsp;-&nbsp;Months)</ANSWER>
+<ANSWER ISCORRECT="false">3&nbsp;-&nbsp;Medium&nbsp;experience&nbsp;(Months)</ANSWER>
+<ANSWER ISCORRECT="false">4&nbsp;-&nbsp;High&nbsp;-&nbsp;Years&nbsp;of&nbsp;experience&nbsp;with&nbsp;a&nbsp;variety&nbsp;of&nbsp;services</ANSWER>
+<ANSWER ISCORRECT="false">5&nbsp;-&nbsp;Very&nbsp;High&nbsp;-&nbsp;Years&nbsp;of&nbsp;deep&nbsp;experience&nbsp;with&nbsp;a&nbsp;broad&nbsp;variety&nbsp;of&nbsp;services</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="On&nbsp;a&nbsp;scale&nbsp;of&nbsp;1-5&nbsp;(5&nbsp;being&nbsp;comprehensive)&nbsp;-&nbsp;What's&nbsp;your&nbsp;experience&nbsp;level&nbsp;with&nbsp;Docker&nbsp;and&nbsp;building&nbsp;Container&nbsp;Images?">
+<ANSWER ISCORRECT="false">1&nbsp;-&nbsp;Minimal&nbsp;or&nbsp;No&nbsp;Knowledge</ANSWER>
+<ANSWER ISCORRECT="false">2&nbsp;-&nbsp;Some&nbsp;experience&nbsp;(Weeks&nbsp;-&nbsp;Months)</ANSWER>
+<ANSWER ISCORRECT="false">3&nbsp;-&nbsp;Medium&nbsp;experience&nbsp;(Months)</ANSWER>
+<ANSWER ISCORRECT="false">4&nbsp;-&nbsp;High&nbsp;-&nbsp;Years&nbsp;of&nbsp;experience</ANSWER>
+<ANSWER ISCORRECT="false">5&nbsp;-&nbsp;Very&nbsp;High&nbsp;-&nbsp;Years&nbsp;of&nbsp;deep&nbsp;experience&nbsp;with&nbsp;various&nbsp;aspects&nbsp;of&nbsp;containers</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Rate&nbsp;your&nbsp;GENERAL&nbsp;KNOWLEDGE&nbsp;of&nbsp;Kubernetes&nbsp;concepts&nbsp;(whether&nbsp;specific&nbsp;to&nbsp;AWS,&nbsp;on-premises,&nbsp;or&nbsp;other&nbsp;cloud&nbsp;provider)&nbsp;on&nbsp;a&nbsp;scale&nbsp;of&nbsp;1-5&nbsp;(5&nbsp;Being&nbsp;High)">
+<ANSWER ISCORRECT="false">1&nbsp;-&nbsp;No&nbsp;Knowledge&nbsp;-&nbsp;Brand&nbsp;new&nbsp;to&nbsp;Kubernetes</ANSWER>
+<ANSWER ISCORRECT="false">2&nbsp;-&nbsp;Some&nbsp;Knowledge&nbsp;-&nbsp;Understand&nbsp;basic&nbsp;concepts&nbsp;and&nbsp;benefits</ANSWER>
+<ANSWER ISCORRECT="false">3&nbsp;-&nbsp;Work&nbsp;with&nbsp;apps&nbsp;running&nbsp;via&nbsp;Kubernetes&nbsp;regularly&nbsp;(Pods,&nbsp;Deployments,&nbsp;Services,&nbsp;DaemonSets,&nbsp;etc.)</ANSWER>
+<ANSWER ISCORRECT="false">4&nbsp;-&nbsp;Administrative&nbsp;responsibilities&nbsp;for&nbsp;designing&nbsp;and&nbsp;implementing&nbsp;Kubernetes&nbsp;clusters&nbsp;regularly</ANSWER>
+<ANSWER ISCORRECT="false">5&nbsp;-&nbsp;k8s&nbsp;customization&nbsp;and&nbsp;extensibility&nbsp;-&nbsp;I&nbsp;write&nbsp;and&nbsp;implement&nbsp;CRDs,&nbsp;Operators,&nbsp;etc.</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcmany" TITLE="The&nbsp;systems&nbsp;I&nbsp;work&nbsp;with&nbsp;currently&nbsp;run&nbsp;(Choose&nbsp;all&nbsp;that&nbsp;apply):">
+<ANSWER ISCORRECT="false">on&nbsp;EC2&nbsp;Instances&nbsp;-&nbsp;or&nbsp;other&nbsp;virtual&nbsp;server&nbsp;in&nbsp;the&nbsp;cloud</ANSWER>
+<ANSWER ISCORRECT="false">Containerized&nbsp;-&nbsp;on&nbsp;EKS,&nbsp;ECS,&nbsp;or&nbsp;other&nbsp;Container&nbsp;Orchestrator</ANSWER>
+<ANSWER ISCORRECT="false">Serverless&nbsp;-&nbsp;via&nbsp;FaaS&nbsp;(Functions&nbsp;as&nbsp;a&nbsp;Service)&nbsp;such&nbsp;as&nbsp;AWS&nbsp;Lambda&nbsp;or&nbsp;similar</ANSWER>
+<ANSWER ISCORRECT="false">Off-Cloud&nbsp;/&nbsp;On-Premises&nbsp;(Your&nbsp;own&nbsp;data&nbsp;center,&nbsp;co-located&nbsp;data&nbsp;center,&nbsp;etc.)</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcmany" TITLE="The&nbsp;systems&nbsp;I&nbsp;work&nbsp;with&nbsp;run&nbsp;(Choose&nbsp;all&nbsp;that&nbsp;apply):">
+<ANSWER ISCORRECT="false">Windows&nbsp;(Any&nbsp;version)</ANSWER>
+<ANSWER ISCORRECT="false">Linux&nbsp;/&nbsp;Unix&nbsp;(Any&nbsp;distribution)</ANSWER>
+<ANSWER ISCORRECT="false">macOS&nbsp;(Any&nbsp;version)</ANSWER>
+<ANSWER ISCORRECT="false">Other&nbsp;(AS/400,&nbsp;Mainframe,&nbsp;etc.)</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="What&nbsp;do&nbsp;you&nbsp;most&nbsp;want&nbsp;to&nbsp;get&nbsp;out&nbsp;of&nbsp;this&nbsp;course?">
+</QUESTION>
+
+</POLL>

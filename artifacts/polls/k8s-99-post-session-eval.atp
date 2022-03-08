@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<POLL TYPE="anonymous" SHOWTIMER="yes" ALARM="5:0" NOANSWER="yes" SHOWRESPONSE="yes">
+
+<QUESTION TYPE="mcone" TITLE="So&nbsp;we&nbsp;know&nbsp;how&nbsp;to&nbsp;improve&nbsp;future&nbsp;editions&nbsp;of&nbsp;this&nbsp;course,&nbsp;please&nbsp;provide&nbsp;a&nbsp;score&nbsp;for&nbsp;each&nbsp;chapter:&nbsp;Module&nbsp;1.&nbsp;Setup&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="chapter&nbsp;score:&nbsp;Module&nbsp;2.&nbsp;Anatomy&nbsp;of&nbsp;a&nbsp;Web&nbsp;Server&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="chapter&nbsp;score:&nbsp;Module&nbsp;3.&nbsp;Anatomy&nbsp;of&nbsp;a&nbsp;Process&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="chapter&nbsp;score:&nbsp;Module&nbsp;4.&nbsp;Linux&nbsp;Namespaces&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="chapter&nbsp;score:&nbsp;Module&nbsp;5.&nbsp;Build&nbsp;Containers&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="chapter&nbsp;score:&nbsp;Module&nbsp;6.&nbsp;Run&nbsp;Containers&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="chapter&nbsp;score:&nbsp;Module&nbsp;7.&nbsp;Meet&nbsp;Kubernetes&nbsp;&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="chapter&nbsp;score:&nbsp;Module&nbsp;8.&nbsp;Orchestrate&nbsp;Containers&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="chapter&nbsp;score:&nbsp;Module&nbsp;9.&nbsp;Running&nbsp;at&nbsp;Scale&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="chapter&nbsp;score:&nbsp;Module&nbsp;10.&nbsp;Services&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="chapter&nbsp;score:&nbsp;Module&nbsp;11.&nbsp;Configuration&nbsp;as&nbsp;Code&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="chapter&nbsp;score:&nbsp;Module&nbsp;12.&nbsp;DaemonSets&nbsp;(1=lowest,&nbsp;5&nbsp;=&nbsp;highest)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="Overall,&nbsp;how&nbsp;satisfied&nbsp;are&nbsp;you&nbsp;with&nbsp;this&nbsp;course?&nbsp;(5=most&nbsp;satisfied,&nbsp;1=least)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="text" TITLE="What&nbsp;did&nbsp;you&nbsp;like&nbsp;most&nbsp;about&nbsp;the&nbsp;course?&nbsp;(5=most&nbsp;satisfied,&nbsp;1=least)">
+</QUESTION>
+
+<QUESTION TYPE="text" TITLE="What&nbsp;would&nbsp;you&nbsp;recommend&nbsp;changing&nbsp;about&nbsp;this&nbsp;course?&nbsp;(5=most&nbsp;satisfied,&nbsp;1=least)">
+<ANSWER ISCORRECT="true">1;2;3;4;5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="The&nbsp;course&nbsp;was&nbsp;presented&nbsp;in&nbsp;a&nbsp;clear&nbsp;and&nbsp;logical&nbsp;manner&nbsp;(5=most&nbsp;clear,&nbsp;1=least)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="The&nbsp;instructor&nbsp;was&nbsp;knowledgeable&nbsp;in&nbsp;the&nbsp;subject&nbsp;matter&nbsp;(5=most&nbsp;knowledgeable,&nbsp;1=least)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="The&nbsp;instructor&nbsp;was&nbsp;available&nbsp;to&nbsp;answer&nbsp;questions&nbsp;(5=most&nbsp;available,&nbsp;1=least)">
+<ANSWER ISCORRECT="false">1</ANSWER>
+<ANSWER ISCORRECT="false">2</ANSWER>
+<ANSWER ISCORRECT="false">3</ANSWER>
+<ANSWER ISCORRECT="false">4</ANSWER>
+<ANSWER ISCORRECT="false">5</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="mcone" TITLE="To&nbsp;what&nbsp;extent&nbsp;do&nbsp;you&nbsp;feel&nbsp;better&nbsp;equipped&nbsp;to&nbsp;tackle&nbsp;EKS">
+<ANSWER ISCORRECT="false">less&nbsp;equipped</ANSWER>
+<ANSWER ISCORRECT="false">no&nbsp;better</ANSWER>
+<ANSWER ISCORRECT="false">slightly&nbsp;better</ANSWER>
+<ANSWER ISCORRECT="false">moderately&nbsp;better</ANSWER>
+<ANSWER ISCORRECT="false">much&nbsp;better&nbsp;equipped</ANSWER>
+</QUESTION>
+
+<QUESTION TYPE="text" TITLE="Additional&nbsp;comments">
+</QUESTION>
+
+</POLL>
