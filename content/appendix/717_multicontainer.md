@@ -1,7 +1,7 @@
 ---
 title: "Multicontainer Pods"
 chapter: false
-weight: 716
+weight: 717
 draft: false
 ---
 
@@ -11,13 +11,55 @@ In the [Pod Infrastructure lesson]({{< ref "appendix/714_pod" >}}), you created 
 
 Hopefully you learned:
 - each container has its own `pid` and `mnt` namespaces
-- Kubernetes adds a pause container to each of your pods
+- Kubernetes adds a `pause` container to each of your pods
 - each pod has its own `net`, `uts`, and `ipc` namespaces
 
-But when you use `kubectl get pods -n dev` or `kubectl describe pod -n dev demopod` to shows
-Thus, when we 
+In the [Pause Containers lesson]({{< ref "appendix/715_pause" >}}), you created another pod and invesigated the purpose of the pause container in each pod.
+- the `pause` container retains the consistent network configuration of the pod
+- your individual app containers can start, restart, or terminate within the pod lifecycle
+- `kubectl get pod` does not count the `pause` container in the running/desired container count
+- `kubectl describe pod` does not list the `pause` container
 
-%%%
+In the [brief interlude on Init Containers]({{< ref "appendix/716_initcontainer" >}}), we pointed out that:
+- init containers run before you app containers
+- when we talk about ***multicontainer pods*** we are explicitly not counting pause and init containers in the "muliti-" aspect of that
+
+When we say "multicontainer pods" we mean multiple simultaneous parallel app containers in the same pod.
+In other words, multiple **app* containers.
+
+## Purpose
+
+Singleton pods which run one-container-per-pod (not counting `pause`) are *quite common* in Kubernetes.
+In many people's experience, one-container-pods account for the *vast majority* of pods, if not nearly *all*.
+
+However, there are several scenarios in which you may want to run more than one container per pod.
+
+Imagine that the **main** app container is like the star of a movie. 
+They're the one with their name on the poster, in lights on the marquee, and central to the plot.
+
+The additional app containers are like the supporting cast. They help out the main character.
+
+When Kubernetes was younger, circa 2015, some people [distinguished three varieties of helper containers](https://kubernetes.io/blog/2015/06/the-distributed-system-toolkit-patterns/):
+- [**Sidecar** containers](https://kubernetes.io/blog/2015/06/the-distributed-system-toolkit-patterns/#example-1-sidecar-containers)
+- [**Ambassador** containers](https://kubernetes.io/blog/2015/06/the-distributed-system-toolkit-patterns/#example-2-ambassador-containers)
+- [**Adapter** containers](https://kubernetes.io/blog/2015/06/the-distributed-system-toolkit-patterns/#example-3-adapter-containers)
+
+However, the Kubernetes community has largely come to treat these all as varieties of helper containers.
+Nowadays, the term **sidecar container** is used to refer generically to any of those three puposes.
+Some people still distinguish them, yet that dogma is dated.
+
+In [current Kubernetes documentation on Pods](https://kubernetes.io/docs/concepts/workloads/pods/),
+only **sidecar** containers are mentioned in the [Workload resources for managing pods](https://kubernetes.io/docs/concepts/workloads/pods/#workload-resources-for-managing-pods).
+
+One particular use case of multicontainer pods is
+[Logging Architecture](https://kubernetes.io/docs/concepts/cluster-administration/logging/).
+
+Another use case is using an [Envoy proxy with a service mesh or ingress](https://www.envoyproxy.io).
+
+In this section, you will deploy multiple containers in a pod which do ***not*** fit the logging or proxy patterns. 
+Those can be explored in other lessons.
+
+## TODO
 
 $ cat 902-demo-duo.yaml 
 apiVersion: v1
