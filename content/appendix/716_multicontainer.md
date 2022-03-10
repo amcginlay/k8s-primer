@@ -5,8 +5,17 @@ weight: 716
 draft: false
 ---
 
+## Multi-Container Pods
 
-...
+In the [Pod Infrastructure lesson]({{< ref "appendix/714_pod" >}}), you created a pod and invesigated what it is made of.
+
+Hopefully you learned:
+- each container has its own `pid` and `mnt` namespaces
+- Kubernetes adds a pause container to each of your pods
+- each pod has its own `net`, `uts`, and `ipc` namespaces
+
+But when you use `kubectl get pods -n dev` or `kubectl describe pod -n dev demopod` to shows
+Thus, when we 
 
 %%%
 
@@ -87,3 +96,30 @@ NAME       READY   STATUS    RESTARTS   AGE     IP           NODE           NOMI
 demoduo    2/2     Running   0          3m34s   10.244.2.2   kind-worker2   <none>           <none>
 demosolo   1/1     Running   0          4h58m   10.244.3.2   kind-worker3   <none>           <none>
 demotrio   3/3     Running   0          59s     10.244.1.2   kind-worker    <none>           <none>
+
+{{< mermaid >}}
+graph
+subgraph pod[demo Pod]
+  subgraph pausecontainer[pause Container]
+    pause((PID 1<br>pause))
+    pausens{{pid,mnt ns}}
+  end
+  subgraph phpcontainer[demo Container]
+    demo((PID 1<br>php<br>-S 127.0.0.1:9081))
+    phpns{{pid,mnt ns}}
+  end
+  podns{{net,uts,ipc ns}}
+end
+classDef green fill:#9f6,stroke:#333,stroke-width:4px;
+classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+classDef blue fill:#69f,stroke:#333,stroke-width:4px;
+classDef blue2 fill:#0af,stroke:#333,stroke-width:4px;
+classDef cyan fill:#0ff,stroke:#333,stroke-width:4px;
+classDef lavender fill:#fcf,stroke:#333,stroke-width:4px;
+classDef yellow fill:#ff3,stroke:#333,stroke-width:2px;
+classDef yelloworange fill:#fd3,stroke:#333,stroke-width:2px;
+class pod yellow;
+class phpcontainer,pausecontainer yelloworange;
+class demo,pause blue2;
+class pausens,phpns,podns lavender;
+{{< /mermaid >}}
