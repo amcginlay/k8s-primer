@@ -94,7 +94,7 @@ You'll use the **test** namespace later; **dev** is enough for this lesson.
 You now have a custom namespace which will provide a home for your app.
 
 {{% notice note %}}
-If you ever need to dispose of this namespace object you could use either `kubectl delete -f ~/environment/001-dev-test-namespaces.yaml` or simply `kubectl delete namespace <NAME>`
+If you ever need to dispose of this namespace object you could use either `kubectl delete -f ~/environment/001-dev-namespace.yaml` or simply `kubectl delete namespace <NAME>`
 {{% /notice %}}
 
 ## Image registries (not today, thanks!)
