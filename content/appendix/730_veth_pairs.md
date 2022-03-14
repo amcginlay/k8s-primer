@@ -387,6 +387,9 @@ sudo ip netns delete orange
 
 In this lesson, you:
 - Created a `veth` pair.
-- Creted two network namespaces (`netns`).
+- Created two network namespaces (`netns`).
 - Configured each `veth` to be in one of those namespaces, brought them up, assigned IP addresses, and tested connectivity.
 
+## Links
+
+- [Linux VETH Pair - Virtual Ethernet Pair](https://www.youtube.com/watch?v=FUHyWfRNhTk) video by dolastack devops -- a similar `veth` pair demonstration to the one you did in this lesson
