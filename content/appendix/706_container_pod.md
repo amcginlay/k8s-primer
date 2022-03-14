@@ -26,7 +26,7 @@ The abbreviation "ns" stands for *namespace* or *namespaces*,
 which are the distinct Linux namespace(s) associated with the pod or container.
 These are shown like badges the pods and containers wear.
 In reality, these namespaces are the very essence of the pod or container's *boundary*.
-For example, `pid,mnt ns` is shown on a Kubernetes pod. The pod is *made of* those namespaces.
+For example, `net,uts,ipc ns` is shown on a Kubernetes pod. The pod is *made of* those namespaces.
 Similarly, `pid,mnt ns` is shown on a Kubernetes container. The container is *made of* those namespaces.
 {{% /notice %}}
 
