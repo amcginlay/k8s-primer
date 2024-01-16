@@ -106,7 +106,7 @@ class demo,curl blue2;
 
 In both cases the response to `gethostname()` inside your app will match the `CONTAINER ID` we created.
 This is the mechanism Docker uses to provide each container instance a unique, isolated identity.
-This seems familiar because it is the same technique your used earlier in the course when [learning about the **UTS namespace**]({{< ref "014_linux_namespaces" >}}).
+This seems familiar because it is the same technique you used earlier in the course when [learning about the **UTS namespace**]({{< ref "014_linux_namespaces" >}}).
 
 {{% notice note %}}
 You referenced `localhost` from the Cloud9 instance.
