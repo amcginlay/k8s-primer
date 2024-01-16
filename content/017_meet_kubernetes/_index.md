@@ -52,7 +52,7 @@ Simply typing `kind create cluster` would create a one node cluster.
 
 Most Kubernetes clusters are composed of multiple compute resources.
 These are referred to as [nodes](https://kubernetes.io/docs/concepts/architecture/nodes/) and they come in a couple of varieties, as follows.
-- **control plane** nodes -- a set of servers that provide container ***orchestration*** support features (like a queen bee of a hive or the government of a town/city)
+- **control plane** nodes -- a set of servers that provide container ***orchestration*** support features (like the queen bee of a hive or the government of a town/city)
 - **data plane** nodes -- a set of servers that run the container workloads; these servers are container hosts, sometimes called **workers**, like the worker bees in a colony, or the populace of a town/city.
 Each data plane node hosts an OCI compliant container runtime.
 This could be the Docker runtime or any alternative (e.g. [containerd](https://containerd.io/)) capable of running OCI compliant containers.
