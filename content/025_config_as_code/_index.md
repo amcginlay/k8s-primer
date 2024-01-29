@@ -339,7 +339,7 @@ kubectl -n dev exec deployment/demo -it -- ls /var/quotes
 kubectl -n dev exec deployment/demo -it -- cat /var/quotes/daisy-bell.txt
 ```
 
-{{< step >}}Remember that you used `>` to told the lines of the Hamlet quote. Take a look at the result.{{< /step >}}
+{{< step >}}Remember that you used `>` to fold the lines of the Hamlet quote. Take a look at the result.{{< /step >}}
 ```bash
 kubectl -n dev exec deployment/demo -it -- cat /var/quotes/hamlet-nutshell.txt
 ```
