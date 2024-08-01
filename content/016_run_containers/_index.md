@@ -238,7 +238,7 @@ bin                      dev   home  lib64  mnt    proc  run   srv   tmp  var
 ^one^two
 ```
 
-So it appears that your sensitive information is only visible from inside the container it belongs to, and not from inside other containers.
+So it appears that your sensitive information is only visible from **inside** the container it belongs to, and not from **inside** other containers.
 But what about **outside** the containers, at the root-level host?
 
 {{< step >}}Scan the overlay filesystem artifacts within the Cloud9 host.{{< /step >}}
@@ -256,7 +256,7 @@ Example output:
 
 Eeeek!
 So the contents of `/` inside the container are simply the re-mapped contents of some regular subdirectory under the control of the Docker runtime.
-You have just witnessed how Docker exploits **Mount namespaces** to provide the illusion of file-system isolation inside containers.
+You have just witnessed how Docker exploits **Mount namespaces** to provide the illusion of file-system isolation **inside** containers.
 
 To close out this section you may also like to `exec` into a container and issue the `mount -t overlay` command to see the `var/lib/docker` references here.
 
